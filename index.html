@@ -1144,27 +1144,6 @@
 
 <script>
 // ════════════════════════════════════════════
-// IMMEDIATE AUTH CHECK - redirect to dashboard if logged in
-// ════════════════════════════════════════════
-(async function() {
-  try {
-    // Skip redirect if coming from sign out
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('signedout') === '1') return;
-
-    const { createClient } = supabase;
-    const _sb = createClient(
-      'https://kjytapcgxukalwsyputk.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMTcxMzEsImV4cCI6MjA5MDg5MzEzMX0.VC8mcU5lUeA56kG2gHssvl88EVWr018XttA86jpfEn0'
-    );
-    const { data: { session } } = await _sb.auth.getSession();
-    if (session?.user) {
-      window.location.replace('dashboard.html');
-    }
-  } catch(e) {}
-})();
-
-// ════════════════════════════════════════════
 // GLOBAL ERROR HANDLER
 // ════════════════════════════════════════════
 
