@@ -1914,6 +1914,7 @@ async function loadSnakeList() {
   const { data } = await sb.from('snake_list').select('handle, created_at').eq('user_id', currentUser.id).order('created_at', { ascending: false });
   if (data) {
     userSnakeList = new Set(data.map(r => r.handle.toLowerCase()));
+    data.forEach(r => { snakeListDates[r.handle.toLowerCase()] = r.created_at; });
     updateSnakeTabCount();
     if (allResults.length) filterResults();
   }
@@ -1942,6 +1943,7 @@ async function toggleSnakeList(handle) {
   } else {
     // Update UI instantly
     userSnakeList.add(handle);
+    snakeListDates[handle] = new Date().toISOString();
     showMiniToast(`🐍 @${handle} added to your Snake List!`);
     updateSnakeTabCount();
     filterResults();
@@ -1985,7 +1987,16 @@ function toggleSectionNoteRow(handle) {
 }
 
 
-async function renderSnakeList() {
+// Cache snake list dates so we don't re-fetch on every render
+let snakeListDates = {};
+
+async function loadSnakeListDates() {
+  if (!currentUser) return;
+  const { data } = await sb.from('snake_list').select('handle, created_at').eq('user_id', currentUser.id);
+  if (data) data.forEach(r => { snakeListDates[r.handle.toLowerCase()] = r.created_at; });
+}
+
+function renderSnakeList() {
   const el = document.getElementById('snake-list-container');
   if (!el) return;
 
@@ -1994,14 +2005,11 @@ async function renderSnakeList() {
     return;
   }
 
-  // Show loading state instantly
-  el.innerHTML = '<div class="snake-empty" style="padding:24px">Loading...</div>';
-
-  const { data } = await sb.from('snake_list').select('handle, created_at').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-  
-  // If no data from Supabase, build from userSnakeList directly
-  const items = data && data.length > 0 ? data : [...userSnakeList].map(handle => ({ handle, created_at: new Date().toISOString() }));
-  if (!items.length) return;
+  // Render instantly from local Set — no Supabase call needed
+  const items = [...userSnakeList].map(handle => ({
+    handle,
+    created_at: snakeListDates[handle] || new Date().toISOString()
+  }));
 
   el.innerHTML = `<div class="snake-list-wrap">
     <div class="snake-list-header"><span>Username</span><span>Added</span><span></span></div>
