@@ -2578,53 +2578,59 @@ function analyze() {
   btn.innerHTML = '<span class="btn-spinner"></span><span class="processing-dots">Processing</span>';
 
   setTimeout(async () => {
-    const followers = extractHandles(followersData);
-    const following = extractHandles(followingData);
+    try {
+      const followers = extractHandles(followersData);
+      const following = extractHandles(followingData);
 
-    if (followers.size === 0 || following.size === 0) {
-      showError('Could not read usernames from the files. Make sure these are Instagram follower/following JSON exports.');
+      if (followers.size === 0 || following.size === 0) {
+        showError('Could not read usernames from the files. Make sure these are Instagram follower/following JSON exports.');
+        btn.disabled = false;
+        btn.classList.remove('processing');
+        btn.innerHTML = '✦ &nbsp;Analyze Now';
+        return;
+      }
+
+      allResults = [];
+      following.forEach(handle => {
+        allResults.push({ handle, mutual: followers.has(handle) });
+      });
+      followers.forEach(handle => {
+        if (!following.has(handle)) allResults.push({ handle, followerOnly: true });
+      });
+      allResults.sort((a, b) => a.handle.localeCompare(b.handle));
+
+      renderResults();
+
+      // Save audit and update unfollower log for monthly users
+      if (userTier === 'monthly') {
+        saveAudit();
+        updateUnfollowerLog();
+      }
+
+      // One-time tier: increment usage in Supabase and mark locally as used
+      if (userTier === 'one_time' && currentUser) {
+        userTier = 'free';
+        userStatus = 'free';
+        updateNavTierBadge();
+        const { error: updateError } = await sb
+          .from('subscriptions')
+          .update({ analyses_used: 1 })
+          .eq('user_id', currentUser.id);
+        if (updateError) {
+          console.error('Failed to record analysis usage:', updateError);
+        } else {
+          console.log('Analysis usage recorded successfully');
+        }
+      }
+
+    } catch(err) {
+      console.error('Analysis error:', err);
+      showError('Something went wrong during analysis. Please try again.');
+    } finally {
       btn.disabled = false;
       btn.classList.remove('processing');
       btn.innerHTML = '✦ &nbsp;Analyze Now';
-      return;
     }
-
-    allResults = [];
-    following.forEach(handle => {
-      allResults.push({ handle, mutual: followers.has(handle) });
-    });
-    followers.forEach(handle => {
-      if (!following.has(handle)) allResults.push({ handle, followerOnly: true });
-    });
-    allResults.sort((a, b) => a.handle.localeCompare(b.handle));
-
-    renderResults();
-
-    // Save audit and update unfollower log for monthly users
-    if (userTier === 'monthly') {
-      saveAudit();
-      updateUnfollowerLog();
-    }
-
-    // One-time tier: increment usage in Supabase and mark locally as used
-    if (userTier === 'one_time' && currentUser) {
-      userTier = 'free'; // immediately prevent further use
-      userStatus = 'free';
-      updateNavTierBadge(); // update badge to show Free
-      const { error: updateError } = await sb
-        .from('subscriptions')
-        .update({ analyses_used: 1 })
-        .eq('user_id', currentUser.id);
-      if (updateError) {
-        console.error('Failed to record analysis usage:', updateError);
-      } else {
-        console.log('Analysis usage recorded successfully');
-      }
-    }
-
-    btn.disabled = false;
-    btn.classList.remove('processing');
-    btn.innerHTML = '✦ &nbsp;Analyze Now';
   }, 80);
 }
 
