@@ -1268,15 +1268,21 @@ async function fetchTier(userId) {
   // Checks the `subscriptions` table written by the Stripe webhook Edge Function
   const { data: rows } = await sb
     .from('subscriptions')
-    .select('tier, status')
+    .select('tier, status, analyses_used')
     .eq('user_id', userId)
     .limit(1);
 
   const data = rows && rows.length > 0 ? rows[0] : null;
 
   if (data && (data.status === 'active' || data.status === 'cancelling')) {
-    userTier = data.tier;
-    userStatus = data.status;
+    // For one_time, check if they've already used their analysis
+    if (data.tier === 'one_time' && data.analyses_used >= 1) {
+      userTier = 'free';
+      userStatus = 'free';
+    } else {
+      userTier = data.tier;
+      userStatus = data.status;
+    }
   } else {
     userTier = 'free';
     userStatus = 'free';
@@ -2010,6 +2016,8 @@ function startOver() {
   // Reset results
   allResults = [];
 
+
+
   // Clear file lists and inputs
   ['followers', 'following'].forEach(type => {
     const listEl = document.getElementById(type + '-files');
@@ -2591,6 +2599,15 @@ function analyze() {
     if (userTier === 'monthly') {
       saveAudit();
       updateUnfollowerLog();
+    }
+
+    // One-time tier: increment usage in Supabase and mark locally as used
+    if (userTier === 'one_time' && currentUser) {
+      userTier = 'free'; // immediately prevent further use
+      sb.from('subscriptions')
+        .update({ analyses_used: 1 })
+        .eq('user_id', currentUser.id)
+        .then(() => console.log('Analysis usage recorded'));
     }
 
     btn.disabled = false;
