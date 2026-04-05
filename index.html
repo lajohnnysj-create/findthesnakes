@@ -845,20 +845,16 @@
     <a href="instructions.html">Instructions</a>
     <a href="faq.html">FAQ</a>
   </div>
-  <div class="nav-right">
-    <div class="account-menu" id="account-menu">
-      <button class="account-btn" id="account-btn" onclick="toggleAccountMenu()">
-        <span id="nav-email-display" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-        <span class="account-tier-badge free" id="nav-tier-badge">Free</span>
-        <span style="font-size:10px;color:var(--muted)">▼</span>
-      </button>
-      <div class="account-menu-dropdown" id="account-dropdown">
-        <button class="account-menu-item" onclick="event.stopPropagation();signOut()">👋 Sign out</button>
-        <div class="account-menu-divider"></div>
-        <button class="account-menu-item danger" id="cancel-sub-btn" style="display:none" onclick="openCancelModal();toggleAccountMenu()">✕ Cancel subscription</button>
-      </div>
-    </div>
+  <div class="nav-right" id="nav-right">
+    <!-- Logged out -->
     <button class="nav-cta" id="nav-signin-btn" onclick="openAuthModal()">Sign in</button>
+    <!-- Logged in -->
+    <div id="nav-user-area" style="display:none;align-items:center;gap:10px;">
+      <span id="nav-tier-badge" class="account-tier-badge free">Free</span>
+      <span id="nav-email-display" style="font-size:13px;color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+      <button class="nav-cta ghost" id="cancel-sub-btn" style="display:none;font-size:13px;" onclick="openCancelModal()">Cancel plan</button>
+      <button class="nav-cta ghost" onclick="signOut()" style="font-size:13px;">Sign out</button>
+    </div>
   </div>
   <!-- Hamburger (mobile only) -->
   <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
@@ -1170,7 +1166,8 @@ async function initAuth() {
 
 async function setUser(user) {
   currentUser = user;
-  document.getElementById('account-btn').classList.add('visible');
+  const navUserArea = document.getElementById('nav-user-area');
+  if (navUserArea) navUserArea.style.display = 'flex';
   document.getElementById('nav-email-display').textContent = user.email;
   document.getElementById('nav-signin-btn').style.display = 'none';
   await fetchTier(user.id);
@@ -1249,8 +1246,8 @@ function clearUser() {
   auditHistory = [];
   unfollowerLog = [];
   userSnakeList = new Set();
-  const accountBtn = document.getElementById('account-btn');
-  if (accountBtn) accountBtn.classList.remove('visible');
+  const navUserArea = document.getElementById('nav-user-area');
+  if (navUserArea) navUserArea.style.display = 'none';
   document.getElementById('nav-signin-btn').style.display = 'inline-flex';
   const badge = document.getElementById('nav-tier-badge');
   if (badge) { badge.textContent = 'Free'; badge.className = 'account-tier-badge free'; }
@@ -2040,10 +2037,7 @@ function startOver() {
 // ════════════════════════════════════════════
 // CANCEL SUBSCRIPTION
 // ════════════════════════════════════════════
-function toggleAccountMenu() {
-  const dropdown = document.getElementById('account-dropdown');
-  if (dropdown) dropdown.classList.toggle('open');
-}
+function toggleAccountMenu() { /* deprecated */ }
 
 // Close dropdown when clicking outside
 document.addEventListener('click', e => {
