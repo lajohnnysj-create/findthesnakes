@@ -2607,17 +2607,14 @@ function analyze() {
         updateUnfollowerLog();
       }
 
-      // One-time tier: increment usage in Supabase and mark locally as used
+      // One-time tier: increment usage via Edge Function (bypasses RLS)
       if (userTier === 'one_time' && currentUser) {
         userTier = 'free';
         userStatus = 'free';
         updateNavTierBadge();
-        const { error: updateError } = await sb
-          .from('subscriptions')
-          .upsert({
-            user_id: currentUser.id,
-            analyses_used: 1,
-          }, { onConflict: 'user_id' });
+        const { data, error: updateError } = await sb.functions.invoke('record-analysis', {
+          body: { userId: currentUser.id }
+        });
         if (updateError) {
           console.error('Failed to record analysis usage:', updateError);
         } else {
