@@ -1802,41 +1802,10 @@ async function updateUnfollowerLog() {
     .filter(r => !r.mutual && !r.followerOnly)
     .map(r => r.handle.toLowerCase());
 
-  const now = new Date().toISOString();
-
-  // Upsert current unfollowers as active
-  for (const handle of currentUnfollowers) {
-    const { data: rows } = await sb
-      .from('unfollower_log')
-      .select('id, first_seen')
-      .eq('user_id', currentUser.id)
-      .eq('handle', handle)
-      .limit(1);
-
-    const existing = rows && rows.length > 0 ? rows[0] : null;
-
-    if (existing) {
-      await sb.from('unfollower_log').update({ last_seen: now, status: 'active' }).eq('id', existing.id);
-    } else {
-      await sb.from('unfollower_log').insert({ user_id: currentUser.id, handle, first_seen: now, last_seen: now, status: 'active' });
-    }
-  }
-
-  // Mark anyone who was active but not in current list as 'gone'
-  const currentSet = new Set(currentUnfollowers);
-  const { data: activeRows } = await sb
-    .from('unfollower_log')
-    .select('id, handle')
-    .eq('user_id', currentUser.id)
-    .eq('status', 'active');
-
-  if (activeRows) {
-    for (const row of activeRows) {
-      if (!currentSet.has(row.handle)) {
-        await sb.from('unfollower_log').update({ status: 'gone', last_seen: now }).eq('id', row.id);
-      }
-    }
-  }
+  // Use Edge Function to bypass RLS
+  await sb.functions.invoke('manage-unfollower-log', {
+    body: { userId: currentUser.id, currentUnfollowers }
+  });
 
   await loadUnfollowerLog();
 }
