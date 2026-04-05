@@ -98,7 +98,7 @@
   .nav-links { display: flex; gap: 36px; }
   .nav-links a { color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
   .nav-links a:hover { color: var(--text); }
-  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-right { display: flex; align-items: center; gap: 12px; position: relative; z-index: 201; }
   .nav-user { font-size: 13px; color: var(--muted); }
   .nav-user span { color: var(--text); font-weight: 500; }
   .nav-cta {
@@ -857,11 +857,11 @@
     <!-- Logged out -->
     <button class="nav-cta" id="nav-signin-btn" onclick="openAuthModal()">Sign in</button>
     <!-- Logged in -->
-    <div id="nav-user-area" style="display:none;align-items:center;gap:10px;">
+    <div id="nav-user-area" style="display:none;align-items:center;gap:10px;position:relative;z-index:202;">
       <span id="nav-tier-badge" class="account-tier-badge free">Free</span>
       <span id="nav-email-display" style="font-size:13px;color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-      <button class="nav-cta ghost" id="cancel-sub-btn" style="display:none;font-size:13px;" onclick="handleSubBtn()">Cancel plan</button>
-      <button class="nav-cta ghost" onclick="signOut()" style="font-size:13px;">Sign out</button>
+      <button class="nav-cta ghost" id="cancel-sub-btn" style="display:none;font-size:13px;position:relative;z-index:203;" onclick="handleSubBtn()">Cancel plan</button>
+      <button class="nav-cta ghost" style="font-size:13px;position:relative;z-index:203;" onclick="signOut()">Sign out</button>
     </div>
   </div>
   <!-- Hamburger (mobile only) -->
@@ -1194,13 +1194,18 @@ let userStatus = 'free'; // 'free' | 'active' | 'cancelling' | 'cancelled'
 
 async function initAuth() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session?.user) await setUser(session.user);
+  if (session?.user) {
+    // Already logged in - redirect to dashboard
+    window.location.href = 'dashboard.html';
+    return;
+  }
 
   sb.auth.onAuthStateChange(async (_event, session) => {
+    console.log('Auth state changed:', _event, session?.user?.email);
     if (session?.user) {
-      // Always close auth modal when user signs in
+      // Redirect to dashboard on sign in
       closeAuthModal();
-      await setUser(session.user);
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
     } else {
       clearUser();
     }
@@ -1451,13 +1456,15 @@ async function handleAuth() {
     if (authMode === 'signup') {
       showAuthMsg('success', 'Check your email to confirm your account!');
     } else {
-      // Close modal immediately on success
       closeAuthModal();
-      // If checkout was pending, continue to it automatically
+      // If checkout was pending, go to checkout — otherwise go to dashboard
       if (pendingCheckout) {
         const plan = pendingCheckout;
         pendingCheckout = null;
         setTimeout(() => startCheckout(plan), 500);
+      } else {
+        // Redirect to dashboard
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
       }
     }
   }
@@ -1481,8 +1488,8 @@ async function startCheckout(planType) {
     body: {
       priceId,
       userId: currentUser.id,
-      successUrl: window.location.origin + window.location.pathname + '?payment=success',
-      cancelUrl: window.location.origin + window.location.pathname + '?payment=cancelled',
+      successUrl: window.location.origin + '/dashboard.html?payment=success',
+      cancelUrl: window.location.origin + '/dashboard.html?payment=cancelled',
     }
   });
 
@@ -2144,14 +2151,7 @@ function startOver() {
 // ════════════════════════════════════════════
 function toggleAccountMenu() { /* deprecated */ }
 
-// Close dropdown when clicking outside
-document.addEventListener('click', e => {
-  const menu = document.getElementById('account-menu');
-  if (menu && !menu.contains(e.target)) {
-    const dropdown = document.getElementById('account-dropdown');
-    if (dropdown) dropdown.classList.remove('open');
-  }
-});
+// Dropdown removed - using inline buttons instead
 
 function openCancelModal() {
   document.getElementById('cancel-modal').classList.add('open');
