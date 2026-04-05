@@ -118,7 +118,7 @@
     align-items: center; justify-content: center;
     padding: 120px 24px 80px; position: relative; text-align: center; overflow: hidden;
   }
-  .hero-bg { position: absolute; inset: 0; pointer-events: none; }
+  .hero-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
   .hero-bg::before {
     content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
     width: 900px; height: 900px;
@@ -227,8 +227,6 @@
     border-radius: 12px; font-size: 17px; font-weight: 500; font-family: 'DM Sans', sans-serif;
     cursor: pointer; transition: all 0.25s; box-shadow: 0 0 50px rgba(232,68,90,0.25); position: relative; overflow: hidden;
   }
-  .analyze-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%); transform: translateX(-100%); transition: transform 0.5s; }
-  .analyze-btn:hover::after { transform: translateX(100%); }
   .analyze-btn:hover { background: #f05570; transform: translateY(-2px); box-shadow: 0 0 70px rgba(232,68,90,0.4); }
   .analyze-btn:disabled { background: var(--muted2); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
   .analyze-btn.processing { background: #b8334a; cursor: not-allowed; transform: none; box-shadow: 0 0 30px rgba(232,68,90,0.15); }
@@ -313,9 +311,11 @@
   /* ── AUTH MODAL ── */
   .modal-backdrop {
     display: none; position: fixed; inset: 0; z-index: 300;
-    background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    background: rgba(0,0,0,0.8);
     align-items: center; justify-content: center;
+    pointer-events: none;
   }
+  .modal-backdrop.open { pointer-events: all; }
   .modal-backdrop.open { display: flex; }
   .modal {
     background: var(--surface); border: 1px solid var(--border-hover);
