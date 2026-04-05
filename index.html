@@ -1219,7 +1219,10 @@ async function initAuth() {
 
   sb.auth.onAuthStateChange((_event, session) => {
     if (_event === 'SIGNED_IN' && session?.user) {
-      window.location.href = 'dashboard.html';
+      // Only redirect to dashboard if no pending checkout
+      if (!pendingCheckout) {
+        window.location.href = 'dashboard.html';
+      }
     }
   });
 }
@@ -1473,6 +1476,7 @@ async function handleAuth() {
       if (pendingCheckout) {
         const plan = pendingCheckout;
         pendingCheckout = null;
+        currentUser = result.data.user; // set user before checkout
         setTimeout(() => startCheckout(plan), 500);
       } else {
         // Redirect to dashboard immediately
