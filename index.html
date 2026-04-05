@@ -829,7 +829,7 @@
     <div class="mobile-account-info" id="mobile-account-info">
       <div class="mobile-account-email" id="mobile-email-display"></div>
       <button class="mobile-cancel-btn" id="mobile-cancel-btn" style="display:none" onclick="closeMobileMenu();openCancelModal()">✕ Cancel subscription</button>
-      <button class="mobile-signout-btn" onclick="closeMobileMenu();signOut()">Sign out</button>
+      <button class="mobile-signout-btn" onclick="event.stopPropagation();closeMobileMenu();signOut()">Sign out</button>
     </div>
   </div>
 </div>
@@ -852,7 +852,7 @@
         <span style="font-size:10px;color:var(--muted)">▼</span>
       </button>
       <div class="account-menu-dropdown" id="account-dropdown">
-        <button class="account-menu-item" onclick="signOut();toggleAccountMenu()">👋 Sign out</button>
+        <button class="account-menu-item" onclick="event.stopPropagation();signOut()">👋 Sign out</button>
         <div class="account-menu-divider"></div>
         <button class="account-menu-item danger" id="cancel-sub-btn" style="display:none" onclick="openCancelModal();toggleAccountMenu()">✕ Cancel subscription</button>
       </div>
