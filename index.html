@@ -1897,6 +1897,41 @@ async function toggleSnakeList(handle) {
   if (currentFilter === 'snakes') renderSnakeList();
 }
 
+async 
+function buildNoteEditor(handle, onSave) {
+  const note = accountNotes[handle.toLowerCase()] || '';
+  return `
+    ${note ? `<div class="note-display" style="margin-top:4px;">📝 ${note}</div>` : ''}
+    <div class="note-row" id="section-note-row-${handle}" style="margin-top:6px;">
+      <div class="note-input-wrap">
+        <input class="note-input" id="section-note-input-${handle}"
+          value="${note.replace(/"/g, '&quot;')}"
+          placeholder="Add a private note…"
+          onkeydown="if(event.key==='Enter') submitSectionNote('${handle}','${onSave}')">
+        <button class="note-save-btn" onclick="submitSectionNote('${handle}','${onSave}')">Save</button>
+      </div>
+    </div>`;
+}
+
+async function submitSectionNote(handle, onSave) {
+  const input = document.getElementById('section-note-input-' + handle);
+  if (!input) return;
+  await saveNote(handle, input.value);
+  const row = document.getElementById('section-note-row-' + handle);
+  if (row) row.classList.remove('visible');
+  // Re-render the appropriate section
+  if (onSave === 'snake') renderSnakeList();
+  if (onSave === 'whitelist') renderWhitelistSection();
+}
+
+function toggleSectionNoteRow(handle) {
+  const row = document.getElementById('section-note-row-' + handle);
+  if (!row) return;
+  document.querySelectorAll('.note-row.visible').forEach(r => r.classList.remove('visible'));
+  row.classList.toggle('visible');
+}
+
+
 async function renderSnakeList() {
   const el = document.getElementById('snake-list-container');
   if (!el) return;
@@ -1913,14 +1948,21 @@ async function renderSnakeList() {
     <div class="snake-list-header"><span>Username</span><span>Added</span><span></span></div>
     ${data.map(r => {
       const date = new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      const note = accountNotes[r.handle] ? `<div style="font-size:11px;color:var(--muted);font-style:italic;margin-top:2px">📝 ${accountNotes[r.handle]}</div>` : '';
-      return `<div class="snake-list-item">
-        <div>
-          <a href="https://instagram.com/${r.handle}" target="_blank" rel="noopener">@${r.handle}</a>
-          ${note}
+      const hasNote = accountNotes[r.handle.toLowerCase()];
+      return `<div class="snake-list-item" style="display:block;padding:12px 20px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <a href="https://instagram.com/${r.handle}" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;font-size:14px;">@${r.handle}</a>
+              <button class="note-icon-btn${hasNote ? ' has-note' : ''}" title="${hasNote ? 'Edit note' : 'Add note'}" onclick="toggleSectionNoteRow('${r.handle}')">📝</button>
+            </div>
+            ${buildNoteEditor(r.handle, 'snake')}
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+            <span class="snake-added-date">${date}</span>
+            <button class="snake-remove-btn" title="Remove from Snake List" onclick="toggleSnakeList('${r.handle}')">✕</button>
+          </div>
         </div>
-        <div class="snake-added-date">${date}</div>
-        <button class="snake-remove-btn" title="Remove from Snake List" onclick="toggleSnakeList('${r.handle}')">✕</button>
       </div>`;
     }).join('')}
   </div>`;
@@ -2818,16 +2860,20 @@ function renderWhitelistSection() {
   }
 
   listEl.innerHTML = `<div class="snake-list-wrap">
-    <div class="snake-list-header"><span>Username</span><span>Note</span><span></span></div>
+    <div class="snake-list-header"><span>Username</span><span></span></div>
     ${[...userWhitelist].map(handle => {
-      const note = accountNotes[handle] || '';
-      return `<div class="snake-list-item">
-        <div>
-          <a href="https://instagram.com/${handle}" target="_blank" rel="noopener">@${handle}</a>
-          ${note ? `<div style="font-size:11px;color:var(--muted);font-style:italic;margin-top:2px">📝 ${note}</div>` : ''}
+      const hasNote = accountNotes[handle.toLowerCase()];
+      return `<div class="snake-list-item" style="display:block;padding:12px 20px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <a href="https://instagram.com/${handle}" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;font-size:14px;">@${handle}</a>
+              <button class="note-icon-btn${hasNote ? ' has-note' : ''}" title="${hasNote ? 'Edit note' : 'Add note'}" onclick="toggleSectionNoteRow('${handle}')">📝</button>
+            </div>
+            ${buildNoteEditor(handle, 'whitelist')}
+          </div>
+          <button class="snake-remove-btn" title="Remove from whitelist" onclick="toggleWhitelist('${handle}');renderWhitelistSection()">✕</button>
         </div>
-        <div class="snake-added-date">${note || '—'}</div>
-        <button class="snake-remove-btn" title="Remove from whitelist" onclick="toggleWhitelist('${handle}');renderWhitelistSection()">✕</button>
       </div>`;
     }).join('')}
   </div>`;
