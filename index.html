@@ -308,6 +308,17 @@
   .paywall-btn.secondary:hover { background: rgba(255,255,255,0.12); }
   .paywall-btn-price { font-size: 13px; opacity: 0.8; }
 
+
+  /* ── AUTH SPINNER ── */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .auth-spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff; border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle; margin-right: 8px;
+  }
+
   /* ── AUTH MODAL ── */
   .modal-backdrop {
     display: none; position: fixed; inset: 0; z-index: 300;
@@ -1395,7 +1406,7 @@ async function handleAuth() {
   if (!email || !password) { showAuthMsg('error', 'Please enter your email and password.'); return; }
 
   btn.disabled = true;
-  btn.textContent = 'Please wait…';
+  btn.innerHTML = '<span class="auth-spinner"></span>Signing in…';
 
   let result;
   if (authMode === 'signin') {
