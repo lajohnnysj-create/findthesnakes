@@ -2655,9 +2655,16 @@ function analyze() {
       console.error('Analysis error:', err);
       showError('Something went wrong during analysis. Please try again.');
     } finally {
-      btn.disabled = false;
+      btn.disabled = true; // keep disabled until new files uploaded
       btn.classList.remove('processing');
       btn.innerHTML = '✦ &nbsp;Analyze Now';
+      // Clear uploaded files so user can do a fresh upload
+      followersData = [];
+      followingData = [];
+      document.getElementById('followers-files').innerHTML = '';
+      document.getElementById('following-files').innerHTML = '';
+      document.getElementById('followers-input').value = '';
+      document.getElementById('following-input').value = '';
     }
   }, 80);
 }
