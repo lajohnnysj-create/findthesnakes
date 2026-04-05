@@ -1584,13 +1584,16 @@ async function saveAudit() {
   const mutuals = allResults.filter(r => r.mutual).map(r => r.handle);
   const followerOnly = allResults.filter(r => r.followerOnly).map(r => r.handle);
 
-  await sb.from('audits').insert({
-    user_id: currentUser.id,
-    unfollowers,
-    mutuals,
-    follower_only: followerOnly,
-    total_following: allResults.filter(r => !r.followerOnly).length,
-    total_followers: allResults.filter(r => r.mutual || r.followerOnly).length,
+  // Use Edge Function to bypass RLS
+  await sb.functions.invoke('save-audit', {
+    body: {
+      userId: currentUser.id,
+      unfollowers,
+      mutuals,
+      followerOnly,
+      totalFollowing: allResults.filter(r => !r.followerOnly).length,
+      totalFollowers: allResults.filter(r => r.mutual || r.followerOnly).length,
+    }
   });
 
   await loadAuditHistory();
@@ -1802,14 +1805,10 @@ async function updateUnfollowerLog() {
     .filter(r => !r.mutual && !r.followerOnly)
     .map(r => r.handle.toLowerCase());
 
-  console.log('updateUnfollowerLog - sending', currentUnfollowers.length, 'unfollowers:', currentUnfollowers.slice(0, 5));
-
   // Use Edge Function to bypass RLS
-  const { data, error } = await sb.functions.invoke('manage-unfollower-log', {
+  await sb.functions.invoke('manage-unfollower-log', {
     body: { userId: currentUser.id, currentUnfollowers }
   });
-
-  console.log('updateUnfollowerLog result:', data, error);
 
   await loadUnfollowerLog();
 }
