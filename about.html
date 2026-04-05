@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="shortcut icon" href="favicon.svg">
+<title>About — FindTheSnakes</title>
+<meta name="description" content="The story behind FindTheSnakes — built by a creator who got tired of not knowing who unfollowed them. If they don't support you, why support them back?">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.findthesnakes.com/about.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.findthesnakes.com/about.html">
+<meta property="og:title" content="About — FindTheSnakes">
+<meta property="og:description" content="The story behind FindTheSnakes — built by a creator who got tired of not knowing who unfollowed them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a26;
+    --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.15);
+    --accent: #e8445a; --text: #f0eef8; --muted: #7a788f; --muted2: #4a4860;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a { color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--text); }
+  .nav-cta { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .nav-cta:hover { background: #f05570; transform: translateY(-1px); }
+
+  /* HAMBURGER */
+  .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; border-radius: 8px; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.25s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 150; flex-direction: column; padding: 80px 32px 40px; pointer-events: none; }
+  .mobile-menu.open { display: flex; pointer-events: all; }
+  .mobile-menu-links { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .mobile-menu-links a { color: var(--text); font-size: 22px; font-family: 'Syne', sans-serif; font-weight: 700; text-decoration: none; padding: 14px 0; border-bottom: 1px solid var(--border); transition: color 0.2s; }
+  .mobile-menu-links a:hover { color: var(--accent); }
+  .mobile-menu-bottom { margin-top: 32px; }
+  .mobile-cta { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; display: block; text-align: center; }
+
+  /* HERO */
+  .about-hero {
+    padding: 100px 48px 80px;
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .about-hero::before {
+    content: '';
+    position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 500px;
+    background: radial-gradient(ellipse, rgba(232,68,90,0.07) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  .about-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(232,68,90,0.4); background: rgba(232,68,90,0.08);
+    border-radius: 100px; padding: 6px 16px; font-size: 12px;
+    color: #ff8fa0; font-weight: 500; letter-spacing: 0.04em;
+    text-transform: uppercase; margin-bottom: 32px;
+  }
+  .about-hero h1 {
+    font-family: 'Syne', sans-serif; font-size: clamp(36px, 6vw, 64px);
+    font-weight: 800; letter-spacing: -2px; line-height: 1.05;
+    margin-bottom: 24px;
+  }
+  .about-hero h1 em { font-style: normal; color: var(--accent); }
+
+  /* STORY */
+  .story {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 48px 100px;
+  }
+  .story-section { margin-bottom: 56px; }
+  .story p {
+    font-size: 18px; line-height: 1.85; color: #c8c6d8;
+    font-weight: 300; margin-bottom: 24px;
+  }
+  .story p:last-child { margin-bottom: 0; }
+  .story p strong { color: var(--text); font-weight: 500; }
+  .story p em { font-style: italic; color: var(--muted); }
+
+  .pull-quote {
+    border-left: 3px solid var(--accent);
+    padding: 20px 28px;
+    margin: 48px 0;
+    background: rgba(232,68,90,0.04);
+    border-radius: 0 12px 12px 0;
+  }
+  .pull-quote p {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(20px, 3vw, 26px) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.5px;
+    color: var(--text) !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+  }
+
+  .snake-divider {
+    text-align: center;
+    font-size: 28px;
+    margin: 56px 0;
+    opacity: 0.4;
+    letter-spacing: 12px;
+  }
+
+  /* CTA */
+  .about-cta {
+    background: linear-gradient(135deg, rgba(232,68,90,0.08) 0%, var(--surface) 60%);
+    border: 1px solid rgba(232,68,90,0.25);
+    border-radius: 20px;
+    padding: 56px 48px;
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 100px;
+  }
+  .about-cta h2 { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
+  .about-cta p { color: var(--muted); font-size: 16px; margin-bottom: 32px; line-height: 1.6; }
+  .btn-primary { display: inline-block; background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 16px 36px; font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.25s; box-shadow: 0 0 40px rgba(232,68,90,0.25); text-decoration: none; }
+  .btn-primary:hover { background: #f05570; transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer p { font-size: 13px; color: var(--muted); }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--text); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links, .nav-right { display: none; }
+    .hamburger { display: flex; }
+    .about-hero { padding: 64px 24px 48px; }
+    .story { padding: 0 24px 60px; }
+    .story p { font-size: 16px; }
+    .about-cta { padding: 40px 24px; margin: 0 24px 60px; }
+    footer { flex-direction: column; text-align: center; padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-links">
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#tool">Try it</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="instructions.html">Instructions</a>
+    <a href="faq.html">FAQ</a>
+    <a href="about.html" class="active">About</a>
+  </div>
+  <div class="mobile-menu-bottom">
+    <a class="mobile-cta" href="index.html#tool">Try it free →</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="index.html"><span class="logo-dot"></span>FindTheSnakes</a>
+  <div class="nav-links">
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#tool">Try it</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="instructions.html">Instructions</a>
+    <a href="faq.html">FAQ</a>
+    <a href="about.html" class="active">About</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-cta" href="index.html#tool">Try Free</a>
+  </div>
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="about-hero">
+  <div class="about-tag">🐍 The story behind the tool</div>
+  <h1>Built by a creator who got <em>tired</em> of not knowing</h1>
+</div>
+
+<!-- STORY -->
+<div class="story">
+  <div class="story-section">
+    <p>
+      I've been a creator for a while now. I put real time, real energy, and real heart into what I share online. And like most creators, I built my following one person at a time. Friends, family, colleagues, strangers who connected with what I was putting out.
+    </p>
+    <p>
+      So when I started noticing my numbers quietly dropping, it stung. Not just because of the numbers. It was because of what those numbers represented. <strong>People I knew. People I cared about. People I supported.</strong>
+    </p>
+    <p>
+      The worst part wasn't the unfollow itself. It was the not knowing. Instagram doesn't tell you when someone leaves. There's no notification, no explanation. Just a slow, invisible leak in something you built.
+    </p>
+  </div>
+
+  <div class="pull-quote">
+    <p>"The worst part wasn't the unfollow. It was the not knowing."</p>
+  </div>
+
+  <div class="story-section">
+    <p>
+      So I started checking. Manually. Going through profiles one by one. Friends, family members, people I'd supported for years. Just trying to figure out who was still there. It was tedious, it was demoralizing, and honestly, it felt a little pathetic. <em>Why was I doing this to myself?</em>
+    </p>
+    <p>
+      Because it mattered. Because when you put yourself out there as a creator, every follow is a vote of support. And when someone close to you takes that away, you deserve to know.
+    </p>
+    <p>
+      I looked for tools to help. Most of them required your Instagram password, connected to your account in sketchy ways, or violated Instagram's terms of service. I wasn't willing to risk my account for a list of names.
+    </p>
+  </div>
+
+  <div class="snake-divider">🐍 🐍 🐍</div>
+
+  <div class="story-section">
+    <p>
+      So I built my own. A tool that works entirely with your own data. Files you download directly from Instagram. Files you already own. <strong>No password required. No account access. No risk.</strong> Just the truth.
+    </p>
+    <p>
+      And the truth, as I discovered, was eye-opening. Family members who smiled at my face but quietly unfollowed. Friends who I'd supported through everything. Their businesses, their posts, their milestones. Gone without a word.
+    </p>
+    <p>
+      It changed how I moved. Not out of anger, but out of clarity. <strong>If they don't support me, why should I support them back?</strong> That's not bitterness. That's energy management. That's protecting your peace.
+    </p>
+  </div>
+
+  <div class="pull-quote">
+    <p>"If they don't support me, why support them back?"</p>
+  </div>
+
+  <div class="story-section">
+    <p>
+      FindTheSnakes exists for every creator, every small business owner, every person who puts themselves out there and deserves to know who's really in their corner.
+    </p>
+    <p>
+      It's not about revenge. It's not about drama. It's about knowing. It's about having the information to make your own choices about who you give your energy to.
+    </p>
+    <p>
+      <strong>Find your snakes. Protect your peace. Keep building.</strong> 🐍
+    </p>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="about-cta">
+  <h2>Ready to find out who's really with you?</h2>
+  <p>Upload your Instagram data and see the full picture in seconds. No password needed. Just the truth.</p>
+  <a class="btn-primary" href="index.html#tool">Find My Snakes for Free →</a>
+</div>
+
+<footer>
+  <a class="logo" href="index.html"><span class="logo-dot"></span>FindTheSnakes</a>
+  <p>© <span class="copy-year"></span> FindTheSnakes. Not affiliated with Instagram or Meta.</p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Service</a>
+    <a href="instructions.html">Instructions</a>
+    <a href="faq.html">FAQ</a>
+    <a href="about.html">About</a>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger-btn');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+</script>
+</body>
+</html>
