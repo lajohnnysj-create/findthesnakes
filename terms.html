@@ -255,3 +255,16 @@
   <a class="logo" href="index.html"><span class="logo-dot"></span>FindTheSnakes</a>
   <p>© <span id="copy-year"></span> FindTheSnakes. Not affiliated with Instagram or Meta.</p>
   <div class="foo
+
+<script>
+document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger-btn');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+</script>
+</body>
+</html>
