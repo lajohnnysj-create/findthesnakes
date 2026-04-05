@@ -2075,12 +2075,13 @@ async function confirmCancel() {
     return;
   }
 
-  // Update local tier
-  userTier = 'free';
+  // Update local tier to cancelling — keeps Pro access until period ends
+  userTier = 'cancelling';
   closeCancelModal();
   updateNavTierBadge();
   updateToolBtns();
-  showToast('Your subscription has been cancelled. You keep full Pro access until the end of your billing period.');
+  const endDate = data?.periodEnd ? ` Your access expires on ${data.periodEnd}.` : ' You keep full Pro access until the end of your billing period.';
+  showToast('Your subscription has been cancelled.' + endDate);
 }
 
 function updateNavTierBadge() {
