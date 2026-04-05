@@ -806,6 +806,7 @@
     <div class="modal-msg" id="auth-msg"></div>
     <input class="modal-input" type="email" id="auth-email" placeholder="you@email.com">
     <input class="modal-input" type="password" id="auth-password" placeholder="Password" style="margin-bottom:4px">
+    <div id="forgot-password-link" style="text-align:right;margin-bottom:12px;"><a onclick="handleForgotPassword()" style="font-size:13px;color:var(--accent);cursor:pointer;text-decoration:none;">Forgot password?</a></div>
     <button class="modal-btn" id="auth-submit-btn" onclick="handleAuth()">Continue</button>
     <div class="modal-switch" id="auth-switch">
       No account? <a onclick="toggleAuthMode()">Create one free</a>
@@ -1326,6 +1327,8 @@ function syncAuthModal() {
   document.getElementById('auth-switch').innerHTML = isSignIn
     ? 'No account? <a onclick="toggleAuthMode()">Create one free</a>'
     : 'Already have one? <a onclick="toggleAuthMode()">Sign in</a>';
+  const forgotLink = document.getElementById('forgot-password-link');
+  if (forgotLink) forgotLink.style.display = isSignIn ? 'block' : 'none';
   document.getElementById('auth-msg').style.display = 'none';
 }
 
@@ -1334,6 +1337,22 @@ function showAuthMsg(type, text) {
   el.className = 'modal-msg ' + type;
   el.textContent = text;
   el.style.display = 'block';
+}
+
+async function handleForgotPassword() {
+  const email = document.getElementById('auth-email').value.trim();
+  if (!email) {
+    showAuthMsg('error', 'Please enter your email address first.');
+    return;
+  }
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://findthesnakes.com/reset-password.html',
+  });
+  if (error) {
+    showAuthMsg('error', error.message);
+  } else {
+    showAuthMsg('success', 'Password reset email sent! Check your inbox.');
+  }
 }
 
 async function handleAuth() {
