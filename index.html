@@ -1469,19 +1469,14 @@ function checkPaymentReturn() {
   if (params.get('payment') === 'success') {
     window.history.replaceState({}, '', window.location.pathname);
 
-    // Try to restore results from localStorage
+    // Clear any stale localStorage
     try {
-      const saved = localStorage.getItem('fts_results');
-      if (saved) {
-        allResults = JSON.parse(saved);
-        localStorage.removeItem('fts_results');
-        localStorage.removeItem('fts_results_date');
-      }
+      localStorage.removeItem('fts_results');
+      localStorage.removeItem('fts_results_date');
     } catch(e) {}
 
-    // Wait for auth to load AND webhook to update Supabase, then re-render
-    const waitForAuthAndRender = async () => {
-      // Wait up to 8 seconds for currentUser to be set
+    // Wait for auth to load, then fetch new tier and prompt re-upload
+    const waitForAuth = async () => {
       let attempts = 0;
       while (!currentUser && attempts < 16) {
         await new Promise(r => setTimeout(r, 500));
@@ -1489,24 +1484,19 @@ function checkPaymentReturn() {
       }
       if (!currentUser) return;
 
-      // Now wait for webhook to update Supabase
+      // Wait for webhook to update Supabase
       await new Promise(r => setTimeout(r, 2500));
       await fetchTier(currentUser.id);
 
-      if (allResults.length) {
-        renderResults();
-        showToast('🎉 Payment successful! Your full results are now unlocked.');
-      } else {
-        showToast('🎉 Payment successful! Upload your files below to see your full results.');
-      }
-      // Always scroll to upload tool section
+      // Show success message and scroll to upload
+      showToast('🎉 Payment successful! Upload your Instagram files below to see your full results.');
       setTimeout(() => {
         const tool = document.getElementById('tool');
         if (tool) tool.scrollIntoView({ behavior: 'smooth' });
       }, 500);
     };
 
-    waitForAuthAndRender();
+    waitForAuth();
   }
 }
 
@@ -2607,12 +2597,6 @@ function analyze() {
       if (!following.has(handle)) allResults.push({ handle, followerOnly: true });
     });
     allResults.sort((a, b) => a.handle.localeCompare(b.handle));
-
-    // Save to localStorage so results survive a Stripe redirect
-    try {
-      localStorage.setItem('fts_results', JSON.stringify(allResults));
-      localStorage.setItem('fts_results_date', new Date().toISOString());
-    } catch(e) {}
 
     renderResults();
 
