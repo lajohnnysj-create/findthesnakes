@@ -196,7 +196,7 @@
   #results { display: none; margin-top: 36px; }
   .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
   .results-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
-  .results-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(232,68,90,0.1); border: 1px solid rgba(232,68,90,0.3); color: #ff8fa0; border-radius: 100px; padding: 4px 14px; font-size: 13px; }
+  .results-badge { display: none; align-items: center; gap: 6px; background: rgba(232,68,90,0.1); border: 1px solid rgba(232,68,90,0.3); color: #ff8fa0; border-radius: 100px; padding: 4px 14px; font-size: 13px; }
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
   .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
   .stat-card .num { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; line-height: 1; }
@@ -2635,7 +2635,11 @@ function renderResults() {
     <div class="stat-card safe"><div class="num">${mutuals.length}</div><div class="lbl">Mutual followers</div></div>
     <div class="stat-card"><div class="num">${followerOnly.length}</div><div class="lbl">Follow you only</div></div>`;
 
-  document.getElementById('results-badge').textContent = `${allResults.length} accounts analyzed`;
+  const badge = document.getElementById('results-badge');
+  if (badge) {
+    badge.style.display = 'inline-flex';
+    badge.textContent = `${allResults.length} accounts analyzed`;
+  }
   const _results = document.getElementById('results');
   if (_results) _results.style.display = 'block';
   document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
