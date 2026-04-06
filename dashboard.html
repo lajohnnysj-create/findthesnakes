@@ -805,15 +805,15 @@ body { overflow-x: hidden; }
 </div>
 
 <!-- SIGN OUT MODAL -->
-<div class="modal-backdrop" id="signout-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
-  <div class="modal" style="max-width:420px;width:90%;background:var(--surface);border:1px solid var(--border-hover);border-radius:20px;padding:40px 32px;text-align:center;position:relative;">
-    <button onclick="closeSignoutModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;">✕</button>
+<div id="signout-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;pointer-events:all;">
+  <div style="max-width:420px;width:90%;background:#12121a;border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:40px 32px;text-align:center;position:relative;z-index:10000;pointer-events:all;">
+    <button onclick="closeSignoutModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#7a788f;font-size:20px;cursor:pointer;line-height:1;pointer-events:all;z-index:10001;">✕</button>
     <div style="font-size:48px;margin-bottom:16px;">👋</div>
-    <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;">Sign out?</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.6;">You'll need to sign back in to access your dashboard and results.</p>
+    <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;color:#f0eef8;">Sign out?</h2>
+    <p style="color:#7a788f;font-size:14px;margin-bottom:28px;line-height:1.6;">You'll need to sign back in to access your dashboard and results.</p>
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <button onclick="confirmSignOut()" id="signout-confirm-btn" style="padding:14px;background:var(--accent);border:none;color:#fff;border-radius:10px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f05570'" onmouseout="this.style.background='var(--accent)'">Yes, sign me out</button>
-      <button onclick="closeSignoutModal()" style="padding:14px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Cancel</button>
+      <button onclick="confirmSignOut()" id="signout-confirm-btn" style="padding:14px;background:#e8445a;border:none;color:#fff;border-radius:10px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;pointer-events:all;">Yes, sign me out</button>
+      <button onclick="closeSignoutModal()" style="padding:14px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#7a788f;border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;cursor:pointer;pointer-events:all;">Cancel</button>
     </div>
   </div>
 </div>
