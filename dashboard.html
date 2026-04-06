@@ -894,6 +894,7 @@ body { overflow-x: hidden; }
         <div class="dashboard-welcome" id="dashboard-welcome">
           <div class="dashboard-welcome-text">
             <strong>Welcome back! 👋</strong> Your tools are ready. Upload your Instagram files above to run a new analysis.
+            <span id="last-audit-msg"></span>
           </div>
           <button class="dashboard-welcome-btn" onclick="document.getElementById('followers-zone').scrollIntoView({behavior:'smooth'});window.scrollBy(0,-100)">Upload files ↑</button>
         </div>
@@ -1124,6 +1125,18 @@ function showDashboard() {
   if (results) results.style.display = 'block';
 
   // Banner visibility handled by fetchTier
+
+  // Show last audit date for Pro users
+  const lastAuditMsg = document.getElementById('last-audit-msg');
+  if (lastAuditMsg) {
+    if (userTier === 'monthly' && auditHistory.length > 0) {
+      const lastDate = new Date(auditHistory[0].created_at);
+      const formatted = lastDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      lastAuditMsg.innerHTML = ` — you last ran an audit on <strong style="color:var(--text)">${formatted}</strong>`;
+    } else {
+      lastAuditMsg.innerHTML = '';
+    }
+  }
 
   // Hide marketing sections for logged-in users
 
@@ -1544,6 +1557,14 @@ async function loadAuditHistory() {
       lastAuditUnfollowers = new Set(data[1].unfollowers);
     } else {
       lastAuditUnfollowers = new Set();
+    }
+
+    // Update last audit message in welcome banner
+    const lastAuditMsg = document.getElementById('last-audit-msg');
+    if (lastAuditMsg && auditHistory.length > 0) {
+      const lastDate = new Date(auditHistory[0].created_at);
+      const formatted = lastDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      lastAuditMsg.innerHTML = ` — you last ran an audit on <strong style="color:var(--text)">${formatted}</strong>`;
     }
 
     renderAuditHistory();
