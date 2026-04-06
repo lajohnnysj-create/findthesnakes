@@ -2084,6 +2084,24 @@ function updateNavTierBadge() {
   // Show upgrade banner for free and one-time users
   if (upgradeBanner) {
     upgradeBanner.classList.toggle('visible', userTier === 'free' || userTier === 'one_time');
+    const upgradeOneBtn = document.getElementById('upgrade-btn-one');
+    if (upgradeOneBtn) {
+      if (userTier === 'one_time') {
+        // Paid but not yet used — disable the button
+        upgradeOneBtn.disabled = true;
+        upgradeOneBtn.textContent = 'Analysis Ready ✓';
+        upgradeOneBtn.style.opacity = '0.45';
+        upgradeOneBtn.style.cursor = 'not-allowed';
+        upgradeOneBtn.title = 'You already have an analysis ready to use. Upload your files above!';
+      } else {
+        // Free — enable the button
+        upgradeOneBtn.disabled = false;
+        upgradeOneBtn.textContent = 'One-time unlock — $3';
+        upgradeOneBtn.style.opacity = '1';
+        upgradeOneBtn.style.cursor = 'pointer';
+        upgradeOneBtn.title = '';
+      }
+    }
   }
 
   if (userTier === 'monthly') {
