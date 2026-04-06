@@ -1026,12 +1026,16 @@ async function setUser(user) {
   if (_emailDisplay) _emailDisplay.textContent = user.email;
   const _signinBtn = document.getElementById('nav-signin-btn');
   if (_signinBtn) _signinBtn.style.display = 'none';
+  // Run all data loads in parallel - much more efficient
   await fetchTier(user.id);
-  await loadWhitelist();
-  await loadAuditHistory();
-  await loadNotes();
-  await loadUnfollowerLog();
-  await loadSnakeList();
+  await Promise.all([
+    loadWhitelist(),
+    loadAuditHistory(),
+    loadNotes(),
+    loadSnakeList(),
+  ]);
+  // Load unfollower log lazily - only when tab is clicked
+  // await loadUnfollowerLog(); -- moved to setFilter
 
   // Always show dashboard tools
   showDashboard();
@@ -1454,7 +1458,7 @@ async function loadAuditHistory() {
     .select('*')
     .eq('user_id', currentUser.id)
     .order('created_at', { ascending: false })
-    .limit(20);
+    .limit(10);
 
   if (data) {
     auditHistory = data;
@@ -2789,7 +2793,9 @@ function setFilter(f, btn) {
     if (paywallContainer) paywallContainer.style.display = 'none';
     if (wlBanner) wlBanner.style.display = 'none';
     document.querySelector('.result-header-row') && (document.querySelector('.result-header-row').style.display = 'none');
-    renderUnfollowerLog();
+    // Load log lazily on first click
+    if (!unfollowerLog.length) loadUnfollowerLog().then(() => renderUnfollowerLog());
+    else renderUnfollowerLog();
   } else if (f === 'snakes') {
     if (snakeSection) snakeSection.style.display = 'block';
     if (resultsList) resultsList.style.display = 'none';
