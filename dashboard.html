@@ -735,7 +735,38 @@
   .print-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 
-/* ── DASHBOARD SPECIFIC ── */
+
+  .upgrade-banner {
+    display: none;
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(232,68,90,0.05) 100%);
+    border: 1px solid rgba(232,68,90,0.2);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .upgrade-banner.visible { display: flex; }
+  .upgrade-banner-text { font-size: 14px; color: var(--muted); }
+  .upgrade-banner-text strong { color: var(--text); font-weight: 500; }
+  .upgrade-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .upgrade-btn-one {
+    padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
+    background: transparent; border: 1px solid var(--border-hover); color: var(--text);
+  }
+  .upgrade-btn-one:hover { border-color: var(--accent); color: var(--accent); }
+  .upgrade-btn-pro {
+    padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
+    background: var(--accent); border: none; color: #fff;
+    box-shadow: 0 0 20px rgba(232,68,90,0.25);
+  }
+  .upgrade-btn-pro:hover { background: #f05570; transform: translateY(-1px); }
+
+  /* ── DASHBOARD SPECIFIC ── */
 body { overflow-x: hidden; }
 .dash-nav {
   position: sticky; top: 0; z-index: 200;
@@ -791,6 +822,17 @@ body { overflow-x: hidden; }
 
 <!-- MAIN CONTENT -->
 <div class="dash-main">
+
+  <!-- UPGRADE BANNER (shown for free/one-time users) -->
+  <div class="upgrade-banner visible" id="upgrade-banner">
+    <div class="upgrade-banner-text">
+      <strong>Upgrade to unlock full results</strong> — See everyone who unfollowed you, manage your whitelist, snake list, audit history and more.
+    </div>
+    <div class="upgrade-btns">
+      <button class="upgrade-btn-one" id="upgrade-btn-one" onclick="startCheckout('one_time')">One-time unlock — $3</button>
+      <button class="upgrade-btn-pro" onclick="startCheckout('monthly')">Go Pro — $10/mo ⭐</button>
+    </div>
+  </div>
 
   <!-- TOOL SECTION -->
   <section id="tool" style="background:transparent;padding:0;border:none;">
@@ -1062,6 +1104,8 @@ function showDashboard() {
   const results = document.getElementById('results');
   if (results) results.style.display = 'block';
 
+  // Banner visibility handled by fetchTier
+
   // Hide marketing sections for logged-in users
 
   // Show welcome banner
@@ -1159,11 +1203,13 @@ function handleSignOut() {
 }
 
 async function signOut() {
-  const btn = document.getElementById('signout-btn');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="auth-spinner"></span> Signing out…'; }
-  // Wait for Supabase to clear session, then redirect
-  await sb.auth.signOut();
-  window.location.href = 'index.html?signedout=1';
+  try {
+    await sb.auth.signOut();
+  } catch(err) {
+    console.error('Sign out error:', err);
+  } finally {
+    window.location.href = 'index.html';
+  }
 }
 
 // ════════════════════════════════════════════
@@ -2032,7 +2078,13 @@ function updateNavTierBadge() {
   updateMobileMenu();
   const badge = document.getElementById('nav-tier-badge');
   const cancelBtn = document.getElementById('cancel-sub-btn');
+  const upgradeBanner = document.getElementById('upgrade-banner');
   if (!badge) return;
+
+  // Show upgrade banner for free and one-time users
+  if (upgradeBanner) {
+    upgradeBanner.classList.toggle('visible', userTier === 'free' || userTier === 'one_time');
+  }
 
   if (userTier === 'monthly') {
     const isCancelling = userStatus === 'cancelling';

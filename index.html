@@ -1203,12 +1203,7 @@ async function initAuth() {
 
   sb.auth.onAuthStateChange((_event, session) => {
     if (_event === 'SIGNED_IN' && session?.user) {
-      // Give handleAuth time to set pendingCheckout first
-      setTimeout(() => {
-        if (!pendingCheckout) {
-          window.location.href = 'dashboard.html';
-        }
-      }, 800);
+      window.location.href = 'dashboard.html';
     }
   });
 }
@@ -1463,14 +1458,7 @@ async function handleAuth() {
     } else {
       closeAuthModal();
       // If checkout was pending, go to checkout — otherwise go to dashboard
-      if (pendingCheckout) {
-        const plan = pendingCheckout;
-        currentUser = result.data.user; // set user before checkout
-        await startCheckout(plan); // go straight to Stripe
-        pendingCheckout = null; // clear after checkout initiated
-      } else {
-        window.location.href = 'dashboard.html';
-      }
+      window.location.href = 'dashboard.html';
     }
   }
 }
@@ -1481,9 +1469,7 @@ async function handleAuth() {
 async function startCheckout(planType) {
   try {
   if (!currentUser) {
-    pendingCheckout = planType;
     openAuthModal();
-    showAuthMsg('error', 'Sign in or create a free account to continue to checkout.');
     return;
   }
 
