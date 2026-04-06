@@ -804,6 +804,20 @@ body { overflow-x: hidden; }
   </div>
 </div>
 
+<!-- SIGN OUT MODAL -->
+<div class="modal-backdrop" id="signout-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
+  <div class="modal" style="max-width:420px;width:90%;background:var(--surface);border:1px solid var(--border-hover);border-radius:20px;padding:40px 32px;text-align:center;position:relative;">
+    <button onclick="closeSignoutModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;">✕</button>
+    <div style="font-size:48px;margin-bottom:16px;">👋</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;">Sign out?</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.6;">You'll need to sign back in to access your dashboard and results.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button onclick="confirmSignOut()" id="signout-confirm-btn" style="padding:14px;background:var(--accent);border:none;color:#fff;border-radius:10px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f05570'" onmouseout="this.style.background='var(--accent)'">Yes, sign me out</button>
+      <button onclick="closeSignoutModal()" style="padding:14px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- DASHBOARD NAV -->
 <nav class="dash-nav">
   <a class="dash-logo" href="index.html"><span class="dash-logo-dot"></span>FindTheSnakes</a>
@@ -972,7 +986,7 @@ body { overflow-x: hidden; }
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
       <button id="cancel-sub-btn" style="display:none;padding:10px 20px;background:transparent;border:1px solid rgba(255,255,255,0.5);color:rgba(255,255,255,0.8);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff';this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.5)';this.style.color='rgba(255,255,255,0.8)';this.style.background='transparent'" onclick="handleSubBtn()">Cancel plan</button>
-      <button id="signout-btn" onclick="handleSignOut()" style="padding:10px 20px;background:var(--accent);border:none;color:#fff;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f05570'" onmouseout="this.style.background='var(--accent)'">Sign out</button>
+      <button id="signout-btn" onclick="openSignoutModal()" style="padding:10px 20px;background:var(--accent);border:none;color:#fff;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f05570'" onmouseout="this.style.background='var(--accent)'">Sign out</button>
     </div>
   </div>
 </div>
@@ -1010,6 +1024,10 @@ if (_authModal) _authModal.addEventListener('click', function(e) {
 const _cancelModal = document.getElementById('cancel-modal');
 if (_cancelModal) _cancelModal.addEventListener('click', function(e) {
   if (e.target === this) closeCancelModal();
+});
+const _signoutModal = document.getElementById('signout-modal');
+if (_signoutModal) _signoutModal.addEventListener('click', function(e) {
+  if (e.target === this) closeSignoutModal();
 });
 
 window.onerror = function(msg, src, line, col, err) {
@@ -1194,13 +1212,24 @@ async function fetchTier(userId) {
 }
 
 
+function openSignoutModal() {
+  const modal = document.getElementById('signout-modal');
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeSignoutModal() {
+  const modal = document.getElementById('signout-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function confirmSignOut() {
+  const btn = document.getElementById('signout-confirm-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="auth-spinner"></span> Signing out…'; }
+  await signOut();
+}
+
 function handleSignOut() {
-  const btn = document.getElementById('signout-btn');
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<span class="auth-spinner"></span> Signing out…';
-  }
-  signOut();
+  openSignoutModal();
 }
 
 async function signOut() {
