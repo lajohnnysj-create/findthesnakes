@@ -1438,7 +1438,7 @@ async function toggleWhitelist(handle) {
     filterResults();
     if (currentFilter === 'whitelist') renderWhitelistSection();
     // Sync to Supabase in background
-    sb.from('whitelist').delete().eq('user_id', currentUser.id).eq('handle', handle);
+    sb.functions.invoke('manage-whitelist', { body: { userId: currentUser.id, handle, action: 'remove' } });
   } else {
     // Update UI instantly
     userWhitelist.add(handle);
@@ -1446,7 +1446,7 @@ async function toggleWhitelist(handle) {
     filterResults();
     if (currentFilter === 'whitelist') renderWhitelistSection();
     // Sync to Supabase in background
-    sb.from('whitelist').insert({ user_id: currentUser.id, handle });
+    sb.functions.invoke('manage-whitelist', { body: { userId: currentUser.id, handle, action: 'add' } });
   }
   updateWhitelistTabCount();
 }
@@ -1454,7 +1454,7 @@ async function toggleWhitelist(handle) {
 
 async function clearWhitelist() {
   if (!currentUser || userTier !== 'monthly') return;
-  await sb.from('whitelist').delete().eq('user_id', currentUser.id);
+  sb.functions.invoke('manage-whitelist', { body: { userId: currentUser.id, action: 'clear' } });
   userWhitelist.clear();
   showMiniToast('Whitelist cleared');
   filterResults();
