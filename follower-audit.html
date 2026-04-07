@@ -888,7 +888,7 @@ body { overflow-x: hidden; }
 </div>
 
 <!-- LOADING MODAL -->
-<div id="loading-overlay" style="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;pointer-events:all;">
+<div id="loading-overlay" style="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;pointer-events:all;">
   <div style="background:#12121a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px 36px;text-align:center;position:relative;min-width:280px;pointer-events:all;">
     <button onclick="document.getElementById('loading-overlay').style.display='none'" style="position:absolute;top:12px;right:14px;background:none;border:none;color:#7a788f;font-size:18px;cursor:pointer;line-height:1;">✕</button>
     <div style="width:36px;height:36px;border:3px solid rgba(232,68,90,0.2);border-top-color:#e8445a;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
@@ -913,15 +913,6 @@ body { overflow-x: hidden; }
 </div>
 
 <!-- LOADING MODAL -->
-<div id="loading-overlay" style="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;pointer-events:all;">
-  <div style="background:#12121a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px 36px;text-align:center;position:relative;min-width:280px;pointer-events:all;">
-    <button onclick="document.getElementById('loading-overlay').style.display='none'" style="position:absolute;top:12px;right:14px;background:none;border:none;color:#7a788f;font-size:18px;cursor:pointer;line-height:1;">✕</button>
-    <div style="width:36px;height:36px;border:3px solid rgba(232,68,90,0.2);border-top-color:#e8445a;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
-    <p style="color:#f0eef8;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;margin-bottom:6px;">Loading your tools…</p>
-    <p style="color:#7a788f;font-size:13px;font-family:'DM Sans',sans-serif;">Please wait a moment</p>
-  </div>
-</div>
-
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
   <button onclick="closeMobileMenu()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;padding:4px;">✕</button>
@@ -946,7 +937,7 @@ body { overflow-x: hidden; }
 <div class="dash-main">
 
   <!-- UPGRADE BANNER (shown for free/one-time users) -->
-  <div class="upgrade-banner visible" id="upgrade-banner">
+  <div class="upgrade-banner" id="upgrade-banner">
     <div class="upgrade-banner-text">
       <strong>Upgrade to unlock full results</strong> — See everyone who unfollowed you, manage your whitelist, snake list, audit history and more.
     </div>
