@@ -347,7 +347,8 @@
         <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
           <div style="margin-bottom:16px;">
             <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">URL or Text</label>
-            <input type="text" id="qr-text" placeholder="https://yourwebsite.com" oninput="previewQR()" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:15px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-hover)'">
+            <input type="text" id="qr-text" placeholder="https://yourwebsite.com" onkeydown="if(event.key==='Enter') generateQR()" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:15px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-hover)'">
+            <button onclick="generateQR()" style="margin-top:12px;width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px var(--accent-glow);">Generate QR Code</button>
           </div>
 
           <div id="qr-pro-options" style="display:none;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
