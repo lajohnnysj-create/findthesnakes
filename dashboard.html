@@ -354,14 +354,14 @@
             <div>
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Foreground color</label>
               <div style="display:flex;align-items:center;gap:10px;">
-                <input type="color" id="qr-fg-color" value="#000000" oninput="previewQR()" style="width:40px;height:36px;border:1px solid var(--border-hover);border-radius:6px;cursor:pointer;background:none;padding:2px;">
+                <input type="color" id="qr-fg-color" value="#000000" oninput="generateQR()" style="width:40px;height:36px;border:1px solid var(--border-hover);border-radius:6px;cursor:pointer;background:none;padding:2px;">
                 <span id="qr-fg-hex" style="font-size:13px;color:var(--muted);">#000000</span>
               </div>
             </div>
             <div>
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Background color</label>
               <div style="display:flex;align-items:center;gap:10px;">
-                <input type="color" id="qr-bg-color" value="#ffffff" oninput="previewQR()" style="width:40px;height:36px;border:1px solid var(--border-hover);border-radius:6px;cursor:pointer;background:none;padding:2px;">
+                <input type="color" id="qr-bg-color" value="#ffffff" oninput="generateQR()" style="width:40px;height:36px;border:1px solid var(--border-hover);border-radius:6px;cursor:pointer;background:none;padding:2px;">
                 <span id="qr-bg-hex" style="font-size:13px;color:var(--muted);">#ffffff</span>
               </div>
             </div>
@@ -561,7 +561,7 @@ function showTool(tool) {
   if (toolArea) toolArea.style.padding = tool === 'follower' ? '0' : '32px';
   // Init tools on first open
   if (tool === 'image') initImageConverter();
-  if (tool === 'qr') { initQRGenerator(); loadQRLibrary(); }
+  if (tool === 'qr') { initQRGenerator(); loadQRLibrary(null); }
   if (tool === 'invoice') initInvoiceGenerator();
   // Close sidebar on mobile
   closeSidebar();
@@ -761,36 +761,40 @@ function initQRGenerator() {
   });
 }
 
-function previewQR() {
+function generateQR() {
   const text = document.getElementById('qr-text').value.trim();
   if (!text) {
     document.getElementById('qr-preview-area').style.display = 'none';
     document.getElementById('qr-empty').style.display = 'block';
     return;
   }
-  document.getElementById('qr-empty').style.display = 'none';
-  document.getElementById('qr-preview-area').style.display = 'block';
-  generateQRCanvas(text);
+  // Load library if not loaded yet
+  if (typeof QRious === 'undefined') {
+    loadQRLibrary(() => renderQRCanvas(text));
+  } else {
+    renderQRCanvas(text);
+  }
 }
 
-function generateQRCanvas(text) {
+function renderQRCanvas(text) {
   const isPro = userTier === 'monthly';
   const fg = isPro ? (document.getElementById('qr-fg-color')?.value || '#000000') : '#000000';
   const bg = isPro ? (document.getElementById('qr-bg-color')?.value || '#ffffff') : '#ffffff';
+  renderQRCanvas(document.getElementById('qr-text').value.trim());
   const canvas = document.getElementById('qr-canvas');
-  const size = 256;
-  canvas.width = size; canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  if (typeof QRCode !== 'undefined') {
-    QRCode.toCanvas(canvas, text, { width: size, color: { dark: fg, light: bg }, errorCorrectionLevel: 'H' }, err => {
-      if (err) console.error(err);
+  try {
+    new QRious({
+      element: canvas,
+      value: text,
+      size: 256,
+      foreground: fg,
+      background: bg,
+      level: 'H'
     });
-  } else {
-    // Fallback: simple visual if library not loaded
-    ctx.fillStyle = bg; ctx.fillRect(0,0,size,size);
-    ctx.fillStyle = fg; ctx.font = '12px monospace'; ctx.textAlign = 'center';
-    ctx.fillText('QR Code', size/2, size/2 - 8);
-    ctx.fillText(text.slice(0,30), size/2, size/2 + 8);
+    document.getElementById('qr-empty').style.display = 'none';
+    document.getElementById('qr-preview-area').style.display = 'block';
+  } catch(e) {
+    console.error('QR error:', e);
   }
 }
 
@@ -1005,11 +1009,12 @@ ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'
 // ════════════════════════════════════════════
 
 
-function loadQRLibrary() {
-  if (typeof QRCode !== 'undefined') return;
+function loadQRLibrary(callback) {
+  if (typeof QRious !== 'undefined') { if (callback) callback(); return; }
   const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-  script.onload = () => { if (document.getElementById('qr-text').value) previewQR(); };
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js';
+  script.onload = () => { if (callback) callback(); };
+  script.onerror = () => console.error('Failed to load QR library');
   document.head.appendChild(script);
 }
 
