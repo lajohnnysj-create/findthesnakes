@@ -1108,8 +1108,10 @@ ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'
   <span style="font-size:14px;font-weight:600;">&#x1F4BE; To save as PDF: Press <kbd style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:4px;">Ctrl+P</kbd> (or <kbd style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:4px;">Cmd+P</kbd> on Mac) then choose "Save as PDF"</span>
   <button onclick="window.print()" style="background:#fff;color:#7c3aed;border:none;border-radius:6px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;">&#x1F5A8; Print / Save PDF</button>
 </div>
-<div style="height:52px;"></div>
-<style>@media print { #save-bar, div[style*="height:52px"] { display:none !important; } body { padding: 0 !important; } }</style>
+<style>
+  body { padding-top: 64px !important; }
+  @media print { #save-bar { display:none !important; } body { padding-top: 0 !important; } }
+</style>
 </body></html>`);
 
   const blob = new Blob([printHtml], { type: 'text/html' });
