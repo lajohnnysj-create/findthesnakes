@@ -41,7 +41,8 @@
   .sidebar-logo { padding: 20px 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .sidebar-logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
   .sidebar-logo-text { font-family: "Syne", sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -0.3px; color: var(--text); }
-  .sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+  .sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .sidebar-nav::-webkit-scrollbar { display: none; }
   .sidebar-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); font-weight: 600; padding: 8px 12px 4px; margin-top: 8px; }
   .sidebar-item {
     display: flex; align-items: center; gap: 12px; padding: 10px 12px;
@@ -121,6 +122,7 @@
     .mobile-menu-btn { display: flex; }
     .tool-area { padding: 20px 16px; }
     .welcome-tools-grid { grid-template-columns: 1fr; }
+    #tool-follower { left: 0 !important; }
   }
 </style>
 </head>
@@ -269,11 +271,11 @@
     </div>
 
     <!-- FOLLOWER AUDIT TOOL -->
-    <div id="tool-follower" style="display:none;">
+    <div id="tool-follower" style="display:none;position:fixed;top:60px;left:240px;right:0;bottom:0;z-index:10;">
       <iframe 
         src="follower-audit.html" 
         id="follower-iframe"
-        style="width:100%;height:calc(100vh - 60px);border:none;display:block;"
+        style="width:100%;height:100%;border:none;display:block;"
         allow="clipboard-write">
       </iframe>
     </div>
