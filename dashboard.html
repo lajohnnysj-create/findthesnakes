@@ -1102,20 +1102,20 @@ ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'
 <div class="footer">Generated with FindTheSnakes Creator Tools &bull; findthesnakes.com</div>
 </body></html>`;
 
-  // Create hidden iframe, write invoice HTML, trigger print to PDF
-  let iframe = document.getElementById('invoice-print-frame');
-  if (iframe) iframe.remove();
-  iframe = document.createElement('iframe');
-  iframe.id = 'invoice-print-frame';
-  iframe.style.cssText = 'position:fixed;left:-9999px;top:0;width:0;height:0;border:none;';
-  document.body.appendChild(iframe);
-  iframe.contentDocument.open();
-  iframe.contentDocument.write(html);
-  iframe.contentDocument.close();
-  setTimeout(() => {
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
-  }, 800);
+  // Add print CSS and save button to the invoice HTML before opening
+  const printHtml = html.replace('</body></html>', `
+<div id="save-bar" style="position:fixed;top:0;left:0;right:0;background:#7c3aed;color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:9999;font-family:Arial,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+  <span style="font-size:14px;font-weight:600;">&#x1F4BE; To save as PDF: Press <kbd style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:4px;">Ctrl+P</kbd> (or <kbd style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:4px;">Cmd+P</kbd> on Mac) then choose "Save as PDF"</span>
+  <button onclick="window.print()" style="background:#fff;color:#7c3aed;border:none;border-radius:6px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;">&#x1F5A8; Print / Save PDF</button>
+</div>
+<div style="height:52px;"></div>
+<style>@media print { #save-bar, div[style*="height:52px"] { display:none !important; } body { padding: 0 !important; } }</style>
+</body></html>`);
+
+  const blob = new Blob([printHtml], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
 
   if (!isPro) {
     invDailyCount++;
