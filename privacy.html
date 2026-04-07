@@ -35,10 +35,10 @@
   .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
   .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
   .nav-cta { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; box-shadow: 0 0 20px var(--accent-glow); font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
-  .nav-cta:hover { background: #f05570; transform: translateY(-1px); }
+  .nav-cta:hover { background: #a855f7; transform: translateY(-1px); }
 
   .page-header { padding: 72px 48px 48px; text-align: center; position: relative; overflow: hidden; }
-  .page-header::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 500px; height: 500px; background: radial-gradient(ellipse, rgba(232,68,90,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .page-header::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 500px; height: 500px; background: radial-gradient(ellipse, rgba(124,58,237,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
   .page-header h1 { font-family: 'Syne', sans-serif; font-size: clamp(28px, 4vw, 48px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 12px; }
   .page-header p { font-size: 14px; color: var(--muted); }
 
@@ -86,7 +86,7 @@
   .nav-links a:hover, .nav-links a.active { color: var(--text); }
   .nav-right { display: flex; align-items: center; gap: 12px; }
   .nav-cta { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; box-shadow: 0 0 20px var(--accent-glow); font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
-  .nav-cta:hover { background: #f05570; transform: translateY(-1px); }
+  .nav-cta:hover { background: #a855f7; transform: translateY(-1px); }
 
   /* ── HAMBURGER ── */
   .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; border-radius: 8px; transition: background 0.2s; }
@@ -104,7 +104,7 @@
   .mobile-menu-links a:hover { color: var(--accent2); }
   .mobile-menu-bottom { margin-top: 32px; }
   .mobile-cta { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; display: block; text-align: center; }
-  .mobile-cta:hover { background: #f05570; }
+  .mobile-cta:hover { background: #a855f7; }
 
   @media (max-width: 768px) {
     nav { padding: 16px 20px; }
@@ -116,22 +116,8 @@
 </head>
 <body>
 
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobile-menu">
-  <div class="mobile-menu-links">
-    <a href="pricing.html">Pricing</a>
-    <a href="instructions.html">Instructions</a>
-    <a href="faq.html">FAQ</a>
-    <a href="about.html">About</a>
-    <a href="blog.html">Blog</a>
-  </div>
-  <div class="mobile-menu-bottom">
-    <a class="mobile-cta" href="index.html#tool">Try it free →</a>
-  </div>
-</div>
-<!-- NAV -->
 <nav>
-  <a class="logo" href="index.html"><div class="logo-icon" style="width:28px;height:28px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">&#x1F40D;</div>FindTheSnakes</a>
+  <a class="logo" href="index.html">FindTheSnakes</a>
   <div class="nav-links">
     <a href="pricing.html">Pricing</a>
     <a href="instructions.html" >Instructions</a>
@@ -147,112 +133,80 @@
   </button>
 </nav>
 
-<div class="page-header">
-  <h1>Privacy Policy</h1>
-  <p>Last updated: <span id="policy-date"></span></p>
+<div style="max-width:760px;margin:0 auto;padding:80px 48px 100px;">
+  <div style="margin-bottom:48px;">
+    <span style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent2);font-weight:600;display:block;margin-bottom:12px;">Legal</span>
+    <h1 style="font-family:'Syne',sans-serif;font-size:clamp(32px,5vw,48px);font-weight:800;letter-spacing:-2px;margin-bottom:12px;">Privacy Policy</h1>
+    <p style="color:var(--muted);font-size:14px;">Last updated: April 2026</p>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:40px;font-size:15px;line-height:1.8;color:var(--muted);">
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">1. Overview</h2>
+      <p>FindTheSnakes ("we", "us", "our") operates findthesnakes.com and provides a suite of creator tools including a Follower Audit, Image Converter, QR Code Generator, and Invoice Generator. We are committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">2. Data We Collect</h2>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Account data:</strong> When you create an account, we collect your email address and store it securely via Supabase.</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Subscription data:</strong> If you upgrade to Pro, we store your subscription status and tier. Payment information is handled entirely by Stripe — we never see or store your credit card details.</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Tool data:</strong> For Pro users, we store feature data you create — such as your whitelist, snake list, audit history, unfollower log, and uploaded invoice logo. This data is associated with your account and stored securely.</p>
+      <p><strong style="color:var(--text);">Usage limits:</strong> Daily and monthly usage limits for tools (Image Converter, QR Generator, Invoice Generator) are tracked in your browser's local storage — not on our servers.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">3. Data We Do NOT Collect</h2>
+      <p style="margin-bottom:12px;">We do not collect, upload, or store the files you use with our tools. The Follower Audit processes your Instagram export files entirely in your browser — they are never sent to our servers. The Image Converter converts images entirely in your browser — your images are never uploaded anywhere.</p>
+      <p>We do not collect your Instagram password, login credentials, or any information from your Instagram account. We do not use cookies for advertising or tracking purposes.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">4. How We Use Your Data</h2>
+      <p>We use your data solely to provide and improve the FindTheSnakes service. This includes authenticating your account, managing your subscription, storing your Pro feature data, and sending important account-related emails (such as password resets and billing receipts). We do not use your data for advertising and we never sell your data to third parties.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">5. Third-Party Services</h2>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Supabase:</strong> We use Supabase for authentication and database storage. Your account data is stored on Supabase servers.</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Stripe:</strong> We use Stripe to process payments. Stripe handles all payment data securely and in compliance with PCI-DSS standards.</p>
+      <p><strong style="color:var(--text);">Vercel:</strong> Our website is hosted on Vercel. Standard server access logs may be collected by Vercel as part of hosting.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">6. Data Retention</h2>
+      <p>We retain your account data for as long as your account is active. If you cancel your Pro subscription, your Pro-specific data (audit history, snake list, whitelist, unfollower log) is retained for 30 days before being cleared. Your account remains active on the Free plan. If you request account deletion, we will delete all your data within 30 days.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">7. Your Rights</h2>
+      <p>You have the right to access, correct, or delete your personal data at any time. To request data deletion or a copy of your data, email us at hello@findthesnakes.com. We will respond within 30 days.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">8. Children's Privacy</h2>
+      <p>FindTheSnakes is not directed at children under 13. We do not knowingly collect personal information from children. If you believe a child has provided us with personal information, please contact us and we will delete it.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">9. Changes to This Policy</h2>
+      <p>We may update this policy from time to time. We will notify you of significant changes by posting the new policy on this page with an updated date. Continued use of the service after changes constitutes acceptance of the new policy.</p>
+    </div>
+
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">10. Contact</h2>
+      <p>If you have any questions about this Privacy Policy, please email us at <a href="mailto:hello@findthesnakes.com" style="color:var(--accent2);">hello@findthesnakes.com</a>.</p>
+    </div>
+
+  </div>
 </div>
 
-<div class="content">
 
-  <div class="highlight-box">
-    <p><strong>The short version:</strong> Your Instagram files are processed entirely in your browser and are never uploaded to our servers. For paid accounts, only your analysis results, whitelist, notes, and audit history are stored in our database to power your account features. We don't sell your data. Ever.</p>
-  </div>
-
-  <div class="section">
-    <h2>1. Who we are</h2>
-    <p>FindTheSnakes ("we", "us", or "our") is a web-based tool that helps Instagram users identify accounts that are not following them back. We are not affiliated with Instagram or Meta Platforms, Inc.</p>
-    <p>If you have any questions about this Privacy Policy, you can contact us at <a href="/cdn-cgi/l/email-protection#a0c8c5cccccfe0c6c9cec4d4c8c5d3cec1cbc5d38ec3cfcd"><span class="__cf_email__" data-cfemail="92faf7fefefdd2f4fbfcf6e6faf7e1fcf3f9f7e1bcf1fdff">[email&#160;protected]</span></a>.</p>
-  </div>
-
-  <div class="section">
-    <h2>2. Information we collect</h2>
-    <p>We collect the minimum information necessary to provide our service:</p>
-    <ul>
-      <li><strong>Instagram JSON files</strong> — Processed entirely in your browser. These files never leave your device and are never uploaded to our servers.</li>
-      <li><strong>Email address and password</strong> — Collected when you create an account. Your password is securely hashed by Supabase and never stored in plain text.</li>
-      <li><strong>Analysis results</strong> — For paid monthly subscribers, your follower/following analysis results are saved to power features like audit history and the unfollower log.</li>
-      <li><strong>Whitelist data</strong> — Accounts you choose to hide from your results, saved to your account.</li>
-      <li><strong>Notes</strong> — Private notes you add to accounts, saved to your account.</li>
-      <li><strong>Payment information</strong> — Processed entirely by Stripe. We never see or store your credit card details.</li>
-    </ul>
-  </div>
-
-  <div class="section">
-    <h2>3. How we use your information</h2>
-    <ul>
-      <li>To provide and maintain the FindTheSnakes service</li>
-      <li>To authenticate your account and keep it secure</li>
-      <li>To save your preferences, whitelist, notes, and audit history</li>
-      <li>To process payments through Stripe</li>
-      <li>To send account-related emails such as email verification and password resets</li>
-      <li>To improve our service based on usage patterns</li>
-    </ul>
-    <p>We do not use your data for advertising. We do not sell your data to third parties. We do not share your data with anyone except the service providers listed below.</p>
-  </div>
-
-  <div class="section">
-    <h2>4. Third-party services</h2>
-    <p>We use the following third-party services to operate FindTheSnakes:</p>
-    <ul>
-      <li><strong>Supabase</strong> — Database and authentication provider. Your account data is stored on Supabase servers. View their privacy policy at <a href="https://supabase.com/privacy" target="_blank" rel="noopener">supabase.com/privacy</a></li>
-      <li><strong>Stripe</strong> — Payment processing. All payment data is handled by Stripe. View their privacy policy at <a href="https://stripe.com/privacy" target="_blank" rel="noopener">stripe.com/privacy</a></li>
-      <li><strong>Vercel</strong> — Website hosting. View their privacy policy at <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">vercel.com/legal/privacy-policy</a></li>
-    </ul>
-  </div>
-
-  <div class="section">
-    <h2>5. Data retention</h2>
-    <p>We retain your data for as long as your account is active. If you delete your account, all associated data including your whitelist, notes, audit history, and unfollower log will be permanently deleted from our database.</p>
-    <p>To request account deletion, contact us at <a href="/cdn-cgi/l/email-protection#59313c353536193f30373d2d313c2a3738323c2a773a3634"><span class="__cf_email__" data-cfemail="a0c8c5cccccfe0c6c9cec4d4c8c5d3cec1cbc5d38ec3cfcd">[email&#160;protected]</span></a>.</p>
-  </div>
-
-  <div class="section">
-    <h2>6. Your rights</h2>
-    <p>Depending on your location, you may have the following rights regarding your personal data:</p>
-    <ul>
-      <li>The right to access the personal data we hold about you</li>
-      <li>The right to correct inaccurate data</li>
-      <li>The right to request deletion of your data</li>
-      <li>The right to data portability (export your data)</li>
-      <li>The right to withdraw consent at any time</li>
-    </ul>
-    <p>To exercise any of these rights, contact us at <a href="/cdn-cgi/l/email-protection#177f727b7b7857717e7973637f726479767c72643974787a"><span class="__cf_email__" data-cfemail="84ece1e8e8ebc4e2edeae0f0ece1f7eae5efe1f7aae7ebe9">[email&#160;protected]</span></a>.</p>
-  </div>
-
-  <div class="section">
-    <h2>7. Cookies</h2>
-    <p>We use minimal cookies necessary for authentication purposes only (to keep you logged in). We do not use tracking cookies or advertising cookies.</p>
-  </div>
-
-  <div class="section">
-    <h2>8. Children's privacy</h2>
-    <p>FindTheSnakes is not intended for users under the age of 13. We do not knowingly collect personal information from children under 13. If you believe we have inadvertently collected such information, please contact us immediately.</p>
-  </div>
-
-  <div class="section">
-    <h2>9. Changes to this policy</h2>
-    <p>We may update this Privacy Policy from time to time. We will notify you of any significant changes by updating the date at the top of this page. Continued use of FindTheSnakes after any changes constitutes your acceptance of the new policy.</p>
-  </div>
-
-  <div class="section">
-    <h2>10. Contact us</h2>
-    <p>If you have any questions about this Privacy Policy, please contact us at <a href="/cdn-cgi/l/email-protection#1b737e7777745b7d72757f6f737e68757a707e6835787476"><span class="__cf_email__" data-cfemail="157d7079797a55737c7b71617d70667b747e70663b767a78">[email&#160;protected]</span></a>.</p>
-  </div>
-
-</div>
-
-<footer>
-  <a class="logo" href="index.html"><span class="logo-
 
 <script>
 document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
-
-function toggleMobileMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const btn = document.getElementById('hamburger-btn');
-  menu.classList.toggle('open');
-  btn.classList.toggle('open');
-}
+function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); document.getElementById('hamburger-btn').classList.toggle('open'); }
+function closeMobileMenu() { document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('hamburger-btn').classList.remove('open'); }
 </script>
 </body>
 </html>
