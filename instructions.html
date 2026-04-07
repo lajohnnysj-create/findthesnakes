@@ -45,15 +45,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a26;
+    --bg: #07070f;
+    --surface: #0f0f1a;
+    --surface2: #161625;
     --border: rgba(255,255,255,0.07);
-    --border-hover: rgba(255,255,255,0.15);
-    --accent: #e8445a;
+    --border-hover: rgba(255,255,255,0.14);
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --accent-glow: rgba(124,58,237,0.3);
     --text: #f0eef8;
     --muted: #7a788f;
-    --muted2: #4a4860;
+    --muted2: #3d3b52;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -115,7 +117,7 @@
     font-weight: 800; letter-spacing: -2px; line-height: 1.05;
     margin-bottom: 16px;
   }
-  .page-header h1 em { font-style: normal; color: var(--accent); }
+  .page-header h1 em { font-style: normal; color: var(--accent2); }
   .page-header p {
     font-size: 17px; color: var(--muted); max-width: 480px;
     margin: 0 auto; line-height: 1.65; font-weight: 300;
@@ -157,7 +159,7 @@
     border: 1px solid rgba(232,68,90,0.3);
     display: flex; align-items: center; justify-content: center;
     font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
-    color: var(--accent); flex-shrink: 0;
+    color: var(--accent2); flex-shrink: 0;
   }
   .step-title {
     font-family: 'Syne', sans-serif;
@@ -171,7 +173,7 @@
   }
   .step-list li::before {
     content: '→';
-    color: var(--accent); font-weight: 700;
+    color: var(--accent2); font-weight: 700;
     flex-shrink: 0; margin-top: 1px;
   }
   .step-list li strong { color: var(--text); font-weight: 500; }
@@ -281,13 +283,13 @@
     background: rgba(10,10,15,0.85); backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
   }
-  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
   .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
   .nav-links { display: flex; gap: 36px; }
   .nav-links a { color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
   .nav-links a:hover, .nav-links a.active { color: var(--text); }
   .nav-right { display: flex; align-items: center; gap: 12px; }
-  .nav-cta { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .nav-cta { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; box-shadow: 0 0 20px var(--accent-glow); font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
   .nav-cta:hover { background: #f05570; transform: translateY(-1px); }
 
   /* ── HAMBURGER ── */
@@ -303,7 +305,7 @@
   .mobile-menu.open { display: flex; }
   .mobile-menu-links { display: flex; flex-direction: column; gap: 4px; flex: 1; }
   .mobile-menu-links a { color: var(--text); font-size: 22px; font-family: 'Syne', sans-serif; font-weight: 700; text-decoration: none; padding: 14px 0; border-bottom: 1px solid var(--border); transition: color 0.2s; letter-spacing: -0.5px; }
-  .mobile-menu-links a:hover { color: var(--accent); }
+  .mobile-menu-links a:hover { color: var(--accent2); }
   .mobile-menu-bottom { margin-top: 32px; }
   .mobile-cta { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; display: block; text-align: center; }
   .mobile-cta:hover { background: #f05570; }
@@ -321,6 +323,7 @@
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
   <div class="mobile-menu-links">
+    <a href="pricing.html">Pricing</a>
     <a href="instructions.html">Instructions</a>
     <a href="faq.html">FAQ</a>
     <a href="about.html">About</a>
@@ -332,8 +335,9 @@
 </div>
 <!-- NAV -->
 <nav>
-  <a class="logo" href="index.html"><span class="logo-dot"></span>FindTheSnakes</a>
+  <a class="logo" href="index.html"><div class="logo-icon" style="width:28px;height:28px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">&#x1F40D;</div>FindTheSnakes</a>
   <div class="nav-links">
+    <a href="pricing.html">Pricing</a>
     <a href="instructions.html" class="active">Instructions</a>
     <a href="faq.html" >FAQ</a>
     <a href="about.html">About</a>
@@ -506,11 +510,12 @@
 </div>
 
 <footer>
-  <a class="logo" href="index.html"><span class="logo-dot"></span>FindTheSnakes</a>
+  <a class="logo" href="index.html"><div class="logo-icon" style="width:28px;height:28px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">&#x1F40D;</div>FindTheSnakes</a>
   <p>© <span class="copy-year"></span> FindTheSnakes. Not affiliated with Instagram or Meta.</p>
   <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
     <a href="privacy.html" style="color:var(--muted);font-size:13px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Privacy Policy</a>
     <a href="terms.html" style="color:var(--muted);font-size:13px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Terms of Service</a>
+    <a href="pricing.html">Pricing</a>
     <a href="instructions.html" style="color:var(--muted);font-size:13px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Instructions</a>
     <a href="faq.html" style="color:var(--muted);font-size:13px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">FAQ</a>
   </div>
