@@ -404,7 +404,7 @@
                   <input type="file" id="inv-logo" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;" onchange="uploadLogo(this)">
                   <div id="logo-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;">
                     <div style="width:28px;height:28px;border-radius:50%;background:rgba(124,58,237,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;color:#a78bfa;">+</div>
-                    <span style="font-size:9px;color:var(--muted);text-align:center;line-height:1.3;">Logo</span>
+                    <span id="logo-placeholder-text" style="font-size:9px;color:var(--muted);text-align:center;line-height:1.3;padding:0 4px;">Logo</span>
                   </div>
                   <img id="logo-preview" style="display:none;width:100%;height:100%;object-fit:contain;padding:6px;pointer-events:none;">
                 </div>
@@ -852,7 +852,18 @@ function initInvoiceGenerator() {
 
   // Show/hide logo section based on tier
   const logoSection = document.getElementById('logo-section');
-  if (logoSection) logoSection.style.display = isPro ? 'block' : 'none';
+  if (logoSection) logoSection.style.display = 'block';
+  // Show locked state for free users
+  const logoUploadArea = document.getElementById('logo-upload-area');
+  const logoPlaceholderText = document.getElementById('logo-placeholder-text');
+  if (!isPro && logoUploadArea) {
+    logoUploadArea.style.cursor = 'not-allowed';
+    logoUploadArea.style.opacity = '0.6';
+    // Remove file input click for free users
+    const fileInput = document.getElementById('inv-logo');
+    if (fileInput) fileInput.style.pointerEvents = 'none';
+    if (logoPlaceholderText) logoPlaceholderText.textContent = 'Upgrade to Pro to add logo';
+  }
 
   if (!isPro) {
     const remaining = Math.max(0, INV_LIMIT_FREE - invDailyCount);
@@ -1091,14 +1102,25 @@ ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'
 <div class="footer">Generated with FindTheSnakes Creator Tools &bull; findthesnakes.com</div>
 </body></html>`;
 
-  // Open invoice in new tab with print button
-  const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `invoice-${invNum}.html`;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  // Open in new window and trigger print dialog (Save as PDF)
+  const win = window.open('', '_blank', 'width=900,height=700');
+  if (win) {
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    setTimeout(() => {
+      win.print();
+    }, 600);
+  } else {
+    // Popup blocked fallback - download as HTML
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `invoice-${invNum}.html`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 
   if (!isPro) {
     invDailyCount++;
