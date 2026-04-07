@@ -397,7 +397,7 @@
           <!-- FROM -->
           <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;">
             <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:12px;">From</div>
-            <div id="logo-section" style="display:none;">
+            <div id="logo-section">
               <div style="margin-bottom:12px;">
                 <!-- Logo display area -->
                 <div id="logo-upload-area" style="width:80px;height:80px;border:2px dashed rgba(124,58,237,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:var(--surface);transition:all 0.2s;overflow:hidden;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(124,58,237,0.3)'">
@@ -1091,11 +1091,14 @@ ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'
 <div class="footer">Generated with FindTheSnakes Creator Tools &bull; findthesnakes.com</div>
 </body></html>`;
 
-  const win = window.open('', '_blank');
-  win.document.write(html);
-  win.document.close();
-  win.focus();
-  setTimeout(() => { win.print(); win.close(); }, 500);
+  // Open invoice in new tab with print button
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `invoice-${invNum}.html`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 
   if (!isPro) {
     invDailyCount++;
