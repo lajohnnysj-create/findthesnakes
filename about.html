@@ -62,12 +62,13 @@
   .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .hamburger.open span:nth-child(2) { opacity: 0; }
   .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-  .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 150; flex-direction: column; padding: 80px 32px 40px; pointer-events: none; }
+  .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 300; flex-direction: column; padding: 80px 32px 40px; pointer-events: none; }
   .mobile-menu.open { display: flex; pointer-events: all; }
   .mobile-menu-links { display: flex; flex-direction: column; gap: 4px; flex: 1; }
   .mobile-menu-links a { color: var(--text); font-size: 22px; font-family: 'Syne', sans-serif; font-weight: 700; text-decoration: none; padding: 14px 0; border-bottom: 1px solid var(--border); transition: color 0.2s; }
   .mobile-menu-links a:hover { color: var(--accent2); }
   .mobile-menu-bottom { margin-top: 32px; }
+  .mobile-cta { display: block; width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; text-decoration: none; text-align: center; }
   .mobile-cta { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; display: block; text-align: center; }
 
   /* HERO */
@@ -174,6 +175,20 @@
 </head>
 <body>
 
+<div class="mobile-menu" id="mobile-menu">
+  <button onclick="closeMobileMenu()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;">&#x2715;</button>
+  <div class="mobile-menu-links">
+    <a href="pricing.html" onclick="closeMobileMenu()">Pricing</a>
+    <a href="instructions.html" onclick="closeMobileMenu()">Instructions</a>
+    <a href="faq.html" onclick="closeMobileMenu()">FAQ</a>
+    <a href="about.html" onclick="closeMobileMenu()">About</a>
+    <a href="blog.html" onclick="closeMobileMenu()">Blog</a>
+  </div>
+  <div class="mobile-menu-bottom">
+    <a class="mobile-cta" href="index.html">Get started free</a>
+  </div>
+</div>
+
 <nav>
   <a class="logo" href="index.html">FindTheSnakes</a>
   <div class="nav-links">
@@ -257,7 +272,16 @@
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
-function toggleMobileMenu() { document.getElementById('mobile-menu')?.classList.toggle('open'); document.getElementById('hamburger-btn')?.classList.toggle('open'); }
-function closeMobileMenu() { document.getElementById('mobile-menu')?.classList.remove('open'); document.getElementById('hamburger-btn')?.classList.remove('open'); }
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+  document.getElementById('hamburger-btn').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('hamburger-btn').classList.remove('open');
+}
+</script>
+</body>
+</html>

@@ -166,10 +166,12 @@
 <script>
 document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
 function toggleMobileMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const btn = document.getElementById('hamburger-btn');
-  menu.classList.toggle('open');
-  btn.classList.toggle('open');
+  document.getElementById('mobile-menu').classList.toggle('open');
+  document.getElementById('hamburger-btn').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('hamburger-btn').classList.remove('open');
 }
 </script>
 </body>
