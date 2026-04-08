@@ -41,8 +41,13 @@
   .sidebar-logo { padding: 20px 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; text-decoration: none; overflow: hidden; }
   .sidebar-logo-icon { display: none; }
   .sidebar-logo-text { font-family: "Syne", sans-serif; font-weight: 800; font-size: 13px; letter-spacing: -0.2px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
-  .sidebar-nav::-webkit-scrollbar { display: none; }
+  .sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: transparent transparent; transition: scrollbar-color 0.3s; }
+  .sidebar-nav:hover { scrollbar-color: rgba(255,255,255,0.12) transparent; }
+  .sidebar-nav::-webkit-scrollbar { width: 6px; }
+  .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-nav::-webkit-scrollbar-thumb { background: transparent; border-radius: 100px; transition: background 0.3s; }
+  .sidebar-nav:hover::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); }
+  .sidebar-nav::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   .sidebar-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); font-weight: 600; padding: 8px 12px 4px; margin-top: 8px; }
   .sidebar-item {
     display: flex; align-items: center; gap: 12px; padding: 10px 12px;
