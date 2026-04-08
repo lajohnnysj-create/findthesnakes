@@ -1258,27 +1258,28 @@ function downloadInvoicePDF() {
     ? `<img src="${invLogoDataUrl}" style="max-height:60px;max-width:160px;object-fit:contain;display:block;margin-bottom:8px;">`
     : '';
 
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invoice ${invNum}</title>
-<style>
-  body{font-family:Arial,sans-serif;background:#fff;color:#111;margin:0;padding:40px;}
-  .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;}
-  .invoice-title{font-size:36px;font-weight:900;color:#7c3aed;letter-spacing:-1px;}
-  .invoice-num{font-size:14px;color:#666;margin-top:4px;}
-  .parties{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;}
-  .party-label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#a78bfa;font-weight:700;margin-bottom:8px;}
-  .party-name{font-size:16px;font-weight:700;margin-bottom:4px;}
-  .party-detail{font-size:13px;color:#555;line-height:1.5;}
-  table{width:100%;border-collapse:collapse;margin-bottom:24px;}
-  th{text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#666;border-bottom:2px solid #f0f0f0;}
-  td{padding:12px;font-size:14px;border-bottom:1px solid #f5f5f5;}
-  .text-right{text-align:right;}
-  .text-center{text-align:center;}
-  .totals{max-width:300px;margin-left:auto;}
-  .total-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;border-bottom:1px solid #f0f0f0;}
-  .total-final{display:flex;justify-content:space-between;padding:12px 0;font-size:20px;font-weight:900;color:#7c3aed;}
-  .notes{margin-top:32px;padding:16px;background:#f9f9f9;border-radius:8px;font-size:13px;color:#555;line-height:1.7;}
-  .footer{margin-top:48px;text-align:center;font-size:11px;color:#aaa;}
-</style></head><body>
+  const invoiceCSS = [
+    'body{font-family:Arial,sans-serif;background:#fff;color:#111;margin:0;padding:40px;}',
+    '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;}',
+    '.invoice-title{font-size:36px;font-weight:900;color:#7c3aed;letter-spacing:-1px;}',
+    '.invoice-num{font-size:14px;color:#666;margin-top:4px;}',
+    '.parties{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;}',
+    '.party-label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#a78bfa;font-weight:700;margin-bottom:8px;}',
+    '.party-name{font-size:16px;font-weight:700;margin-bottom:4px;}',
+    '.party-detail{font-size:13px;color:#555;line-height:1.5;}',
+    'table{width:100%;border-collapse:collapse;margin-bottom:24px;}',
+    'th{text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#666;border-bottom:2px solid #f0f0f0;}',
+    'td{padding:12px;font-size:14px;border-bottom:1px solid #f5f5f5;}',
+    '.text-right{text-align:right;} .text-center{text-align:center;}',
+    '.totals{max-width:300px;margin-left:auto;}',
+    '.total-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;border-bottom:1px solid #f0f0f0;}',
+    '.total-final{display:flex;justify-content:space-between;padding:12px 0;font-size:20px;font-weight:900;color:#7c3aed;}',
+    '.notes{margin-top:32px;padding:16px;background:#f9f9f9;border-radius:8px;font-size:13px;color:#555;line-height:1.7;}',
+    '.footer{margin-top:48px;text-align:center;font-size:11px;color:#aaa;}'
+  ].join(' ');
+
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invoice ' + invNum + '</title><style>' + invoiceCSS + '</style></head><body>';
+  const htmlBody = `
 <div class="header">
   <div>
     ${logoHtml}
@@ -1311,19 +1312,19 @@ function downloadInvoicePDF() {
 </div>
 ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'<br>')}</div>` : ''}
 <div class="footer">Generated with FindTheSnakes Creator Tools &bull; findthesnakes.com</div>
-</body></html>`;
+` + '</body></html>';
 
   // Add print CSS and save button to the invoice HTML before opening
-  const printHtml = html.replace('</body></html>', `
+  const printHtml = html.replace('<\/body><\/html>', `
 <div id="save-bar" style="position:fixed;top:0;left:0;right:0;background:#7c3aed;color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:9999;font-family:Arial,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
   <span style="font-size:14px;font-weight:600;">&#x1F4BE; To save as PDF: Press <kbd style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:4px;">Ctrl+P</kbd> (or <kbd style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:4px;">Cmd+P</kbd> on Mac) then choose "Save as PDF"</span>
   <button onclick="window.print()" style="background:#fff;color:#7c3aed;border:none;border-radius:6px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;">&#x1F5A8; Print / Save PDF</button>
 </div>
-<style>
+<style id="print-styles">
   body { padding-top: 64px !important; }
   @media print { #save-bar { display:none !important; } body { padding-top: 0 !important; } }
-</style>
-</body></html>`);
+<\/style>
+<\/body><\/html>`);
 
   const blob = new Blob([printHtml], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
@@ -1347,4 +1348,17 @@ function loadQRLibrary(callback) {
   if (typeof QRious !== 'undefined') { if (callback) callback(); return; }
   const script = document.createElement('script');
   script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js';
-  script.onload = () => { if (callb
+  script.onload = () => { if (callback) callback(); };
+  script.onerror = () => console.error('Failed to load QR library');
+  document.head.appendChild(script);
+}
+
+initAuth();
+
+
+document.getElementById('signout-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeSignoutModal();
+});
+</script>
+</body>
+</html>
