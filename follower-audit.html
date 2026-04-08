@@ -1588,17 +1588,20 @@ let lastAuditUnfollowers = new Set();
 async function saveAudit() {
   if (!currentUser || userTier !== 'monthly') return;
 
-  const unfollowers = allResults.filter(r => !r.mutual && !r.followerOnly).map(r => r.handle);
-  const mutuals = allResults.filter(r => r.mutual).map(r => r.handle);
-  const followerOnly = allResults.filter(r => r.followerOnly).map(r => r.handle);
+  // EGRESS/STORAGE OPTIMIZATION: only store counts, never username arrays.
+  // Username lists for the current audit live in browser memory (allResults)
+  // and are never persisted.
+  const unfollowerCount = allResults.filter(r => !r.mutual && !r.followerOnly).length;
+  const mutualCount = allResults.filter(r => r.mutual).length;
+  const followerOnlyCount = allResults.filter(r => r.followerOnly).length;
 
   // Use Edge Function to bypass RLS
   await sb.functions.invoke('save-audit', {
     body: {
       userId: currentUser.id,
-      unfollowers,
-      mutuals,
-      followerOnly,
+      unfollowerCount,
+      mutualCount,
+      followerOnlyCount,
       totalFollowing: allResults.filter(r => !r.followerOnly).length,
       totalFollowers: allResults.filter(r => r.mutual || r.followerOnly).length,
     }
@@ -1610,25 +1613,18 @@ async function saveAudit() {
 async function loadAuditHistory() {
   if (!currentUser || userTier !== 'monthly') return;
 
-  // EGRESS OPTIMIZATION: only fetch the 2 most recent audits
-  // (latest for display, previous for "new since last audit" diff)
-  // and only the columns we actually use.
+  // EGRESS OPTIMIZATION: only fetch the latest audit, only count columns.
+  // No username arrays are stored or fetched anymore.
   const { data } = await sb
     .from('audits')
-    .select('id, created_at, unfollowers, mutuals, total_following, total_followers, follower_only')
+    .select('id, created_at, unfollower_count, mutual_count, follower_only_count, total_following, total_followers')
     .eq('user_id', currentUser.id)
     .order('created_at', { ascending: false })
-    .limit(2);
+    .limit(1);
 
   if (data) {
     auditHistory = data;
-
-    // Set last audit unfollowers for diff comparison (second most recent)
-    if (data.length >= 2) {
-      lastAuditUnfollowers = new Set(data[1].unfollowers);
-    } else {
-      lastAuditUnfollowers = new Set();
-    }
+    lastAuditUnfollowers = new Set(); // diff feature removed
 
     // Update last audit message in welcome banner
     const lastAuditMsg = document.getElementById('last-audit-msg');
@@ -1639,24 +1635,13 @@ async function loadAuditHistory() {
     }
 
     renderAuditHistory();
-    showNewUnfollowerBadge();
   }
 }
 
 function showNewUnfollowerBadge() {
-  if (!auditHistory.length || auditHistory.length < 2) return;
-  const currentUnfollowers = new Set(allResults.filter(r => !r.mutual && !r.followerOnly).map(r => r.handle));
-  const newOnes = [...currentUnfollowers].filter(h => !lastAuditUnfollowers.has(h));
-
+  // Removed: diff feature retired to save egress (no username arrays stored).
   const badge = document.getElementById('new-unfollower-badge');
-  if (badge) {
-    if (newOnes.length > 0) {
-      badge.textContent = `🔴 ${newOnes.length} new unfollower${newOnes.length > 1 ? 's' : ''} since last audit`;
-      badge.style.display = 'inline-flex';
-    } else {
-      badge.style.display = 'none';
-    }
-  }
+  if (badge) badge.style.display = 'none';
 }
 
 function renderAuditHistory() {
@@ -1668,58 +1653,33 @@ function renderAuditHistory() {
     return;
   }
 
-  // Only render the most recent audit (egress optimization)
-  el.innerHTML = auditHistory.slice(0, 1).map((audit, i) => {
+  // Render only the most recent audit, using stored counts only.
+  // Username arrays are no longer stored or fetched.
+  el.innerHTML = auditHistory.slice(0, 1).map((audit) => {
     const date = new Date(audit.created_at);
     const dateStr = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-    // Find new unfollowers compared to previous audit
-    let newUnfollowers = [];
-    if (i < auditHistory.length - 1) {
-      const prevSet = new Set(auditHistory[i + 1].unfollowers);
-      newUnfollowers = audit.unfollowers.filter(h => !prevSet.has(h));
-    }
-
-    const newBadge = newUnfollowers.length > 0
-      ? `<span class="audit-new-badge">🔴 ${newUnfollowers.length} new</span>`
-      : i === auditHistory.length - 1 ? '<span style="font-size:11px;color:var(--muted)">First audit</span>' : '';
-
-    const unfollowerList = audit.unfollowers.slice(0, 50).map(h => {
-      const isNew = newUnfollowers.includes(h);
-      return `<div class="audit-list-item">
-        ${isNew ? '<span class="audit-new-dot"></span>' : '<span style="width:6px;flex-shrink:0"></span>'}
-        <a href="https://instagram.com/${h}" target="_blank" rel="noopener">@${h}</a>
-        ${isNew ? '<span style="font-size:11px;color:var(--accent);font-weight:500">new</span>' : ''}
-      </div>`;
-    }).join('');
-
-    const moreCount = audit.unfollowers.length > 50 ? `<div style="text-align:center;padding:8px;font-size:12px;color:var(--muted)">+ ${audit.unfollowers.length - 50} more</div>` : '';
-
-    return `<div class="audit-card" id="audit-${audit.id}">
-      <div class="audit-card-header" onclick="toggleAudit('${audit.id}')">
+    return `<div class="audit-card open" id="audit-${audit.id}">
+      <div class="audit-card-header">
         <div class="audit-card-left">
           <div>
             <div class="audit-date">${dateStr} <span style="font-weight:400;color:var(--muted);font-size:13px">${timeStr}</span></div>
             <div class="audit-meta">${audit.total_following} following · ${audit.total_followers} followers</div>
           </div>
-          ${newBadge}
         </div>
         <div style="display:flex;align-items:center;gap:16px;">
           <div class="audit-stats">
-            <div class="audit-stat danger"><strong>${audit.unfollowers.length}</strong> not following back</div>
-            <div class="audit-stat"><strong>${audit.mutuals.length}</strong> mutual</div>
+            <div class="audit-stat danger"><strong>${audit.unfollower_count}</strong> not following back</div>
+            <div class="audit-stat"><strong>${audit.mutual_count}</strong> mutual</div>
           </div>
           <button class="audit-delete-btn" onclick="deleteAudit('${audit.id}',event)">Delete</button>
-          <span class="audit-chevron">▼</span>
         </div>
       </div>
       <div class="audit-body">
-        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;">Not following back${newUnfollowers.length > 0 ? ` · ${newUnfollowers.length} new since last audit` : ''}</div>
-        ${audit.unfollowers.length === 0
-          ? '<div style="color:var(--muted);font-size:13px;padding:12px 0">No unfollowers in this audit 🎉</div>'
-          : `<div class="audit-list">${unfollowerList}${moreCount}</div>`
-        }
+        <div style="font-size:12px;color:var(--muted);padding:14px 0 4px;line-height:1.6;">
+          Run a new audit anytime to see the full updated list of who isn't following you back. Individual usernames aren't stored — only counts — to keep your data private and your account fast.
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -2401,7 +2361,7 @@ function exportCSV() {
       rows.push(['Date', 'Not Following Back', 'Mutuals', 'Follows You Only', 'Total Analyzed']);
       auditHistory.forEach(audit => {
         const d = new Date(audit.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' });
-        rows.push([d, audit.unfollowers.length, audit.mutuals.length, audit.follower_only.length, audit.total_following]);
+        rows.push([d, audit.unfollower_count, audit.mutual_count, audit.follower_only_count, audit.total_following]);
       });
     } else {
       rows.push(['No audit history yet']);
@@ -2822,23 +2782,8 @@ function renderAnalytics() {
   }
 
   // ── RETURNING SNAKES ──
-  if (auditHistory.length >= 2) {
-    const allPastUnfollowers = new Set();
-    auditHistory.slice(1).forEach(audit => {
-      audit.unfollowers.forEach(h => allPastUnfollowers.add(h.toLowerCase()));
-    });
-    const currentUnfollowers = new Set(allResults.filter(r => !r.mutual && !r.followerOnly).map(r => r.handle.toLowerCase()));
-    const returning = [...currentUnfollowers].filter(h => allPastUnfollowers.has(h));
-    cards.push({
-      icon: '🔄',
-      label: 'Returning snakes',
-      value: returning.length,
-      valueClass: returning.length > 0 ? 'negative' : 'positive',
-      sub: returning.length > 0
-        ? `${returning.length} account${returning.length > 1 ? 's' : ''} that unfollowed before and still not following back`
-        : 'No returning snakes detected ✅'
-    });
-  }
+  // Removed: relied on stored username arrays which we no longer persist
+  // (only counts are stored to keep your data private and reduce egress).
 
   // ── SNAKE SCORE ──
   const totalAccounts = allResults.filter(r => !r.followerOnly).length;
