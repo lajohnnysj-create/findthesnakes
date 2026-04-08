@@ -138,8 +138,13 @@
   .mobile-cta { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; display: block; text-align: center; }
   .mobile-cta:hover { background: #a855f7; }
 
+  .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.25s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
   @media (max-width: 768px) {
-    nav { padding: 16px 20px; }
+    nav { padding: 0 20px; }
     .nav-links, .nav-right { display: none; }
     .hamburger { display: flex; }
   }
@@ -150,6 +155,7 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
+  <button onclick="closeMobileMenu()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;">&#x2715;</button>
   <div class="mobile-menu-links">
     <a href="pricing.html">Pricing</a>
     <a href="instructions.html">Instructions</a>
@@ -459,14 +465,28 @@
 document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
 
 function toggleMobileMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const btn = document.getElementById('hamburger-btn');
-  menu.classList.toggle('open');
-  btn.classList.toggle('open');
+  document.getElementById('mobile-menu').classList.toggle('open');
+  document.getElementById('hamburger-btn').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('hamburger-btn').classList.remove('open');
 }
 
 function toggleFaq(questionEl) {
   const item = questionEl.closest('.faq-item');
   const isOpen = item.classList.contains('open');
   document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-  if (!isOpen) i
+  if (!isOpen) item.classList.add('open');
+}
+
+function showCategory(cat, btn) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.faq-category').forEach(c => {
+    c.style.display = (cat === 'all' || c.dataset.category === cat) ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>
