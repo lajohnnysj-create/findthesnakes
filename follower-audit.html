@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 
   :root {
@@ -17,7 +18,7 @@
     --surface: #0f0f1a;
     --surface2: #161625;
     --border: rgba(255,255,255,0.07);
-    --border-hover: rgba(255,255,255,0.14);
+    --border-hover: rgba(255,255,255,0.15);
     --accent: #7c3aed;
     --accent2: #a855f7;
     --accent-glow: rgba(124,58,237,0.3);
@@ -58,7 +59,7 @@
     padding: 10px 22px; font-size: 14px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
   }
-  .nav-cta:hover { background: #f05570; transform: translateY(-1px); }
+  .nav-cta:hover { background: #a855f7; transform: translateY(-1px); }
   .nav-cta.ghost {
     background: transparent; border: 1px solid var(--border-hover); color: var(--muted);
   }
@@ -74,7 +75,7 @@
   .hero-bg::before {
     content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
     width: 900px; height: 900px;
-    background: radial-gradient(ellipse, rgba(232,68,90,0.12) 0%, transparent 70%); border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 70%); border-radius: 50%;
   }
   .grid-lines {
     position: absolute; inset: 0; pointer-events: none;
@@ -84,9 +85,9 @@
   }
   .badge {
     display: inline-flex; align-items: center; gap: 8px;
-    border: 1px solid rgba(232,68,90,0.4); background: rgba(232,68,90,0.08);
+    border: 1px solid rgba(124,58,237,0.4); background: rgba(124,58,237,0.08);
     border-radius: 100px; padding: 6px 16px; font-size: 12px;
-    color: #ff8fa0; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+    color: #c4b5fd; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
     margin-bottom: 32px; animation: fadeUp 0.6s ease both;
   }
   .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
@@ -110,9 +111,9 @@
     background: var(--accent); color: #fff; border: none; border-radius: 10px;
     padding: 16px 34px; font-size: 16px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.25s;
-    box-shadow: 0 0 40px rgba(232,68,90,0.3);
+    box-shadow: 0 0 40px rgba(124,58,237,0.3);
   }
-  .btn-primary:hover { background: #f05570; transform: translateY(-2px); box-shadow: 0 0 60px rgba(232,68,90,0.4); }
+  .btn-primary:hover { background: #a855f7; transform: translateY(-2px); box-shadow: 0 0 60px rgba(124,58,237,0.4); }
   .btn-secondary {
     background: transparent; color: var(--text); border: 1px solid var(--border-hover);
     border-radius: 10px; padding: 16px 34px; font-size: 16px; font-weight: 400;
@@ -132,9 +133,9 @@
   .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border); border-radius: 16px; overflow: hidden; }
   .feat { background: var(--surface); padding: 40px 36px; transition: background 0.2s; position: relative; overflow: hidden; }
   .feat:hover { background: var(--surface2); }
-  .feat::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(232,68,90,0.4), transparent); opacity: 0; transition: opacity 0.3s; }
+  .feat::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(124,58,237,0.4), transparent); opacity: 0; transition: opacity 0.3s; }
   .feat:hover::before { opacity: 1; }
-  .feat-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(232,68,90,0.12); border: 1px solid rgba(232,68,90,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 22px; }
+  .feat-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 22px; }
   .feat h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
   .feat p { font-size: 14px; line-height: 1.7; color: var(--muted); font-weight: 300; }
 
@@ -143,7 +144,7 @@
   .steps::before { content: ''; position: absolute; top: 32px; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg, transparent, var(--border-hover), transparent); }
   .step { padding: 32px 32px 0; text-align: center; }
   .step-num { width: 64px; height: 64px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border-hover); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin: 0 auto 24px; position: relative; z-index: 1; }
-  .step:first-child .step-num { border-color: rgba(232,68,90,0.4); color: var(--accent); background: rgba(232,68,90,0.08); }
+  .step:first-child .step-num { border-color: rgba(124,58,237,0.4); color: var(--accent); background: rgba(124,58,237,0.08); }
   .step h4 { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 10px; }
   .step p { font-size: 14px; color: var(--muted); line-height: 1.65; font-weight: 300; }
 
@@ -159,10 +160,10 @@
     text-align: center; transition: all 0.25s; cursor: pointer;
     background: var(--bg); position: relative; overflow: hidden;
   }
-  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--accent); background: rgba(232,68,90,0.04); }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--accent); background: rgba(124,58,237,0.04); }
   .upload-zone input[type=file] { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 1; }
   .upload-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hover); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: all 0.25s; }
-  .upload-zone:hover .upload-icon { background: rgba(232,68,90,0.1); border-color: rgba(232,68,90,0.3); }
+  .upload-zone:hover .upload-icon { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); }
   .upload-label { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
   .upload-sublabel { font-size: 12px; color: var(--muted); line-height: 1.5; }
   .upload-sublabel span { color: var(--accent); }
@@ -177,11 +178,11 @@
   .analyze-btn {
     width: 100%; padding: 18px; background: var(--accent); color: #fff; border: none;
     border-radius: 12px; font-size: 17px; font-weight: 500; font-family: 'DM Sans', sans-serif;
-    cursor: pointer; transition: all 0.25s; box-shadow: 0 0 50px rgba(232,68,90,0.25); position: relative; overflow: hidden;
+    cursor: pointer; transition: all 0.25s; box-shadow: 0 0 50px rgba(124,58,237,0.25); position: relative; overflow: hidden;
   }
-  .analyze-btn:hover { background: #f05570; transform: translateY(-2px); box-shadow: 0 0 70px rgba(232,68,90,0.4); }
+  .analyze-btn:hover { background: #a855f7; transform: translateY(-2px); box-shadow: 0 0 70px rgba(124,58,237,0.4); }
   .analyze-btn:disabled { background: var(--muted2); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
-  .analyze-btn.processing { background: #b8334a; cursor: not-allowed; transform: none; box-shadow: 0 0 30px rgba(232,68,90,0.15); }
+  .analyze-btn.processing { background: #b8334a; cursor: not-allowed; transform: none; box-shadow: 0 0 30px rgba(124,58,237,0.15); }
   .analyze-btn.processing::after { display: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .btn-spinner {
@@ -192,13 +193,13 @@
   }
   @keyframes dots { 0%,20%{content:'.'} 40%{content:'..'} 60%,100%{content:'...'} }
   .processing-dots::after { content: '.'; animation: dots 1.2s steps(1) infinite; }
-  .error-box { background: rgba(232,68,90,0.08); border: 1px solid rgba(232,68,90,0.25); border-radius: 10px; padding: 14px 18px; font-size: 14px; color: #ff8fa0; margin-top: 16px; display: none; }
+  .error-box { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25); border-radius: 10px; padding: 14px 18px; font-size: 14px; color: #c4b5fd; margin-top: 16px; display: none; }
 
   /* ── RESULTS ── */
   #results { display: none; margin-top: 36px; }
   .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
   .results-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
-  .results-badge { display: none; align-items: center; gap: 6px; background: rgba(232,68,90,0.1); border: 1px solid rgba(232,68,90,0.3); color: #ff8fa0; border-radius: 100px; padding: 4px 14px; font-size: 13px; }
+  .results-badge { display: none; align-items: center; gap: 6px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); color: #c4b5fd; border-radius: 100px; padding: 4px 14px; font-size: 13px; }
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
   .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
   .stat-card .num { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; line-height: 1; }
@@ -222,7 +223,7 @@
   .result-handle a { color: var(--text); text-decoration: none; }
   .result-handle a:hover { color: var(--accent); }
   .tag { display: inline-flex; align-items: center; gap: 5px; border-radius: 100px; padding: 3px 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; }
-  .tag.unfollow { background: rgba(232,68,90,0.12); color: #ff7a8f; border: 1px solid rgba(232,68,90,0.25); }
+  .tag.unfollow { background: rgba(124,58,237,0.12); color: #ff7a8f; border: 1px solid rgba(124,58,237,0.25); }
   .tag.mutual { background: rgba(74,222,128,0.08); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
   .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; }
   .empty-state .emoji { font-size: 36px; display: block; margin-bottom: 12px; }
@@ -235,7 +236,7 @@
 
   /* ── PAYWALL GATE ── */
   .paywall-gate {
-    border: 1px solid rgba(232,68,90,0.3);
+    border: 1px solid rgba(124,58,237,0.3);
     border-radius: 16px;
     background: linear-gradient(160deg, rgba(232,68,90,0.06) 0%, var(--surface) 60%);
     padding: 40px 36px; text-align: center; margin-top: 4px;
@@ -254,8 +255,8 @@
     display: flex; align-items: center; justify-content: space-between;
   }
   .paywall-btn:hover { transform: translateY(-1px); }
-  .paywall-btn.primary { background: var(--accent); color: #fff; box-shadow: 0 0 30px rgba(232,68,90,0.25); }
-  .paywall-btn.primary:hover { background: #f05570; }
+  .paywall-btn.primary { background: var(--accent); color: #fff; box-shadow: 0 0 30px rgba(124,58,237,0.25); }
+  .paywall-btn.primary:hover { background: #a855f7; }
   .paywall-btn.secondary { background: rgba(255,255,255,0.07); color: var(--text); border: 1px solid var(--border-hover); }
   .paywall-btn.secondary:hover { background: rgba(255,255,255,0.12); }
   .paywall-btn-price { font-size: 13px; opacity: 0.8; }
@@ -302,20 +303,20 @@
     border-radius: 10px; font-size: 15px; font-weight: 500; font-family: 'DM Sans', sans-serif;
     cursor: pointer; transition: all 0.2s; margin-top: 4px;
   }
-  .modal-btn:hover { background: #f05570; }
+  .modal-btn:hover { background: #a855f7; }
   .modal-btn:disabled { background: var(--muted2); cursor: not-allowed; }
   .modal-switch { font-size: 13px; color: var(--muted); text-align: center; margin-top: 18px; }
   .modal-switch a { color: var(--accent); cursor: pointer; text-decoration: none; }
   .modal-switch a:hover { text-decoration: underline; }
   .modal-msg { font-size: 13px; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; display: none; }
-  .modal-msg.error { background: rgba(232,68,90,0.1); color: #ff8fa0; border: 1px solid rgba(232,68,90,0.25); }
+  .modal-msg.error { background: rgba(124,58,237,0.1); color: #c4b5fd; border: 1px solid rgba(124,58,237,0.25); }
   .modal-msg.success { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
 
   /* ── PRICING ── */
   .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 900px; margin: 0 auto; }
   .plan { border: 1px solid var(--border); border-radius: 16px; padding: 36px; background: var(--surface); transition: border-color 0.2s; }
   .plan:hover { border-color: var(--border-hover); }
-  .plan.featured { border-color: rgba(232,68,90,0.4); background: linear-gradient(160deg, rgba(232,68,90,0.06) 0%, var(--surface) 60%); position: relative; }
+  .plan.featured { border-color: rgba(124,58,237,0.4); background: linear-gradient(160deg, rgba(232,68,90,0.06) 0%, var(--surface) 60%); position: relative; }
   .plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; border-radius: 100px; padding: 4px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
   .plan-badge.blue { background: #1d6fb5; box-shadow: 0 0 20px rgba(29,111,181,0.4); }
   .plan-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -373,7 +374,7 @@
     border: none; border-radius: 12px; font-size: 16px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
   }
-  .mobile-signin-btn:hover { background: #f05570; }
+  .mobile-signin-btn:hover { background: #a855f7; }
   .mobile-account-info {
     display: none; flex-direction: column; gap: 10px;
   }
@@ -388,11 +389,11 @@
   .mobile-signout-btn:hover { border-color: var(--accent); color: var(--accent); }
   .mobile-cancel-btn {
     width: 100%; padding: 14px; background: transparent;
-    border: 1px solid rgba(232,68,90,0.3); color: #ff7a8f;
+    border: 1px solid rgba(124,58,237,0.3); color: #ff7a8f;
     border-radius: 12px; font-size: 15px; font-weight: 400;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
   }
-  .mobile-cancel-btn:hover { background: rgba(232,68,90,0.1); }
+  .mobile-cancel-btn:hover { background: rgba(124,58,237,0.1); }
 
   @media (max-width: 768px) {
     .hamburger { display: flex; }
@@ -421,9 +422,9 @@
     color: var(--muted); font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif;
     padding: 5px 10px; border-radius: 20px; transition: all 0.2s; margin-left: 8px;
   }
-  .whitelist-btn:hover { background: rgba(232,68,90,0.1); border-color: var(--accent); color: var(--accent); }
+  .whitelist-btn:hover { background: rgba(124,58,237,0.1); border-color: var(--accent); color: var(--accent); }
   .whitelist-btn.whitelisted { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.4); color: #4ade80; }
-  .whitelist-btn.whitelisted:hover { background: rgba(232,68,90,0.08); border-color: var(--accent); color: var(--accent); }
+  .whitelist-btn.whitelisted:hover { background: rgba(124,58,237,0.08); border-color: var(--accent); color: var(--accent); }
   .whitelist-btn.locked-wl { opacity: 0.3; cursor: not-allowed; }
   .whitelist-btn.locked-wl:hover { background: rgba(255,255,255,0.05); border-color: var(--border-hover); color: var(--muted); opacity: 0.3; }
   .whitelist-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--border-hover); color: var(--text); padding: 12px 20px; border-radius: 10px; font-size: 13px; z-index: 999; animation: fadeUp 0.25s ease; white-space: nowrap; pointer-events: none; }
@@ -462,7 +463,7 @@
   .audit-meta { font-size: 12px; color: var(--muted); }
   .audit-new-badge {
     display: inline-flex; align-items: center; gap: 5px;
-    background: rgba(232,68,90,0.12); border: 1px solid rgba(232,68,90,0.3);
+    background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
     color: #ff7a8f; border-radius: 100px; padding: 3px 10px; font-size: 11px; font-weight: 600;
   }
   .audit-stats { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -480,7 +481,7 @@
   .audit-list-item a:hover { color: var(--accent); }
   .audit-new-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
   .audit-delete-btn { background: none; border: none; color: var(--muted2); cursor: pointer; font-size: 12px; padding: 3px 8px; border-radius: 5px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
-  .audit-delete-btn:hover { color: var(--accent); background: rgba(232,68,90,0.08); }
+  .audit-delete-btn:hover { color: var(--accent); background: rgba(124,58,237,0.08); }
 
 
   /* ── NOTES ── */
@@ -504,7 +505,7 @@
     border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; white-space: nowrap;
   }
-  .note-save-btn:hover { background: #f05570; }
+  .note-save-btn:hover { background: #a855f7; }
   .note-display {
     font-size: 12px; color: var(--muted); font-style: italic;
     padding: 4px 0 0 2px;
@@ -540,7 +541,7 @@
   .log-item:hover { background: rgba(255,255,255,0.03); }
   .log-item a { color: var(--text); text-decoration: none; }
   .log-item a:hover { color: var(--accent); }
-  .log-status-active { display: inline-flex; align-items: center; gap: 5px; background: rgba(232,68,90,0.1); border: 1px solid rgba(232,68,90,0.25); color: #ff7a8f; border-radius: 100px; padding: 2px 10px; font-size: 11px; font-weight: 500; }
+  .log-status-active { display: inline-flex; align-items: center; gap: 5px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25); color: #ff7a8f; border-radius: 100px; padding: 2px 10px; font-size: 11px; font-weight: 500; }
   .log-status-gone { display: inline-flex; align-items: center; gap: 5px; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; border-radius: 100px; padding: 2px 10px; font-size: 11px; font-weight: 500; }
   .log-date { font-size: 12px; color: var(--muted); }
   .log-empty { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; }
@@ -564,7 +565,7 @@
   .snake-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; }
   .snake-empty { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; border: 1px solid var(--border); border-radius: 12px; }
   .snake-empty .emoji { font-size: 36px; display: block; margin-bottom: 12px; }
-  .snake-list-wrap { border: 1px solid rgba(232,68,90,0.25); border-radius: 12px; overflow: hidden; background: linear-gradient(160deg, rgba(232,68,90,0.03) 0%, var(--surface) 60%); }
+  .snake-list-wrap { border: 1px solid rgba(124,58,237,0.25); border-radius: 12px; overflow: hidden; background: linear-gradient(160deg, rgba(232,68,90,0.03) 0%, var(--surface) 60%); }
   .snake-list-header { display: grid; grid-template-columns: 1fr 160px 36px; padding: 10px 20px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); border-bottom: 1px solid var(--border); background: var(--surface2); }
   .snake-list-item { display: grid; grid-template-columns: 1fr 160px 36px; align-items: center; padding: 13px 20px; border-bottom: 1px solid var(--border); font-size: 14px; transition: background 0.15s; }
   .snake-list-item:last-child { border-bottom: none; }
@@ -573,7 +574,7 @@
   .snake-list-item a:hover { color: var(--accent); }
   .snake-added-date { font-size: 12px; color: var(--muted); }
   .snake-remove-btn { background: none; border: none; cursor: pointer; color: var(--muted2); font-size: 16px; padding: 4px; border-radius: 6px; transition: all 0.2s; }
-  .snake-remove-btn:hover { color: var(--accent); background: rgba(232,68,90,0.1); }
+  .snake-remove-btn:hover { color: var(--accent); background: rgba(124,58,237,0.1); }
 
 
   /* ── DASHBOARD EMPTY STATE ── */
@@ -587,7 +588,7 @@
   .no-analysis-msg a:hover { text-decoration: underline; }
   .dashboard-welcome {
     background: linear-gradient(135deg, rgba(232,68,90,0.06) 0%, var(--surface) 60%);
-    border: 1px solid rgba(232,68,90,0.2); border-radius: 12px;
+    border: 1px solid rgba(124,58,237,0.2); border-radius: 12px;
     padding: 20px 24px; margin-bottom: 20px;
     display: none;
   }
@@ -599,7 +600,7 @@
     border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; white-space: nowrap;
   }
-  .dashboard-welcome-btn:hover { background: #f05570; }
+  .dashboard-welcome-btn:hover { background: #a855f7; }
 
 
   .start-over-btn {
@@ -621,19 +622,19 @@
   .cancel-modal-inner p { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 24px; }
   .cancel-modal-btns { display: flex; flex-direction: column; gap: 10px; }
   .cancel-confirm-btn {
-    width: 100%; padding: 13px; background: rgba(232,68,90,0.1);
-    border: 1px solid rgba(232,68,90,0.3); color: #ff7a8f;
+    width: 100%; padding: 13px; background: rgba(124,58,237,0.1);
+    border: 1px solid rgba(124,58,237,0.3); color: #ff7a8f;
     border-radius: 10px; font-size: 14px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
   }
-  .cancel-confirm-btn:hover { background: rgba(232,68,90,0.2); }
+  .cancel-confirm-btn:hover { background: rgba(124,58,237,0.2); }
   .cancel-keep-btn {
     width: 100%; padding: 13px; background: var(--accent);
     border: none; color: #fff;
     border-radius: 10px; font-size: 14px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
   }
-  .cancel-keep-btn:hover { background: #f05570; }
+  .cancel-keep-btn:hover { background: #a855f7; }
   .account-menu {
     position: relative; display: inline-block;
   }
@@ -653,7 +654,7 @@
   }
   .account-menu-item:hover { background: rgba(255,255,255,0.06); color: var(--text); }
   .account-menu-item.danger { color: #ff7a8f; }
-  .account-menu-item.danger:hover { background: rgba(232,68,90,0.1); color: #ff7a8f; }
+  .account-menu-item.danger:hover { background: rgba(124,58,237,0.1); color: #ff7a8f; }
   .account-menu-divider { height: 1px; background: var(--border); margin: 6px 0; }
   .account-btn {
     display: none; align-items: center; gap: 8px;
@@ -712,7 +713,7 @@
     #print-extra-sections { display: block !important; }
     .stats-row { display: grid !important; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
     .stat-card { border: 1px solid #ddd !important; background: #f9f9f9 !important; }
-    .stat-card .num { color: #e8445a !important; }
+    .stat-card .num { color: #7c3aed !important; }
     .stat-card.safe .num { color: #16a34a !important; }
     .stat-card .lbl { color: #666 !important; }
     .results-list { border: 1px solid #ddd !important; }
@@ -726,7 +727,7 @@
     #results-list-scroll { max-height: none !important; overflow: visible !important; }
     .print-btn { display: none !important; }
   }
-  .print-header { display: none; padding: 0 0 20px; border-bottom: 2px solid #e8445a; margin-bottom: 24px; }
+  .print-header { display: none; padding: 0 0 20px; border-bottom: 2px solid #7c3aed; margin-bottom: 24px; }
   .print-btn {
     display: inline-flex; align-items: center; gap: 8px;
     background: transparent; border: 1px solid var(--border-hover);
@@ -742,7 +743,7 @@
   .upgrade-banner {
     display: none;
     background: linear-gradient(135deg, var(--surface) 0%, rgba(232,68,90,0.05) 100%);
-    border: 1px solid rgba(232,68,90,0.2);
+    border: 1px solid rgba(124,58,237,0.2);
     border-radius: 14px;
     padding: 20px 24px;
     margin-bottom: 28px;
@@ -765,9 +766,9 @@
     padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
     background: var(--accent); border: none; color: #fff;
-    box-shadow: 0 0 20px rgba(232,68,90,0.25);
+    box-shadow: 0 0 20px rgba(124,58,237,0.25);
   }
-  .upgrade-btn-pro:hover { background: #f05570; transform: translateY(-1px); }
+  .upgrade-btn-pro:hover { background: #a855f7; transform: translateY(-1px); }
 
 
   /* ── DASHBOARD MOBILE ── */
@@ -881,7 +882,7 @@ body { overflow-x: hidden; }
     <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;color:#f0eef8;">Sign out?</h2>
     <p style="color:#7a788f;font-size:14px;margin-bottom:28px;line-height:1.6;">You'll need to sign back in to access your dashboard and results.</p>
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <button onclick="confirmSignOut()" id="signout-confirm-btn" style="padding:14px;background:#e8445a;border:none;color:#fff;border-radius:10px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;pointer-events:all;">Yes, sign me out</button>
+      <button onclick="confirmSignOut()" id="signout-confirm-btn" style="padding:14px;background:#7c3aed;border:none;color:#fff;border-radius:10px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;pointer-events:all;">Yes, sign me out</button>
       <button onclick="closeSignoutModal()" style="padding:14px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#7a788f;border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;cursor:pointer;pointer-events:all;">Cancel</button>
     </div>
   </div>
@@ -891,7 +892,7 @@ body { overflow-x: hidden; }
 <div id="loading-overlay" style="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;pointer-events:all;">
   <div style="background:#12121a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px 36px;text-align:center;position:relative;min-width:280px;pointer-events:all;">
     <button onclick="document.getElementById('loading-overlay').style.display='none'" style="position:absolute;top:12px;right:14px;background:none;border:none;color:#7a788f;font-size:18px;cursor:pointer;line-height:1;">✕</button>
-    <div style="width:36px;height:36px;border:3px solid rgba(232,68,90,0.2);border-top-color:#e8445a;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
+    <div style="width:36px;height:36px;border:3px solid rgba(124,58,237,0.2);border-top-color:#7c3aed;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
     <p style="color:#f0eef8;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;margin-bottom:6px;">Loading your tools…</p>
     <p style="color:#7a788f;font-size:13px;font-family:'DM Sans',sans-serif;">Please wait a moment</p>
   </div>
@@ -906,7 +907,7 @@ body { overflow-x: hidden; }
     <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;color:#f0eef8;">Sign out?</h2>
     <p style="color:#7a788f;font-size:14px;margin-bottom:28px;line-height:1.6;">You'll need to sign back in to access your dashboard and results.</p>
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <button onclick="confirmSignOut()" id="signout-confirm-btn" style="padding:14px;background:#e8445a;border:none;color:#fff;border-radius:10px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;pointer-events:all;">Yes, sign me out</button>
+      <button onclick="confirmSignOut()" id="signout-confirm-btn" style="padding:14px;background:#7c3aed;border:none;color:#fff;border-radius:10px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;pointer-events:all;">Yes, sign me out</button>
       <button onclick="closeSignoutModal()" style="padding:14px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#7a788f;border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;cursor:pointer;pointer-events:all;">Cancel</button>
     </div>
   </div>
@@ -925,7 +926,7 @@ body { overflow-x: hidden; }
   </div>
   <div class="mobile-menu-bottom">
     <div id="mobile-account-info" style="display:none;flex-direction:column;gap:6px;padding:16px;background:var(--surface2);border-radius:12px;margin-bottom:12px;">
-      <span id="mobile-tier-badge" style="font-size:12px;color:#ff8fa0;font-weight:600;"></span>
+      <span id="mobile-tier-badge" style="font-size:12px;color:#c4b5fd;font-weight:600;"></span>
       <span id="mobile-email-display" style="font-size:13px;color:var(--muted);"></span>
     </div>
     <button onclick="openSignoutModal();closeMobileMenu();" style="width:100%;padding:14px;background:var(--accent);border:none;color:#fff;border-radius:12px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;">Sign out</button>
@@ -942,7 +943,8 @@ body { overflow-x: hidden; }
       <strong>Upgrade to unlock full results</strong> — See everyone who unfollowed you, manage your whitelist, snake list, audit history and more.
     </div>
     <div class="upgrade-btns">
-<button class="upgrade-btn-pro" onclick="startCheckout('monthly')">Go Pro — $10/mo ⭐</button>
+      <button class="upgrade-btn-one" id="upgrade-btn-one" onclick="startCheckout('one_time')">One-time unlock — $3</button>
+      <button class="upgrade-btn-pro" onclick="startCheckout('monthly')">Go Pro — $10/mo ⭐</button>
     </div>
   </div>
 
@@ -951,33 +953,21 @@ body { overflow-x: hidden; }
     <div style="max-width:100%;">
       <div class="tool-header" style="margin-bottom:40px;text-align:center;">
         <h2 class="section-title" style="text-align:center;margin:0 0 8px;">Analyze your followers</h2>
-        <p style="color:var(--muted);font-size:14px;">Upload your Instagram JSON export files. Your files are processed entirely in your browser and never uploaded to our servers.</p>
-        <p style="margin-top:8px;font-size:13px;color:var(--muted);">🖥️ This tool works best on a desktop browser. Downloading, unzipping, and uploading files is much easier on a computer than on mobile.</p>
-        <a href="instructions.html" target="_top" style="display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:10px 18px;color:#c4b5fd;font-size:13px;text-decoration:none;" onmouseover="this.style.background='rgba(124,58,237,0.15)'" onmouseout="this.style.background='rgba(124,58,237,0.08)'">
+        <p style="color:var(--muted);font-size:14px;">Upload your Instagram data ZIP file directly — no unzipping needed. We automatically find the right files inside.</p>
+        <p style="margin-top:8px;font-size:13px;color:var(--muted);">🖥️ This tool works best on a desktop browser. Downloading and uploading the ZIP is easier on a computer than on mobile.</p>
+        <a href="instructions.html" style="display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:10px 18px;color:#c4b5fd;font-size:13px;text-decoration:none;" onmouseover="this.style.background='rgba(124,58,237,0.15)'" onmouseout="this.style.background='rgba(124,58,237,0.08)'">
           📋 <span>Need help getting your files? Follow our step-by-step instructions →</span>
         </a>
       </div>
 
-      <div class="upload-grid">
-        <div>
-          <div class="upload-zone" id="followers-zone">
-            <input type="file" id="followers-input" accept=".json" multiple>
-            <div class="upload-icon">👥</div>
-            <div class="upload-label">Followers</div>
-            <div class="upload-sublabel">Drop <span>followers_1.json</span> (and more)<br>or click to browse</div>
-          </div>
-          <div class="file-list" id="followers-files"></div>
-        </div>
-        <div>
-          <div class="upload-zone" id="following-zone">
-            <input type="file" id="following-input" accept=".json" multiple>
-            <div class="upload-icon">➕</div>
-            <div class="upload-label">Following</div>
-            <div class="upload-sublabel">Drop <span>following.json</span> (and more)<br>or click to browse</div>
-          </div>
-          <div class="file-list" id="following-files"></div>
-        </div>
+      <div class="upload-zone" id="zip-zone" style="max-width:520px;margin:0 auto 8px;">
+        <input type="file" id="zip-input" accept=".zip">
+        <div class="upload-icon">📦</div>
+        <div class="upload-label">Upload Instagram ZIP</div>
+        <div class="upload-sublabel">Drop your <span>instagram-XXXXXX.zip</span> here<br>or click to browse — no unzipping needed</div>
       </div>
+      <div id="zip-file-list" style="max-width:520px;margin:0 auto 8px;"></div>
+      <div id="zip-status" style="max-width:520px;margin:0 auto 16px;font-size:13px;color:var(--muted);text-align:center;min-height:20px;"></div>
 
       <div class="error-box" id="error-box"></div>
       <button class="analyze-btn" id="analyze-btn" onclick="analyze()" disabled>✦ &nbsp;Analyze Now</button>
@@ -986,7 +976,7 @@ body { overflow-x: hidden; }
       <div id="results" style="display:none;margin-top:36px;">
         <div class="stats-row" id="stats-row"></div>
         <div class="print-header" id="print-header">
-          <div style="font-size:22px;font-weight:800;font-family:Syne,sans-serif;color:#e8445a;margin-bottom:4px">FindTheSnakes</div>
+          <div style="font-size:22px;font-weight:800;font-family:Syne,sans-serif;color:#7c3aed;margin-bottom:4px">FindTheSnakes</div>
           <div style="font-size:13px;color:#666" id="print-date"></div>
         </div>
         <div class="dashboard-welcome" id="dashboard-welcome">
@@ -994,13 +984,13 @@ body { overflow-x: hidden; }
             <strong>Welcome back! 👋</strong> Your tools are ready. Upload your Instagram files above to run a new analysis.
             <span id="last-audit-msg"></span>
           </div>
-          <button class="dashboard-welcome-btn" onclick="document.getElementById('followers-zone').scrollIntoView({behavior:'smooth'});window.scrollBy(0,-100)">Upload files ↑</button>
+          <button class="dashboard-welcome-btn" onclick="document.getElementById('zip-zone').scrollIntoView({behavior:'smooth'});window.scrollBy(0,-100)">Upload ZIP ↑</button>
         </div>
         <div class="results-header">
           <div class="results-title">Results</div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <div class="results-badge" id="results-badge"></div>
-            <span id="new-unfollower-badge" style="display:none;background:rgba(232,68,90,0.12);border:1px solid rgba(232,68,90,0.3);color:#ff7a8f;border-radius:100px;padding:4px 12px;font-size:12px;font-weight:600;"></span>
+            <span id="new-unfollower-badge" style="display:none;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);color:#ff7a8f;border-radius:100px;padding:4px 12px;font-size:12px;font-weight:600;"></span>
             <button class="start-over-btn" id="start-over-btn" onclick="startOver()">↺ &nbsp;New analysis</button>
           </div>
         </div>
@@ -1014,8 +1004,8 @@ body { overflow-x: hidden; }
           <button class="filter-tab" id="whitelist-tab" onclick="setFilter('whitelist',this)">🛡 Whitelist <span id="wl-tab-count" style="display:none;background:rgba(74,222,128,0.2);color:#4ade80;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
           <button class="filter-tab" id="analytics-tab" onclick="setFilter('analytics',this)">📊 Analytics</button>
           <button class="filter-tab" id="history-tab" onclick="setFilter('history',this)">📅 History</button>
-          <button class="filter-tab" id="snake-tab" onclick="setFilter('snakes',this)">🐍 Snake List <span id="snake-tab-count" style="display:none;background:rgba(232,68,90,0.2);color:#ff7a8f;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
-          <button class="filter-tab" id="log-tab" onclick="setFilter('log',this)">📋 All Unfollowers <span id="log-tab-count" style="display:none;background:rgba(232,68,90,0.2);color:#ff7a8f;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
+          <button class="filter-tab" id="snake-tab" onclick="setFilter('snakes',this)">🐍 Snake List <span id="snake-tab-count" style="display:none;background:rgba(124,58,237,0.2);color:#ff7a8f;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
+          <button class="filter-tab" id="log-tab" onclick="setFilter('log',this)">📋 All Unfollowers <span id="log-tab-count" style="display:none;background:rgba(124,58,237,0.2);color:#ff7a8f;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
         </div>
         <div class="wl-banner" id="wl-banner" style="display:none"><div>🛡 <span></span></div><button onclick="clearWhitelist()">Clear whitelist</button></div>
         <div class="results-list">
@@ -2511,7 +2501,7 @@ function printReport() {
     // Whitelist
     if (userWhitelist.size > 0) {
       html += `<div style="margin-top:24px;border-top:1px solid #eee;padding-top:16px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e8445a">WHITELIST (${userWhitelist.size} accounts)</div>`;
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#7c3aed">WHITELIST (${userWhitelist.size} accounts)</div>`;
       userWhitelist.forEach(h => { html += `<div style="font-size:12px;padding:3px 0;color:#333">@${h}${accountNotes[h] ? ' — ' + accountNotes[h] : ''}</div>`; });
       html += '</div>';
     }
@@ -2519,7 +2509,7 @@ function printReport() {
     // Snake List
     if (userSnakeList.size > 0) {
       html += `<div style="margin-top:24px;border-top:1px solid #eee;padding-top:16px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e8445a">🐍 SNAKE LIST (${userSnakeList.size} accounts)</div>`;
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#7c3aed">🐍 SNAKE LIST (${userSnakeList.size} accounts)</div>`;
       userSnakeList.forEach(h => { html += `<div style="font-size:12px;padding:3px 0;color:#333">@${h}${accountNotes[h] ? ' — ' + accountNotes[h] : ''}</div>`; });
       html += '</div>';
     }
@@ -2527,7 +2517,7 @@ function printReport() {
     // Audit History summary
     if (auditHistory.length > 0) {
       html += `<div style="margin-top:24px;border-top:1px solid #eee;padding-top:16px;">
-        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e8445a">AUDIT HISTORY (${auditHistory.length} audits)</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#7c3aed">AUDIT HISTORY (${auditHistory.length} audits)</div>
         <table style="width:100%;font-size:11px;border-collapse:collapse;">
           <tr style="background:#f5f5f5;"><th style="padding:4px 8px;text-align:left;">Date</th><th style="padding:4px 8px;">Not Following Back</th><th style="padding:4px 8px;">Mutuals</th><th style="padding:4px 8px;">Follows You Only</th></tr>`;
       auditHistory.forEach(a => {
@@ -2560,50 +2550,87 @@ let allResults = [];
 let currentFilter = 'unfollowers';
 let userWhitelist = new Set(); // handles whitelisted by user
 
-['followers', 'following'].forEach(type => {
-  const zone = document.getElementById(type + '-zone');
-  const input = document.getElementById(type + '-input');
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); handleFiles(type, Array.from(e.dataTransfer.files)); });
-  input.addEventListener('change', () => handleFiles(type, Array.from(input.files)));
+// ── ZIP UPLOAD HANDLER ──
+const zipInput = document.getElementById('zip-input');
+const zipZone  = document.getElementById('zip-zone');
+
+zipZone.addEventListener('dragover', e => { e.preventDefault(); zipZone.classList.add('drag-over'); });
+zipZone.addEventListener('dragleave', () => zipZone.classList.remove('drag-over'));
+zipZone.addEventListener('drop', e => {
+  e.preventDefault();
+  zipZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) handleZip(file);
+});
+zipInput.addEventListener('change', () => {
+  if (zipInput.files[0]) handleZip(zipInput.files[0]);
 });
 
-function handleFiles(type, files) {
-  const jsonFiles = files.filter(f => f.name.endsWith('.json'));
-  if (!jsonFiles.length) { showError('Please upload JSON files only.'); return; }
+async function handleZip(file) {
+  if (!file.name.endsWith('.zip')) {
+    showError('Please upload a ZIP file. Download your Instagram data export and upload the ZIP directly — no unzipping needed.');
+    return;
+  }
   hideError();
-  const listEl = document.getElementById(type + '-files');
-  jsonFiles.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const json = JSON.parse(e.target.result);
-        if (type === 'followers') followersData.push({ name: file.name, data: json });
-        else followingData.push({ name: file.name, data: json });
-        renderFileItem(listEl, file, type);
-        updateBtn();
-      } catch {
-        showError(`Could not parse ${file.name}. Make sure it's a valid Instagram JSON export.`);
+  followersData = [];
+  followingData = [];
+
+  const statusEl  = document.getElementById('zip-status');
+  const listEl    = document.getElementById('zip-file-list');
+  listEl.innerHTML = '';
+  statusEl.style.color = 'var(--muted)';
+  statusEl.textContent = 'Reading ZIP file...';
+
+  try {
+    const zip = await JSZip.loadAsync(file);
+    const found = [];
+
+    zip.forEach((path, entry) => {
+      if (entry.dir) return;
+      const name = path.split('/').pop();
+      if (/^followers_\d+\.json$/i.test(name) || /^following.*\.json$/i.test(name)) {
+        found.push({ path, name, entry });
       }
-    };
-    reader.readAsText(file);
-  });
-}
+    });
 
-function renderFileItem(listEl, file, type) {
-  const item = document.createElement('div');
-  item.className = 'file-item';
-  const kb = (file.size / 1024).toFixed(1);
-  item.innerHTML = `<span class="file-item-dot"></span><span class="file-item-name">${file.name}</span><span class="file-item-size">${kb} KB</span><span class="file-item-remove" title="Remove" onclick="removeFile('${type}','${file.name}',this)">✕</span>`;
-  listEl.appendChild(item);
-}
+    if (found.length === 0) {
+      showError('No followers or following files found in this ZIP. Make sure you selected "Followers and following" when requesting your export, and set the format to JSON.');
+      statusEl.textContent = '';
+      return;
+    }
 
-function removeFile(type, name, el) {
-  if (type === 'followers') followersData = followersData.filter(f => f.name !== name);
-  else followingData = followingData.filter(f => f.name !== name);
-  el.closest('.file-item').remove();
-  updateBtn();
+    for (const { name, entry } of found) {
+      const text = await entry.async('string');
+      try {
+        const json = JSON.parse(text);
+        const isFollowers = /^followers_/i.test(name);
+        if (isFollowers) followersData.push({ name, data: json });
+        else followingData.push({ name, data: json });
+
+        const item = document.createElement('div');
+        item.className = 'file-item';
+        item.innerHTML = `<span class="file-item-dot" style="background:${isFollowers ? '#a78bfa' : '#4ade80'}"></span><span class="file-item-name">${name}</span><span class="file-item-size" style="color:${isFollowers ? '#a78bfa' : '#4ade80'}">${isFollowers ? 'Followers' : 'Following'}</span>`;
+        listEl.appendChild(item);
+      } catch(e) {
+        console.warn('Could not parse', name, e);
+      }
+    }
+
+    if (followersData.length === 0 || followingData.length === 0) {
+      showError(`Found files but missing ${followersData.length === 0 ? 'followers' : 'following'} data. Make sure your export includes both Followers and Following.`);
+      statusEl.textContent = '';
+      return;
+    }
+
+    statusEl.style.color = '#4ade80';
+    statusEl.textContent = `✓ Found ${followersData.length} followers file${followersData.length > 1 ? 's' : ''} and ${followingData.length} following file${followingData.length > 1 ? 's' : ''} — ready to analyze`;
+    updateBtn();
+
+  } catch(err) {
+    console.error('ZIP error:', err);
+    showError('Could not read the ZIP file. Make sure it is a valid Instagram data export ZIP.');
+    statusEl.textContent = '';
+  }
 }
 
 function updateBtn() {
@@ -3103,7 +3130,7 @@ function buildPaywall(hiddenCount, totalUnfollowers) {
         <span class="paywall-btn-price">$10/mo — Unlimited access</span>
       </button>
     </div>
-    ${!currentUser ? `<p style="margin-top:20px;font-size:13px;color:var(--muted)">Already a Pro member? <a href="#" onclick="openAuthModal();return false;" style="color:var(--accent)">Sign in to restore access</a></p>` : ''}
+    ${!currentUser ? `<p style="margin-top:20px;font-size:13px;color:var(--muted)">Already paid? <a href="#" onclick="openAuthModal();return false;" style="color:var(--accent)">Sign in to restore access</a></p>` : ''}
   </div>`;
 }
 
