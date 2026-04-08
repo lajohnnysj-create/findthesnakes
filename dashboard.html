@@ -511,18 +511,18 @@
         </div>
 
         <!-- INVOICE META -->
-        <div class="inv-meta-grid" style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div class="inv-meta-grid" style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
           <div>
             <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Invoice #</label>
-            <input type="text" id="inv-number" placeholder="INV-001" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;">
+            <input type="text" id="inv-number" placeholder="INV-001" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;">
           </div>
           <div>
             <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Issue Date</label>
-            <input type="date" id="inv-date" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;">
+            <input type="date" id="inv-date" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;">
           </div>
           <div>
             <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Due Date</label>
-            <input type="date" id="inv-due" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;">
+            <input type="date" id="inv-due" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;">
           </div>
         </div>
 
@@ -1263,10 +1263,10 @@ function downloadInvoicePDF() {
   const invoiceCSS = [
     'body{font-family:Arial,sans-serif;background:#fff;color:#111;margin:0;padding:40px;}',
     '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;}',
-    '.invoice-title{font-size:36px;font-weight:900;color:#7c3aed;letter-spacing:-1px;}',
+    '.invoice-title{font-size:36px;font-weight:900;color:#111;letter-spacing:-1px;}',
     '.invoice-num{font-size:14px;color:#666;margin-top:4px;}',
     '.parties{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;}',
-    '.party-label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#a78bfa;font-weight:700;margin-bottom:8px;}',
+    '.party-label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#555;font-weight:700;margin-bottom:8px;}',
     '.party-name{font-size:16px;font-weight:700;margin-bottom:4px;}',
     '.party-detail{font-size:13px;color:#555;line-height:1.5;}',
     'table{width:100%;border-collapse:collapse;margin-bottom:24px;}',
@@ -1275,7 +1275,7 @@ function downloadInvoicePDF() {
     '.text-right{text-align:right;} .text-center{text-align:center;}',
     '.totals{max-width:300px;margin-left:auto;}',
     '.total-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;border-bottom:1px solid #f0f0f0;}',
-    '.total-final{display:flex;justify-content:space-between;padding:12px 0;font-size:20px;font-weight:900;color:#7c3aed;}',
+    '.total-final{display:flex;justify-content:space-between;padding:12px 0;font-size:20px;font-weight:900;color:#111;}',
     '.notes{margin-top:32px;padding:16px;background:#f9f9f9;border-radius:8px;font-size:13px;color:#555;line-height:1.7;}',
     '.footer{margin-top:48px;text-align:center;font-size:11px;color:#aaa;}'
   ].join(' ');
