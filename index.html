@@ -109,16 +109,25 @@
   .mockup-dot.green { background: #28c840; }
   .mockup-url { background: var(--surface); border-radius: 6px; padding: 4px 12px; font-size: 11px; color: var(--muted); margin-left: 8px; flex: 1; max-width: 260px; }
   .mockup-body { display: flex; min-height: 380px; }
-  .mockup-sidebar { width: 200px; background: rgba(0,0,0,0.2); border-right: 1px solid var(--border); padding: 20px 12px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
-  .mockup-logo { display: flex; align-items: center; gap: 8px; padding: 8px; margin-bottom: 16px; }
-  .mockup-logo-icon { width: 24px; height: 24px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 6px; font-size: 12px; display: flex; align-items: center; justify-content: center; }
-  .mockup-logo-text { font-family: "Syne", sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
-  .mockup-nav-item { padding: 8px 12px; border-radius: 8px; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .mockup-sidebar { width: 200px; background: rgba(0,0,0,0.2); border-right: 1px solid var(--border); padding: 16px 10px; display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; }
+  .mockup-logo { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin-bottom: 12px; }
+  .mockup-logo-text { font-family: "Syne", sans-serif; font-size: 13px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; }
+  .mockup-section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); font-weight: 600; padding: 6px 10px 4px; }
+  .mockup-nav-item { padding: 7px 10px; border-radius: 7px; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
   .mockup-nav-item.active { background: rgba(124,58,237,0.15); color: #c4b5fd; border: 1px solid rgba(124,58,237,0.2); }
-  .mockup-content { flex: 1; padding: 20px; overflow: hidden; }
-  .mockup-header { margin-bottom: 16px; }
-  .mockup-title { font-family: "Syne", sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-  .mockup-sub { font-size: 11px; color: var(--muted); }
+  .mockup-nav-icon { width: 13px; height: 13px; stroke: #fff; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .mockup-nav-item.active .mockup-nav-icon { stroke: #c4b5fd; }
+  .mockup-pro-badge { margin-left: auto; font-size: 8px; background: rgba(124,58,237,0.2); color: #c4b5fd; border-radius: 100px; padding: 1px 6px; font-weight: 700; letter-spacing: 0.05em; }
+  .mockup-content { flex: 1; padding: 28px 24px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .mockup-welcome { width: 100%; }
+  .mockup-welcome-badge { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(124,58,237,0.4); background: rgba(124,58,237,0.08); border-radius: 100px; padding: 4px 12px; font-size: 9px; color: #c4b5fd; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 14px; }
+  .mockup-welcome-title { font-family: "Syne", sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 8px; color: var(--text); }
+  .mockup-welcome-title span { background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .mockup-welcome-sub { font-size: 11px; color: var(--muted); margin-bottom: 18px; }
+  .mockup-welcome-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-width: 320px; margin: 0 auto; }
+  .mockup-welcome-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 10px 8px; display: flex; align-items: center; gap: 8px; }
+  .mockup-welcome-icon { width: 24px; height: 24px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .mockup-welcome-name { font-size: 10px; font-weight: 600; color: var(--text); text-align: left; }
   .mockup-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
   .mockup-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
   .mockup-stat-num { font-family: "Syne", sans-serif; font-size: 20px; font-weight: 800; color: #a78bfa; }
@@ -258,30 +267,46 @@
         <div class="mockup-body">
           <div class="mockup-sidebar">
             <div class="mockup-logo">
-              <div class="mockup-logo-icon">&#x1F40D;</div>
               <div class="mockup-logo-text">FindTheSnakes</div>
             </div>
-            <div class="mockup-nav-item active">&#x1F50D; Follower Audit</div>
-            <div class="mockup-nav-item">&#x1F5BC; Image Converter</div>
-            <div class="mockup-nav-item">&#x2B1B; QR Generator</div>
-            <div class="mockup-nav-item">&#x1F9FE; Invoice Generator</div>
+            <div class="mockup-section-label">Tools</div>
+            <div class="mockup-nav-item active">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1V10"/></svg>
+              Home
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              Follow-Back Audit
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+              Image Converter
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20v1"/></svg>
+              QR Generator
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+              Invoice Generator
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Tax Tracker
+              <span class="mockup-pro-badge">PRO</span>
+            </div>
           </div>
           <div class="mockup-content">
-            <div class="mockup-header">
-              <div class="mockup-title">Follower Audit</div>
-              <div class="mockup-sub">Last run: Today at 9:41 AM</div>
-            </div>
-            <div class="mockup-stats">
-              <div class="mockup-stat"><div class="mockup-stat-num">47</div><div class="mockup-stat-label">Not following back</div></div>
-              <div class="mockup-stat"><div class="mockup-stat-num green">1.2k</div><div class="mockup-stat-label">Mutuals</div></div>
-              <div class="mockup-stat"><div class="mockup-stat-num">8</div><div class="mockup-stat-label">New snakes</div></div>
-            </div>
-            <div class="mockup-table">
-              <div class="mockup-table-header"><span>Username</span><span>Status</span><span>Action</span></div>
-              <div class="mockup-table-row"><span class="mockup-handle">@jessica_creates</span><span><div class="mockup-tag red">Snake &#x1F40D;</div></span><span style="font-size:10px;color:#7a788f;">Unfollow</span></div>
-              <div class="mockup-table-row"><span class="mockup-handle">@travelblogger</span><span><div class="mockup-tag red">Snake &#x1F40D;</div></span><span style="font-size:10px;color:#7a788f;">Unfollow</span></div>
-              <div class="mockup-table-row"><span class="mockup-handle">@fitness_mike</span><span><div class="mockup-tag">Mutual &#x2713;</div></span><span style="font-size:10px;color:#7a788f;">Keep</span></div>
-              <div class="mockup-table-row"><span class="mockup-handle">@branddeals_co</span><span><div class="mockup-tag red">Snake &#x1F40D;</div></span><span style="font-size:10px;color:#7a788f;">Unfollow</span></div>
+            <div class="mockup-welcome">
+              <div class="mockup-welcome-badge">🐍 Creator Tools</div>
+              <div class="mockup-welcome-title">Welcome back, creator. <span>Let's get to work.</span></div>
+              <div class="mockup-welcome-sub">Your creator toolkit is ready. Pick a tool to get started.</div>
+              <div class="mockup-welcome-grid">
+                <div class="mockup-welcome-card"><div class="mockup-welcome-icon">🔍</div><div class="mockup-welcome-name">Follow-Back Audit</div></div>
+                <div class="mockup-welcome-card"><div class="mockup-welcome-icon">🖼</div><div class="mockup-welcome-name">Image Converter</div></div>
+                <div class="mockup-welcome-card"><div class="mockup-welcome-icon">⬛</div><div class="mockup-welcome-name">QR Generator</div></div>
+                <div class="mockup-welcome-card"><div class="mockup-welcome-icon">🧾</div><div class="mockup-welcome-name">Invoice Generator</div></div>
+              </div>
             </div>
           </div>
         </div>
