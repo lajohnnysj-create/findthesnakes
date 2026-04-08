@@ -394,6 +394,13 @@ function openSignupModal() {
   setTimeout(() => document.getElementById('auth-email')?.focus(), 100);
 }
 
+// Open signup modal if URL has #signup (from external page links)
+window.addEventListener('load', () => {
+  if (window.location.hash === '#signup' && !currentUser) {
+    setTimeout(openSignupModal, 300);
+  }
+});
+
 function closeAuthModal() {
   document.getElementById('auth-modal').classList.remove('open');
   const el = document.getElementById('auth-msg'); if (el) el.style.display = 'none';
