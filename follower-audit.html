@@ -1004,7 +1004,6 @@ body { overflow-x: hidden; }
           <button class="filter-tab" id="analytics-tab" onclick="setFilter('analytics',this)">📊 Analytics</button>
           <button class="filter-tab" id="history-tab" onclick="setFilter('history',this)">📅 Last Audit</button>
           <button class="filter-tab" id="snake-tab" onclick="setFilter('snakes',this)">🐍 Snake List <span id="snake-tab-count" style="display:none;background:rgba(124,58,237,0.2);color:#ff7a8f;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
-          <button class="filter-tab" id="log-tab" onclick="setFilter('log',this)">📋 All Unfollowers <span id="log-tab-count" style="display:none;background:rgba(124,58,237,0.2);color:#ff7a8f;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
         </div>
         <div class="wl-banner" id="wl-banner" style="display:none"><div>🛡 <span></span></div><button onclick="clearWhitelist()">Clear whitelist</button></div>
         <div class="results-list">
@@ -1835,19 +1834,10 @@ async function updateUnfollowerLog() {
 }
 
 async function loadUnfollowerLog() {
-  if (!currentUser || userTier !== 'monthly') return;
-
-  const { data } = await sb
-    .from('unfollower_log')
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .order('first_seen', { ascending: false });
-
-  if (data) {
-    unfollowerLog = data;
-    updateLogTabCount();
-    renderUnfollowerLog();
-  }
+  // EGRESS OPTIMIZATION: All Unfollowers tab removed.
+  // Skip the query entirely. unfollowerLog stays as an empty array,
+  // which gracefully hides dependent analytics cards and CSV sections.
+  return;
 }
 
 function updateLogTabCount() {
