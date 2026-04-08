@@ -818,8 +818,8 @@ document.getElementById('settings-modal').addEventListener('click', function(e) 
 // ════════════════════════════════════════════
 let imgFile = null;
 let imgDailyCount = 0;
-const IMG_LIMIT_FREE = 3;
-const IMG_LIMIT_PRO = 10;
+const IMG_LIMIT_FREE = 1;
+const IMG_LIMIT_PRO = 9999;
 const IMG_SIZE_FREE = 5 * 1024 * 1024; // 5MB
 const IMG_SIZE_PRO = 50 * 1024 * 1024; // 50MB
 
@@ -884,7 +884,7 @@ async function convertImage() {
   const key = 'fts_img_' + new Date().toDateString();
   imgDailyCount = parseInt(localStorage.getItem(key) || '0');
   if (imgDailyCount >= limit) {
-    alert(`You have reached your daily limit of ${limit} conversions. ${isPro ? '' : 'Upgrade to Pro for more.'}`);
+    alert(`You have used your free conversion for today. Upgrade to Pro for unlimited.`);
     return;
   }
   const btn = document.getElementById('img-convert-btn');
@@ -935,7 +935,7 @@ async function convertImage() {
     imgDailyCount++;
     localStorage.setItem(key, imgDailyCount.toString());
     const remaining = Math.max(0, limit - imgDailyCount);
-    document.getElementById('img-usage').textContent = `${remaining} conversion${remaining !== 1 ? 's' : ''} remaining today`;
+    document.getElementById('img-usage').textContent = isPro ? `Unlimited conversions` : `${remaining} conversion${remaining !== 1 ? 's' : ''} remaining today`;
     document.getElementById('img-limit-note').textContent = `${isPro ? 'Pro' : 'Free'}: ${remaining} of ${limit} conversions remaining today`;
     btn.textContent = 'Convert Image'; btn.disabled = false;
   };
@@ -946,9 +946,9 @@ async function convertImage() {
 // QR CODE GENERATOR
 // ════════════════════════════════════════════
 let qrMonthCount = 0;
-const QR_LIMIT_FREE = 3;
+const QR_LIMIT_FREE = 1;
 const QR_LIMIT_FREE_DAY = true; // per day for free
-const QR_LIMIT_PRO = 10; // per month
+const QR_LIMIT_PRO = 9999; // unlimited
 
 function initQRGenerator() {
   const isPro = userTier === 'monthly';
@@ -1016,7 +1016,7 @@ function downloadQR() {
   qrMonthCount = parseInt(localStorage.getItem(key) || '0');
   const limit = isPro ? QR_LIMIT_PRO : QR_LIMIT_FREE;
   if (qrMonthCount >= limit) {
-    alert(`You have reached your limit of ${limit} QR codes ${isPro ? 'this month' : 'today'}. ${isPro ? '' : 'Upgrade to Pro for 10/month.'}`);
+    alert(isPro ? 'Unexpected error.' : 'You have used your free QR code for today. Upgrade to Pro for unlimited.');
     return;
   }
   const canvas = document.getElementById('qr-canvas');
@@ -1027,8 +1027,8 @@ function downloadQR() {
   qrMonthCount++;
   localStorage.setItem(key, qrMonthCount.toString());
   const remaining = Math.max(0, limit - qrMonthCount);
-  document.getElementById('qr-usage').textContent = `${remaining} QR code${remaining !== 1 ? 's' : ''} remaining ${isPro ? 'this month' : 'today'}`;
-  document.getElementById('qr-limit-note').textContent = `${isPro ? 'Pro' : 'Free'}: ${remaining} of ${limit} QR codes remaining ${isPro ? 'this month' : 'today'}`;
+  document.getElementById('qr-usage').textContent = isPro ? 'Unlimited QR codes' : `${remaining} QR code${remaining !== 1 ? 's' : ''} remaining today`;
+  document.getElementById('qr-limit-note').textContent = isPro ? 'Pro: Unlimited QR codes' : `Free: ${remaining} of ${limit} QR code remaining today`;
 }
 
 // ════════════════════════════════════════════
@@ -1037,7 +1037,7 @@ function downloadQR() {
 let invItems = [];
 let invLogoDataUrl = null;
 let invDailyCount = 0;
-const INV_LIMIT_FREE = 3;
+const INV_LIMIT_FREE = 1;
 
 function initInvoiceGenerator() {
   const isPro = userTier === 'monthly';
@@ -1061,7 +1061,7 @@ function initInvoiceGenerator() {
 
   if (!isPro) {
     const remaining = Math.max(0, INV_LIMIT_FREE - invDailyCount);
-    document.getElementById('inv-usage').textContent = `Free: ${remaining} of ${INV_LIMIT_FREE} invoices remaining today. Upgrade to Pro for unlimited invoices and logo upload.`;
+    document.getElementById('inv-usage').textContent = `Free: ${remaining} of ${INV_LIMIT_FREE} invoice remaining today. Upgrade to Pro for unlimited.`;
   }
 
   // Set default dates
@@ -1218,7 +1218,7 @@ function downloadInvoicePDF() {
   const key = 'fts_inv_' + new Date().toDateString();
   invDailyCount = parseInt(localStorage.getItem(key) || '0');
   if (!isPro && invDailyCount >= INV_LIMIT_FREE) {
-    alert('You have reached your daily limit of 3 invoices. Upgrade to Pro for unlimited.');
+    alert('You have used your free invoice for today. Upgrade to Pro for unlimited.');
     return;
   }
   const fromName = document.getElementById('inv-from-name').value || 'Your Name';
@@ -1317,7 +1317,7 @@ ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'
     invDailyCount++;
     localStorage.setItem(key, invDailyCount.toString());
     const remaining = Math.max(0, INV_LIMIT_FREE - invDailyCount);
-    document.getElementById('inv-usage').textContent = `Free: ${remaining} of ${INV_LIMIT_FREE} invoices remaining today.`;
+    document.getElementById('inv-usage').textContent = `Free: ${remaining} of ${INV_LIMIT_FREE} invoice remaining today.`;
   }
 }
 
