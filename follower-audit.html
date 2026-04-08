@@ -919,7 +919,7 @@ body { overflow-x: hidden; }
   <button onclick="closeMobileMenu()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;padding:4px;">✕</button>
   <div class="mobile-menu-links">
     <a href="dashboard.html" onclick="closeMobileMenu()" style="color:var(--accent);">Dashboard</a>
-    <a href="instructions.html" target="_top">Instructions</a>
+    <a href="instructions.html">Instructions</a>
     <a href="faq.html" onclick="closeMobileMenu()">FAQ</a>
     <a href="about.html" onclick="closeMobileMenu()">About</a>
     <a href="blog.html" onclick="closeMobileMenu()">Blog</a>
@@ -1224,7 +1224,7 @@ function showDashboard() {
     if (scroll) scroll.innerHTML = `<div class="no-analysis-msg">
       <span class="emoji">📂</span>
       No analysis yet. Upload your Instagram JSON files above and click <strong>Analyze Now</strong> to see your results.<br><br>
-      <a href="instructions.html" target="_top">Need help getting your files? →</a>
+      <a href="instructions.html">Need help getting your files? →</a>
     </div>`;
 
     // Default to whitelist tab if they have whitelist items, otherwise history
@@ -2097,7 +2097,7 @@ function startOver() {
     if (scroll) scroll.innerHTML = `<div class="no-analysis-msg">
       <span class="emoji">📂</span>
       Upload your Instagram JSON files above and click <strong>Analyze Now</strong> to run a new analysis.<br><br>
-      <a href="instructions.html" target="_top">Need help getting your files? →</a>
+      <a href="instructions.html">Need help getting your files? →</a>
     </div>`;
     // Show welcome banner again
     const welcome = document.getElementById('dashboard-welcome');
