@@ -160,6 +160,21 @@
       <div id="settings-sub-pro" style="display:none;">
         <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">You are on the <strong style="color:#e879f9;">Pro plan</strong>. You have full access to all tools and features.</p>
         <button id="settings-cancel-btn" onclick="handleSettingsCancel()" style="width:100%;padding:11px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.08)'" onmouseout="this.style.background='transparent'">Cancel subscription</button>
+        <div id="settings-cancel-confirm" style="display:none;margin-top:12px;padding:14px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:8px;">
+          <p style="font-size:13px;color:#fca5a5;margin-bottom:12px;">Are you sure? You will keep Pro access until the end of your billing period.</p>
+          <div style="display:flex;gap:8px;">
+            <button onclick="confirmSettingsCancel()" style="flex:1;padding:9px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:7px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Yes, cancel</button>
+            <button onclick="dismissSettingsMsg()" style="flex:1;padding:9px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:12px;font-family:DM Sans,sans-serif;cursor:pointer;">Keep my plan</button>
+          </div>
+        </div>
+        <div id="settings-renew-confirm" style="display:none;margin-top:12px;padding:14px;background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);border-radius:8px;">
+          <p style="font-size:13px;color:#4ade80;margin-bottom:12px;">Reactivate your Pro plan? Your subscription will continue as normal.</p>
+          <div style="display:flex;gap:8px;">
+            <button onclick="confirmSettingsCancel()" style="flex:1;padding:9px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);color:#4ade80;border-radius:7px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Yes, reactivate</button>
+            <button onclick="dismissSettingsMsg()" style="flex:1;padding:9px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:12px;font-family:DM Sans,sans-serif;cursor:pointer;">Never mind</button>
+          </div>
+        </div>
+        <div id="settings-result-msg" style="display:none;margin-top:12px;padding:12px 14px;border-radius:8px;font-size:13px;"></div>
       </div>
     </div>
 
@@ -742,29 +757,52 @@ function closeSettingsModal() {
   document.getElementById('settings-modal').style.display = 'none';
 }
 
-async function handleSettingsCancel() {
+function handleSettingsCancel() {
+  const isCancelling = userStatus === 'cancelling';
+  dismissSettingsMsg();
+  if (isCancelling) {
+    document.getElementById('settings-renew-confirm').style.display = 'block';
+  } else {
+    document.getElementById('settings-cancel-confirm').style.display = 'block';
+  }
+}
+
+function dismissSettingsMsg() {
+  document.getElementById('settings-cancel-confirm').style.display = 'none';
+  document.getElementById('settings-renew-confirm').style.display = 'none';
+  document.getElementById('settings-result-msg').style.display = 'none';
+}
+
+function showSettingsResult(type, msg) {
+  dismissSettingsMsg();
+  const el = document.getElementById('settings-result-msg');
+  const isSuccess = type === 'success';
+  el.style.display = 'block';
+  el.style.background = isSuccess ? 'rgba(74,222,128,0.08)' : 'rgba(239,68,68,0.08)';
+  el.style.border = isSuccess ? '1px solid rgba(74,222,128,0.25)' : '1px solid rgba(239,68,68,0.2)';
+  el.style.color = isSuccess ? '#4ade80' : '#fca5a5';
+  el.textContent = msg;
+}
+
+async function confirmSettingsCancel() {
   const isCancelling = userStatus === 'cancelling';
   const btn = document.getElementById('settings-cancel-btn');
-  const action = isCancelling ? 'reactivate' : 'cancel';
-  const confirmMsg = isCancelling
-    ? 'Reactivate your Pro subscription? Your plan will continue as normal.'
-    : 'Cancel your Pro subscription? You will keep access until the end of your billing period.';
-  if (!confirm(confirmMsg)) return;
   btn.textContent = isCancelling ? 'Reactivating...' : 'Cancelling...';
   btn.disabled = true;
+  dismissSettingsMsg();
   try {
     const fn = isCancelling ? 'reactivate-subscription' : 'cancel-subscription';
     const { error } = await sb.functions.invoke(fn, { body: { userId: currentUser.id } });
     if (error) throw error;
     await fetchTier(currentUser.id);
     updateSettingsCancelBtn();
-    const msg = isCancelling
-      ? 'Your subscription has been reactivated!'
-      : 'Subscription cancelled. You keep Pro access until the end of your billing period.';
-    alert(msg);
+    showSettingsResult('success', isCancelling
+      ? 'Your Pro plan has been reactivated!'
+      : 'Cancelled. You keep Pro access until the end of your billing period.'
+    );
   } catch(err) {
     console.error('Subscription error:', err);
-    alert('Something went wrong. Please email hello@findthesnakes.com for help.');
+    showSettingsResult('error', 'Something went wrong. Please email hello@findthesnakes.com for help.');
   } finally {
     btn.disabled = false;
   }
