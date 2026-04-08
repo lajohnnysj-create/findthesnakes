@@ -2606,11 +2606,6 @@ async function handleZip(file) {
         const isFollowers = /^followers_/i.test(name);
         if (isFollowers) followersData.push({ name, data: json });
         else followingData.push({ name, data: json });
-
-        const item = document.createElement('div');
-        item.className = 'file-item';
-        item.innerHTML = `<span class="file-item-dot" style="background:${isFollowers ? '#a78bfa' : '#4ade80'}"></span><span class="file-item-name">${name}</span><span class="file-item-size" style="color:${isFollowers ? '#a78bfa' : '#4ade80'}">${isFollowers ? 'Followers' : 'Following'}</span>`;
-        listEl.appendChild(item);
       } catch(e) {
         console.warn('Could not parse', name, e);
       }
@@ -2621,6 +2616,20 @@ async function handleZip(file) {
       statusEl.textContent = '';
       return;
     }
+
+    // Show compact summary instead of full list
+    listEl.innerHTML = `
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);border-radius:8px;padding:7px 14px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#a78bfa;display:inline-block;flex-shrink:0;"></span>
+          <span style="font-size:13px;color:#a78bfa;font-weight:500;">${followersData.length} followers file${followersData.length > 1 ? 's' : ''}</span>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:8px;padding:7px 14px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;flex-shrink:0;"></span>
+          <span style="font-size:13px;color:#4ade80;font-weight:500;">${followingData.length} following file${followingData.length > 1 ? 's' : ''}</span>
+        </div>
+      </div>
+    `;
 
     statusEl.style.color = '#4ade80';
     statusEl.textContent = `✓ Found ${followersData.length} followers file${followersData.length > 1 ? 's' : ''} and ${followingData.length} following file${followingData.length > 1 ? 's' : ''} — ready to analyze`;
