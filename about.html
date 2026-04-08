@@ -49,6 +49,7 @@
   /* NAV */
   nav { position: sticky; top: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(7,7,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
   .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
+  .logo img { width: 28px; height: 28px; object-fit: contain; }
   .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
   .nav-links { display: flex; gap: 36px; }
   .nav-links a { color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
@@ -189,7 +190,7 @@
 </div>
 
 <nav>
-  <a class="logo" href="index.html">FindTheSnakes</a>
+  <a class="logo" href="index.html"><img src="logo.png" alt=""> FindTheSnakes</a>
   <div class="nav-links">
     <a href="pricing.html">Pricing</a>
     <a href="faq.html">FAQ</a>
@@ -256,7 +257,7 @@
 </section>
 
 <footer>
-  <a class="logo" href="index.html">FindTheSnakes</a>
+  <a class="logo" href="index.html"><img src="logo.png" alt=""> FindTheSnakes</a>
   <p>© <span class="copy-year"></span> FindTheSnakes. Not affiliated with Instagram or Meta.</p>
   <div class="footer-links">
     <a href="pricing.html">Pricing</a>

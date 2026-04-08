@@ -42,6 +42,7 @@
   body { font-family: "DM Sans", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(7,7,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
   .logo { font-family: "Syne", sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+  .logo img { width: 28px; height: 28px; object-fit: contain; }
   .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
   .nav-links { display: flex; align-items: center; gap: 32px; }
   .nav-links a { color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
@@ -224,7 +225,7 @@
 
 <nav>
   <a class="logo" href="index.html">
-    FindTheSnakes
+    <img src="logo.png" alt=""> FindTheSnakes
   </a>
   <div class="nav-links" id="nav-links">
     <a href="dashboard.html" id="dashboard-link" style="display:none;color:#c4b5fd;font-weight:500;">Dashboard</a>
@@ -388,7 +389,7 @@
 </section>
 
 <footer>
-  <a class="logo" href="index.html">FindTheSnakes</a>
+  <a class="logo" href="index.html"><img src="logo.png" alt=""> FindTheSnakes</a>
   <p style="font-size:13px;color:var(--muted);">&#x00A9; <span class="copy-year"></span> FindTheSnakes. Not affiliated with Instagram or Meta.</p>
   <div class="footer-links">
     <a href="pricing.html">Pricing</a>

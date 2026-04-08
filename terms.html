@@ -28,6 +28,7 @@
 
   nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
   .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
+  .logo img { width: 28px; height: 28px; object-fit: contain; }
   .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
   .nav-cta { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; box-shadow: 0 0 20px var(--accent-glow); font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
   .nav-cta:hover { background: #a855f7; transform: translateY(-1px); }
@@ -112,7 +113,7 @@
 <body>
 
 <nav>
-  <a class="logo" href="index.html">FindTheSnakes</a>
+  <a class="logo" href="index.html"><img src="logo.png" alt=""> FindTheSnakes</a>
   <div class="nav-links">
     <a href="pricing.html">Pricing</a>
     <a href="instructions.html" >Instructions</a>
@@ -156,7 +157,7 @@
     <div>
       <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">4. Subscriptions and Billing</h2>
       <p style="margin-bottom:12px;">Pro subscriptions are billed monthly at $10/month. Billing is handled by Stripe. Your subscription renews automatically each month until cancelled. You can cancel at any time from your dashboard. Cancellation takes effect at the end of your current billing period — you keep Pro access until then.</p>
-      <p>We offer refunds within 7 days of purchase. After 7 days, charges are non-refundable except where required by law. If you believe a charge was made in error, contact us at hello@findthesnakes.com.</p>
+      <p>We offer refunds within 7 days of purchase. After 7 days, charges are non-refundable except where required by law. If you believe a charge was made in error, contact us at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dab2bfb6b6b59abcb3b4beaeb2bfa9b4bbb1bfa9f4b9b5b7">[email&#160;protected]</a>.</p>
     </div>
 
     <div>
@@ -192,7 +193,7 @@
 
     <div>
       <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">11. Contact</h2>
-      <p>If you have questions about these Terms of Service, email us at <a href="mailto:hello@findthesnakes.com" style="color:var(--accent2);">hello@findthesnakes.com</a>.</p>
+      <p>If you have questions about these Terms of Service, email us at <a href="/cdn-cgi/l/email-protection#b7dfd2dbdbd8f7d1ded9d3c3dfd2c4d9d6dcd2c499d4d8da" style="color:var(--accent2);"><span class="__cf_email__" data-cfemail="fe969b929291be9897909a8a969b8d909f959b8dd09d9193">[email&#160;protected]</span></a>.</p>
     </div>
 
   </div>
@@ -200,10 +201,5 @@
 
 
 
-<script>
-document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
-function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); document.getElementById('hamburger-btn').classList.toggle('open'); }
-function closeMobileMenu() { document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('hamburger-btn').classList.remove('open'); }
-</script>
-</body>
-</html>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+document.querySelectorAll('.copy-year').forEach(el => el.textContent = ne
