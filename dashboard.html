@@ -659,11 +659,8 @@ function updateSettingsCancelBtn() {
 }
 
 function showFollowerTool() {
-  // Reset iframe src so navigating away and back always returns to follower-audit
   const iframe = document.getElementById('follower-iframe');
-  if (iframe && iframe.src.indexOf('follower-audit.html') === -1) {
-    iframe.src = 'follower-audit.html';
-  }
+  if (iframe) iframe.src = 'follower-audit.html';
   showTool('follower');
 }
 
