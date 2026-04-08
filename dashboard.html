@@ -63,6 +63,8 @@
   .sidebar-user-info { flex: 1; overflow: hidden; }
   .sidebar-user-email { font-size: 12px; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sidebar-user-tier { font-size: 11px; color: var(--accent2); font-weight: 500; }
+  .sidebar-settings { width: 100%; padding: 9px 12px; background: transparent; border: 1px solid var(--border-hover); color: var(--muted); border-radius: 8px; font-size: 13px; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .sidebar-settings:hover { border-color: rgba(124,58,237,0.4); color: #c4b5fd; background: rgba(124,58,237,0.05); }
   .sidebar-signout { width: 100%; padding: 9px 12px; background: transparent; border: 1px solid var(--border-hover); color: var(--muted); border-radius: 8px; font-size: 13px; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 8px; }
   .sidebar-signout:hover { border-color: rgba(239,68,68,0.4); color: #fca5a5; background: rgba(239,68,68,0.05); }
 
@@ -128,6 +130,48 @@
 </head>
 <body>
 
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;pointer-events:all;">
+  <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:36px;position:relative;width:100%;max-width:440px;pointer-events:all;margin:20px;">
+    <button onclick="closeSettingsModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#7a788f;font-size:18px;cursor:pointer;">&#x2715;</button>
+    <h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;margin-bottom:4px;letter-spacing:-0.3px;">Settings</h2>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:28px;">Manage your account and subscription</p>
+
+    <!-- Account Info -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:12px;">Account</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div id="settings-avatar" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;"></div>
+        <div>
+          <div id="settings-email" style="font-size:14px;font-weight:500;color:var(--text);"></div>
+          <div id="settings-tier" style="font-size:12px;color:var(--accent2);margin-top:2px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subscription -->
+    <div id="settings-sub-section" style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:12px;">Subscription</div>
+      <div id="settings-sub-free" style="display:none;">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">You are on the Free plan. Upgrade to Pro to unlock full access to all tools.</p>
+        <button onclick="closeSettingsModal();startCheckout();" style="width:100%;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);">Upgrade to Pro — $10/mo</button>
+      </div>
+      <div id="settings-sub-pro" style="display:none;">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">You are on the <strong style="color:#e879f9;">Pro plan</strong>. You have full access to all tools and features.</p>
+        <button id="settings-cancel-btn" onclick="handleSettingsCancel()" style="width:100%;padding:11px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.08)'" onmouseout="this.style.background='transparent'">Cancel subscription</button>
+      </div>
+    </div>
+
+    <!-- Help -->
+    <div style="display:flex;gap:10px;">
+      <a href="faq.html" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted);text-decoration:none;text-align:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--border-hover)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">FAQ</a>
+      <a href="mailto:hello@findthesnakes.com" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted);text-decoration:none;text-align:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--border-hover)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Contact support</a>
+      <a href="privacy.html" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted);text-decoration:none;text-align:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--border-hover)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Privacy</a>
+    </div>
+  </div>
+</div>
+
 <!-- SIGN OUT MODAL -->
 <div id="signout-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;pointer-events:all;">
   <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px 36px;text-align:center;position:relative;min-width:280px;max-width:400px;pointer-events:all;">
@@ -160,7 +204,7 @@
     </button>
     <button class="sidebar-item" id="nav-follower" onclick="showTool('follower')">
       <div class="sidebar-item-icon">&#x1F50D;</div>
-      <span class="sidebar-item-label">Follower Audit</span>
+      <span class="sidebar-item-label">Follow-Back Audit</span>
     </button>
     <button class="sidebar-item" id="nav-image" onclick="showTool('image')">
       <div class="sidebar-item-icon">&#x1F5BC;</div>
@@ -194,6 +238,10 @@
         <div class="sidebar-user-tier" id="sidebar-tier">Free</div>
       </div>
     </div>
+    <button class="sidebar-settings" onclick="openSettingsModal()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </button>
     <button class="sidebar-signout" onclick="openSignoutModal()">
       &#x2192; Sign out
     </button>
@@ -237,7 +285,7 @@
           <div class="welcome-tool-card" onclick="showTool('follower')">
             <div class="welcome-tool-icon">&#x1F50D;</div>
             <div>
-              <div class="welcome-tool-name">Follower Audit</div>
+              <div class="welcome-tool-name">Follow-Back Audit</div>
               <div class="welcome-tool-desc">Find who stopped following you on Instagram</div>
             </div>
           </div>
@@ -510,7 +558,7 @@ let currentTool = 'welcome';
 
 const toolTitles = {
   welcome: 'Dashboard',
-  follower: 'Follower Audit',
+  follower: 'Follow-Back Audit',
   image: 'Image Converter',
   qr: 'QR Generator',
   invoice: 'Invoice Generator'
@@ -644,6 +692,50 @@ if (urlParams.get('payment') === 'success') {
 }
 
 initAuth();
+
+function openSettingsModal() {
+  const modal = document.getElementById('settings-modal');
+  if (!modal) return;
+  // Populate info
+  if (currentUser) {
+    document.getElementById('settings-avatar').textContent = currentUser.email[0].toUpperCase();
+    document.getElementById('settings-email').textContent = currentUser.email;
+  }
+  const isPro = userTier === 'monthly';
+  document.getElementById('settings-tier').textContent = isPro ? 'Pro Plan' : 'Free Plan';
+  document.getElementById('settings-sub-free').style.display = isPro ? 'none' : 'block';
+  document.getElementById('settings-sub-pro').style.display = isPro ? 'block' : 'none';
+  modal.style.display = 'flex';
+  closeSidebar();
+}
+
+function closeSettingsModal() {
+  document.getElementById('settings-modal').style.display = 'none';
+}
+
+async function handleSettingsCancel() {
+  const btn = document.getElementById('settings-cancel-btn');
+  if (!confirm('Are you sure you want to cancel your Pro subscription? You will keep access until the end of your billing period.')) return;
+  btn.textContent = 'Cancelling...'; btn.disabled = true;
+  try {
+    const { error } = await sb.functions.invoke('cancel-subscription', {
+      body: { userId: currentUser.id }
+    });
+    if (error) throw error;
+    await fetchTier(currentUser.id);
+    closeSettingsModal();
+    alert('Your subscription has been cancelled. You will keep Pro access until the end of your billing period.');
+  } catch(err) {
+    console.error('Cancel error:', err);
+    alert('Something went wrong. Please email hello@findthesnakes.com for help.');
+    btn.textContent = 'Cancel subscription'; btn.disabled = false;
+  }
+}
+
+document.getElementById('settings-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeSettingsModal();
+});
+
 
 // ════════════════════════════════════════════
 // IMAGE CONVERTER
