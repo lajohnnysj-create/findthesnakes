@@ -34,8 +34,8 @@
     --accent2: #a855f7;
     --accent-glow: rgba(124,58,237,0.3);
     --text: #f0eef8;
-    --muted: #7a788f;
-    --muted2: #9a98b0;
+    --muted: #b4b2c8;
+    --muted2: #c9c7dc;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -110,25 +110,25 @@
   .mockup-dot.green { background: #28c840; }
   .mockup-url { background: var(--surface); border-radius: 6px; padding: 4px 12px; font-size: 11px; color: var(--muted); margin-left: 8px; flex: 1; max-width: 260px; }
   .mockup-body { display: flex; min-height: 380px; }
-  .mockup-sidebar { width: 200px; background: rgba(0,0,0,0.2); border-right: 1px solid var(--border); padding: 16px 10px; display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; }
+  .mockup-sidebar { width: 220px; background: rgba(0,0,0,0.2); border-right: 1px solid var(--border); padding: 18px 12px; display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; }
   .mockup-logo { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin-bottom: 12px; }
-  .mockup-logo-text { font-family: "Syne", sans-serif; font-size: 13px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; }
-  .mockup-section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); font-weight: 600; padding: 6px 10px 4px; }
-  .mockup-nav-item { padding: 7px 10px; border-radius: 7px; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .mockup-logo-text { font-family: "Syne", sans-serif; font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; }
+  .mockup-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); font-weight: 600; padding: 6px 10px 4px; }
+  .mockup-nav-item { padding: 8px 10px; border-radius: 7px; font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
   .mockup-nav-item.active { background: rgba(124,58,237,0.15); color: #c4b5fd; border: 1px solid rgba(124,58,237,0.2); }
-  .mockup-nav-icon { width: 13px; height: 13px; stroke: #fff; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .mockup-nav-icon { width: 15px; height: 15px; stroke: #fff; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
   .mockup-nav-item.active .mockup-nav-icon { stroke: #c4b5fd; }
-  .mockup-pro-badge { margin-left: auto; font-size: 8px; background: rgba(124,58,237,0.2); color: #c4b5fd; border-radius: 100px; padding: 1px 6px; font-weight: 700; letter-spacing: 0.05em; }
+  .mockup-pro-badge { margin-left: auto; font-size: 10px; background: rgba(124,58,237,0.2); color: #c4b5fd; border-radius: 100px; padding: 1px 6px; font-weight: 700; letter-spacing: 0.05em; }
   .mockup-content { flex: 1; padding: 28px 24px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
   .mockup-welcome { width: 100%; }
-  .mockup-welcome-badge { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(124,58,237,0.4); background: rgba(124,58,237,0.08); border-radius: 100px; padding: 4px 12px; font-size: 9px; color: #c4b5fd; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 14px; }
-  .mockup-welcome-title { font-family: "Syne", sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 8px; color: var(--text); }
+  .mockup-welcome-badge { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(124,58,237,0.4); background: rgba(124,58,237,0.08); border-radius: 100px; padding: 5px 14px; font-size: 11px; color: #c4b5fd; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 14px; }
+  .mockup-welcome-title { font-family: "Syne", sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 8px; color: var(--text); }
   .mockup-welcome-title span { background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .mockup-welcome-sub { font-size: 11px; color: var(--muted); margin-bottom: 18px; }
-  .mockup-welcome-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-width: 320px; margin: 0 auto; }
-  .mockup-welcome-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 10px 8px; display: flex; align-items: center; gap: 8px; }
-  .mockup-welcome-icon { width: 24px; height: 24px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
-  .mockup-welcome-name { font-size: 10px; font-weight: 600; color: var(--text); text-align: left; }
+  .mockup-welcome-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+  .mockup-welcome-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-width: 360px; margin: 0 auto; }
+  .mockup-welcome-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 10px; display: flex; align-items: center; gap: 10px; }
+  .mockup-welcome-icon { width: 28px; height: 28px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .mockup-welcome-name { font-size: 12px; font-weight: 600; color: var(--text); text-align: left; }
   .mockup-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
   .mockup-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
   .mockup-stat-num { font-family: "Syne", sans-serif; font-size: 20px; font-weight: 800; color: #a78bfa; }
@@ -231,8 +231,8 @@
     <h2 id="auth-title">Welcome back</h2>
     <p id="auth-sub">Sign in to access your creator tools.</p>
     <div class="modal-msg" id="auth-msg"></div>
-    <input class="modal-input" id="auth-email" type="email" placeholder="Email address" autocomplete="email">
-    <input class="modal-input" id="auth-password" type="password" placeholder="Password" autocomplete="current-password">
+    <input class="modal-input" id="auth-email" type="email" aria-label="Email address" placeholder="Email address" autocomplete="email">
+    <input class="modal-input" id="auth-password" type="password" aria-label="Password" placeholder="Password" autocomplete="current-password">
     <a class="forgot-link" id="forgot-password-link" onclick="handleForgotPassword()">Forgot password?</a>
     <button class="modal-btn" id="auth-submit-btn" onclick="handleAuth()">Sign in</button>
     <div class="modal-switch" id="auth-switch">No account? <a onclick="toggleAuthMode()">Create one free</a></div>

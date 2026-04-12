@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root { --bg:#07070f;--surface:#0f0f1a;--surface2:#161625;--border:rgba(255,255,255,0.07);--border-hover:rgba(255,255,255,0.14);--accent:#7c3aed;--accent2:#a855f7;--accent-glow:rgba(124,58,237,0.3);--text:#f0eef8;--muted:#7a788f;--muted2:#9a98b0; }
+  :root { --bg:#07070f;--surface:#0f0f1a;--surface2:#161625;--border:rgba(255,255,255,0.07);--border-hover:rgba(255,255,255,0.14);--accent:#7c3aed;--accent2:#a855f7;--accent-glow:rgba(124,58,237,0.3);--text:#f0eef8;--muted:#b4b2c8;--muted2:#c9c7dc; }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
   body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
@@ -125,8 +125,8 @@
     <h2 id="auth-title">Welcome back</h2>
     <p id="auth-sub">Sign in to access your creator tools.</p>
     <div class="modal-msg" id="auth-msg"></div>
-    <input class="modal-input" id="auth-email" type="email" placeholder="Email address">
-    <input class="modal-input" id="auth-password" type="password" placeholder="Password">
+    <input class="modal-input" id="auth-email" type="email" aria-label="Email address" placeholder="Email address">
+    <input class="modal-input" id="auth-password" type="password" aria-label="Password" placeholder="Password">
     <a class="forgot-link" id="forgot-password-link" onclick="handleForgotPassword()">Forgot password?</a>
     <button class="modal-btn" id="auth-submit-btn" onclick="handleAuth()">Sign in</button>
     <div class="modal-switch" id="auth-switch">No account? <a onclick="toggleAuthMode()">Create one free</a></div>
