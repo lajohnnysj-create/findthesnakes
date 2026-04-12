@@ -5393,8 +5393,8 @@ async function buildSignedPdfBytes() {
         });
       }
     } else if (field.type === 'checkbox') {
-      // Draw a check mark centered
-      const size = Math.min(absW, absH) * 0.9;
+      // Draw a check mark centered — size fits box but cap at reasonable max
+      const size = Math.min(absW, absH, 18) * 0.9;
       page.drawText('X', {
         x: absX + (absW - size * 0.55) / 2,
         y: absY + (absH - size) / 2 + size * 0.1,
@@ -5403,12 +5403,13 @@ async function buildSignedPdfBytes() {
         color: rgb(0, 0, 0),
       });
     } else {
-      // text / date
+      // text / date / other
       const text = String(field.value || '');
-      // Auto-fit font size
-      let fontSize = absH * 0.7;
+      // Target font size ~11pt (matches the ~13px editor visual at typical zoom).
+      // Cap at field height to avoid overflow if user drew a very short box.
+      let fontSize = Math.min(11, absH * 0.7);
       let textWidth = helv.widthOfTextAtSize(text, fontSize);
-      while (textWidth > absW && fontSize > 4) {
+      while (textWidth > absW - 4 && fontSize > 4) {
         fontSize -= 0.5;
         textWidth = helv.widthOfTextAtSize(text, fontSize);
       }
