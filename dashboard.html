@@ -397,7 +397,7 @@
 
         <!-- Drop Zone -->
         <div id="img-dropzone" style="border:2px dashed rgba(124,58,237,0.4);border-radius:16px;padding:48px 24px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(124,58,237,0.03);margin-bottom:20px;position:relative;">
-          <input type="file" id="img-input" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,image/avif,image/svg+xml,image/x-icon,image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
+          <input type="file" id="img-input" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,image/avif,image/svg+xml,image/x-icon,image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" aria-label="Select image to convert">
           <div style="font-size:36px;margin-bottom:12px;">&#x1F5BC;</div>
           <div style="font-size:16px;font-weight:500;margin-bottom:6px;">Drop your image here</div>
           <div style="font-size:13px;color:var(--muted);" id="img-size-note">or click to browse</div>
@@ -420,7 +420,7 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
             <div>
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Convert to</label>
-              <select id="img-format" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;">
+              <select id="img-format" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;" aria-label="Output format">
                 <option value="image/jpeg" selected>JPEG</option>
                 <option value="image/png">PNG</option>
                 <option value="image/webp">WebP</option>
@@ -433,17 +433,17 @@
             </div>
             <div id="quality-group">
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Quality <span id="quality-val">90</span>%</label>
-              <input type="range" id="img-quality" min="10" max="100" value="90" style="width:100%;accent-color:var(--accent);" oninput="document.getElementById('quality-val').textContent=this.value">
+              <input type="range" id="img-quality" min="10" max="100" value="90" style="width:100%;accent-color:var(--accent);" oninput="document.getElementById('quality-val').textContent=this.value" aria-label="Compression quality">
             </div>
           </div>
           <div id="pro-resize" style="display:none;grid-template-columns:1fr 1fr;gap:16px;">
             <div>
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Width (px)</label>
-              <input type="number" id="img-width" placeholder="Auto" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;">
+              <input type="number" id="img-width" placeholder="Auto" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;" aria-label="Output width in pixels">
             </div>
             <div>
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Height (px)</label>
-              <input type="number" id="img-height" placeholder="Auto" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;">
+              <input type="number" id="img-height" placeholder="Auto" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;" aria-label="Output height in pixels">
             </div>
           </div>
         </div>
@@ -464,7 +464,7 @@
         <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
           <div style="margin-bottom:16px;">
             <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">URL or Text</label>
-            <input type="text" id="qr-text" placeholder="https://yourwebsite.com" onkeydown="if(event.key==='Enter') generateQR()" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:15px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-hover)'">
+            <input type="text" id="qr-text" placeholder="https://yourwebsite.com" onkeydown="if(event.key==='Enter') generateQR()" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:15px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-hover)'" aria-label="URL or text to encode">
             <button onclick="generateQR()" style="margin-top:12px;width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px var(--accent-glow);">Generate QR Code</button>
           </div>
 
@@ -472,14 +472,14 @@
             <div>
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Foreground color</label>
               <div style="display:flex;align-items:center;gap:10px;">
-                <input type="color" id="qr-fg-color" value="#000000" oninput="generateQR()" style="width:40px;height:36px;border:1px solid var(--border-hover);border-radius:6px;cursor:pointer;background:none;padding:2px;">
+                <input type="color" id="qr-fg-color" value="#000000" oninput="generateQR()" style="width:40px;height:36px;border:1px solid var(--border-hover);border-radius:6px;cursor:pointer;background:none;padding:2px;" aria-label="QR foreground color">
                 <span id="qr-fg-hex" style="font-size:13px;color:var(--muted);">#000000</span>
               </div>
             </div>
             <div>
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Background color</label>
               <div style="display:flex;align-items:center;gap:10px;">
-                <input type="color" id="qr-bg-color" value="#ffffff" oninput="generateQR()" style="width:40px;height:36px;border:1px solid var(--border-hover);border-radius:6px;cursor:pointer;background:none;padding:2px;">
+                <input type="color" id="qr-bg-color" value="#ffffff" oninput="generateQR()" style="width:40px;height:36px;border:1px solid var(--border-hover);border-radius:6px;cursor:pointer;background:none;padding:2px;" aria-label="QR background color">
                 <span id="qr-bg-hex" style="font-size:13px;color:var(--muted);">#ffffff</span>
               </div>
             </div>
@@ -518,7 +518,7 @@
               <div style="margin-bottom:12px;">
                 <!-- Logo display area -->
                 <div id="logo-upload-area" style="width:80px;height:80px;border:2px dashed rgba(124,58,237,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:var(--surface);transition:all 0.2s;overflow:hidden;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(124,58,237,0.3)'">
-                  <input type="file" id="inv-logo" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;" onchange="uploadLogo(this)">
+                  <input type="file" id="inv-logo" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;" onchange="uploadLogo(this)" aria-label="Upload invoice logo">
                   <div id="logo-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;">
                     <div style="width:28px;height:28px;border-radius:50%;background:rgba(124,58,237,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;color:#a78bfa;">+</div>
                     <span id="logo-placeholder-text" style="font-size:9px;color:var(--muted);text-align:center;line-height:1.3;padding:0 4px;">Logo</span>
@@ -529,22 +529,22 @@
                   <span id="logo-status" style="font-size:11px;color:#4ade80;width:100%;"></span>
                   <label style="padding:4px 10px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:#4ade80;border-radius:6px;font-size:11px;cursor:pointer;position:relative;">
                     Change
-                    <input type="file" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" onchange="uploadLogo(this)">
+                    <input type="file" accept="image/*" aria-label="Change invoice logo" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" onchange="uploadLogo(this)">
                   </label>
                   <button onclick="deleteLogo()" style="padding:4px 10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#fca5a5;border-radius:6px;font-size:11px;cursor:pointer;font-family:DM Sans,sans-serif;">Delete</button>
                 </div>
               </div>
             </div>
-            <input type="text" id="inv-from-name" placeholder="Your Name / Business" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:8px;">
-            <input type="email" id="inv-from-email" placeholder="your@email.com" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:8px;">
-            <textarea id="inv-from-address" placeholder="Address (optional)" rows="2" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;resize:none;"></textarea>
+            <input type="text" id="inv-from-name" placeholder="Your Name / Business" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:8px;" aria-label="Your name or business">
+            <input type="email" id="inv-from-email" placeholder="your@email.com" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:8px;" aria-label="Your email">
+            <textarea id="inv-from-address" placeholder="Address (optional)" rows="2" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;resize:none;" aria-label="Your address (optional)"></textarea>
           </div>
           <!-- TO -->
           <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;">
             <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:12px;">Bill To</div>
-            <input type="text" id="inv-to-name" placeholder="Client Name / Brand" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:8px;">
-            <input type="email" id="inv-to-email" placeholder="client@brand.com" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:8px;">
-            <textarea id="inv-to-address" placeholder="Client address (optional)" rows="2" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;resize:none;"></textarea>
+            <input type="text" id="inv-to-name" placeholder="Client Name / Brand" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:8px;" aria-label="Client name or brand">
+            <input type="email" id="inv-to-email" placeholder="client@brand.com" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:8px;" aria-label="Client email">
+            <textarea id="inv-to-address" placeholder="Client address (optional)" rows="2" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;resize:none;" aria-label="Client address (optional)"></textarea>
           </div>
         </div>
 
@@ -552,15 +552,15 @@
         <div class="inv-meta-grid" style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
           <div>
             <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Invoice #</label>
-            <input type="text" id="inv-number" placeholder="INV-001" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;">
+            <input type="text" id="inv-number" placeholder="INV-001" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;" aria-label="Invoice number">
           </div>
           <div>
             <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Issue Date</label>
-            <input type="date" id="inv-date" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;box-sizing:border-box;appearance:none;-webkit-appearance:none;">
+            <input type="date" id="inv-date" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;box-sizing:border-box;appearance:none;-webkit-appearance:none;" aria-label="Issue date">
           </div>
           <div>
             <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Due Date</label>
-            <input type="date" id="inv-due" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;box-sizing:border-box;appearance:none;-webkit-appearance:none;">
+            <input type="date" id="inv-due" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:8px 8px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;box-sizing:border-box;appearance:none;-webkit-appearance:none;" aria-label="Due date">
           </div>
         </div>
 
@@ -583,7 +583,7 @@
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
             <div style="display:flex;align-items:center;gap:8px;">
               <span style="font-size:14px;color:var(--muted);">Tax</span>
-              <input type="number" id="inv-tax" value="0" min="0" max="100" oninput="calcTotals()" style="width:60px;background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;padding:4px 8px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;text-align:center;">
+              <input type="number" id="inv-tax" value="0" min="0" max="100" oninput="calcTotals()" style="width:60px;background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;padding:4px 8px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;text-align:center;" aria-label="Tax percentage">
               <span style="font-size:13px;color:var(--muted);">%</span>
             </div>
             <span id="inv-tax-amount" style="font-size:14px;font-weight:500;">$0.00</span>
@@ -598,7 +598,7 @@
         <!-- NOTES -->
         <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;">
           <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:12px;">Notes (optional)</div>
-          <textarea id="inv-notes" placeholder="Payment terms, thank you note, bank details..." rows="3" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;resize:none;line-height:1.6;"></textarea>
+          <textarea id="inv-notes" placeholder="Payment terms, thank you note, bank details..." rows="3" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;resize:none;line-height:1.6;" aria-label="Invoice notes (optional)"></textarea>
         </div>
 
         <div id="inv-usage" style="margin-top:16px;font-size:13px;color:var(--muted);text-align:center;"></div>
@@ -614,7 +614,7 @@
             <p style="color:var(--muted);font-size:14px;">Log your creator income throughout the year and see your estimated tax liability in real time.</p>
           </div>
           <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-            <select id="tax-year-select" onchange="loadTaxEntries()" style="background:var(--surface2);border:1px solid var(--border-hover);color:var(--text);border-radius:10px;padding:10px 14px;font-size:14px;font-family:DM Sans,sans-serif;outline:none;cursor:pointer;"></select>
+            <select id="tax-year-select" onchange="loadTaxEntries()" style="background:var(--surface2);border:1px solid var(--border-hover);color:var(--text);border-radius:10px;padding:10px 14px;font-size:14px;font-family:DM Sans,sans-serif;outline:none;cursor:pointer;" aria-label="Tax year"></select>
             <button id="tax-export-btn" onclick="exportTaxCSV()" style="padding:10px 18px;background:transparent;color:var(--accent2);border:1px solid rgba(124,58,237,0.4);border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">⬇ Export CSV</button>
           </div>
         </div>
@@ -656,19 +656,19 @@
             <div class="tax-form-grid" style="display:grid;grid-template-columns:130px 1fr 1.5fr 130px auto;gap:10px;align-items:end;">
               <div>
                 <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Date</label>
-                <input type="date" id="tax-input-date" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 10px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+                <input type="date" id="tax-input-date" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 10px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;" aria-label="Entry date">
               </div>
               <div>
                 <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Company / Client</label>
-                <input type="text" id="tax-input-company" placeholder="e.g. Nike" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+                <input type="text" id="tax-input-company" placeholder="e.g. Nike" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;" aria-label="Company or client">
               </div>
               <div>
                 <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Description</label>
-                <input type="text" id="tax-input-desc" placeholder="e.g. Sponsored Reel" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+                <input type="text" id="tax-input-desc" placeholder="e.g. Sponsored Reel" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;" aria-label="Description">
               </div>
               <div>
                 <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Gross Amount</label>
-                <input type="number" id="tax-input-amount" placeholder="0.00" min="0" step="0.01" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+                <input type="number" id="tax-input-amount" placeholder="0.00" min="0" step="0.01" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;" aria-label="Gross amount">
               </div>
               <button onclick="addTaxEntry()" style="padding:9px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;height:36px;white-space:nowrap;">+ Add</button>
             </div>
@@ -1550,11 +1550,11 @@ function renderInvoiceItems() {
   const container = document.getElementById('inv-items');
   container.innerHTML = invItems.map(item => `
     <div style="display:grid;grid-template-columns:1fr 60px 90px 28px;gap:6px;margin-bottom:8px;align-items:center;">
-      <input type="text" value="${item.desc}" placeholder="Service description" oninput="updateItem(${item.id},'desc',this.value)"
+      <input type="text" aria-label="Service description" value="${item.desc}" placeholder="Service description" oninput="updateItem(${item.id},'desc',this.value)"
         style="background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;width:100%;">
-      <input type="number" value="${item.qty}" min="1" oninput="updateItem(${item.id},'qty',this.value)"
+      <input type="number" aria-label="Quantity" value="${item.qty}" min="1" oninput="updateItem(${item.id},'qty',this.value)"
         style="background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 8px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;width:100%;text-align:center;">
-      <input type="number" value="${item.rate}" min="0" step="0.01" placeholder="0.00" oninput="updateItem(${item.id},'rate',this.value)"
+      <input type="number" aria-label="Rate" value="${item.rate}" min="0" step="0.01" placeholder="0.00" oninput="updateItem(${item.id},'rate',this.value)"
         style="background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;width:100%;text-align:right;">
       <button onclick="removeInvoiceItem(${item.id})" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px;border-radius:6px;">&#x2715;</button>
     </div>
@@ -1724,19 +1724,19 @@ document.getElementById('signout-modal').addEventListener('click', function(e) {
 
     <div style="margin-bottom:14px;">
       <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);display:block;margin-bottom:6px;">Date</label>
-      <input type="date" id="tax-edit-date" style="width:100%;background:var(--surface2);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+      <input type="date" id="tax-edit-date" style="width:100%;background:var(--surface2);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;" aria-label="Entry date">
     </div>
     <div style="margin-bottom:14px;">
       <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);display:block;margin-bottom:6px;">Company / Client</label>
-      <input type="text" id="tax-edit-company" style="width:100%;background:var(--surface2);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+      <input type="text" id="tax-edit-company" style="width:100%;background:var(--surface2);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;" aria-label="Company or client">
     </div>
     <div style="margin-bottom:14px;">
       <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);display:block;margin-bottom:6px;">Description</label>
-      <input type="text" id="tax-edit-desc" style="width:100%;background:var(--surface2);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+      <input type="text" id="tax-edit-desc" style="width:100%;background:var(--surface2);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;" aria-label="Description">
     </div>
     <div style="margin-bottom:20px;">
       <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);display:block;margin-bottom:6px;">Gross Amount</label>
-      <input type="number" id="tax-edit-amount" min="0" step="0.01" style="width:100%;background:var(--surface2);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+      <input type="number" id="tax-edit-amount" min="0" step="0.01" style="width:100%;background:var(--surface2);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;" aria-label="Gross amount">
     </div>
 
     <div id="tax-edit-error" style="display:none;margin-bottom:12px;font-size:12px;color:#fca5a5;"></div>

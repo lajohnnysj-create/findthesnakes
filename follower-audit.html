@@ -1049,7 +1049,7 @@ body { overflow-x: hidden; }
               <div class="log-stat"><strong id="log-gone-count">0</strong> now following</div>
             </div>
           </div>
-          <input class="log-search" id="log-search" placeholder="Search unfollowers…" oninput="renderUnfollowerLog()">
+          <input class="log-search" id="log-search" aria-label="Search unfollowers" placeholder="Search unfollowers…" oninput="renderUnfollowerLog()">
           <div class="log-filters">
             <button class="log-filter active" id="log-filter-all" onclick="setLogFilter('all',this)">All</button>
             <button class="log-filter" id="log-filter-active" onclick="setLogFilter('active',this)">Still not following</button>
@@ -1926,7 +1926,7 @@ function buildNoteEditor(handle, onSave) {
     ${note ? `<div class="note-display" style="margin-top:4px;">📝 ${note}</div>` : ''}
     <div class="note-row" id="section-note-row-${handle}" style="margin-top:6px;">
       <div class="note-input-wrap">
-        <input class="note-input" id="section-note-input-${handle}"
+        <input class="note-input" aria-label="Note for @${handle}" id="section-note-input-${handle}"
           value="${note.replace(/"/g, '&quot;')}"
           placeholder="Add a private note…"
           onkeydown="if(event.key==='Enter') submitSectionNote('${handle}','${onSave}')">
@@ -2944,7 +2944,7 @@ function buildRow(r, blurred) {
         ${existingNote ? `<div class="note-display" style="margin-top:5px;">📝 ${existingNote}</div>` : ''}
         <div class="note-row" id="note-row-${r.handle}" style="margin-top:8px;">
           <div class="note-input-wrap">
-            <input class="note-input" id="note-input-${r.handle}" 
+            <input class="note-input" aria-label="Note for @${r.handle}" id="note-input-${r.handle}" 
               value="${existingNote.replace(/"/g, '&quot;')}" 
               placeholder="Add a private note about @${r.handle}…"
               onkeydown="if(event.key==='Enter') submitNote('${r.handle}')">
