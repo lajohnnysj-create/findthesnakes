@@ -2759,6 +2759,8 @@ async function addMediaKitLink() {
     return;
   }
   if (!currentUser) return;
+  // Already added? ignore (button should be disabled but defensive check)
+  if (bioState.links.some(l => l.isMediaKit)) return;
 
   const { maxLinks } = bioLimits();
   const regularCount = bioState.links.filter(l => !l.featured).length;
@@ -2780,13 +2782,15 @@ async function addMediaKitLink() {
     return;
   }
 
-  // Check if media kit is published
+  // Check if media kit is published + get headshot
+  let headshotUrl = '';
   try {
-    const { data: kit } = await sb.from('media_kit').select('published').eq('user_id', currentUser.id).maybeSingle();
+    const { data: kit } = await sb.from('media_kit').select('published, headshot_url').eq('user_id', currentUser.id).maybeSingle();
     if (!kit || !kit.published) {
       showBioStatus('error', 'Publish your Media Kit first.');
       return;
     }
+    headshotUrl = kit.headshot_url || '';
   } catch (e) {
     showBioStatus('error', 'Could not check Media Kit. Try again.');
     return;
@@ -2807,7 +2811,7 @@ async function addMediaKitLink() {
     description: 'Audience stats, rate card, contact info',
     url: mediaKitUrl,
     featured: false,
-    photoUrl: '',
+    photoUrl: headshotUrl,
     isMediaKit: true,
   });
   renderBioLinks();
@@ -2824,16 +2828,35 @@ async function updateMediaKitLinkButton() {
     btn.style.display = 'none';
     return;
   }
-  // Already in the list? hide
-  if (bioState.links.some(l => l.isMediaKit)) {
+  // Check published status first — if no MK, hide entirely
+  let published = false;
+  try {
+    const { data: kit } = await sb.from('media_kit').select('published').eq('user_id', currentUser.id).maybeSingle();
+    published = !!(kit && kit.published);
+  } catch (e) {
     btn.style.display = 'none';
     return;
   }
-  try {
-    const { data: kit } = await sb.from('media_kit').select('published').eq('user_id', currentUser.id).maybeSingle();
-    btn.style.display = (kit && kit.published) ? 'flex' : 'none';
-  } catch (e) {
+  if (!published) {
     btn.style.display = 'none';
+    return;
+  }
+  // Pro + published MK: always show. Grey out if already added.
+  btn.style.display = 'flex';
+  const alreadyAdded = bioState.links.some(l => l.isMediaKit);
+  if (alreadyAdded) {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.style.cursor = 'not-allowed';
+    btn.setAttribute('aria-disabled', 'true');
+    // Update text to show status
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Media Kit link added';
+  } else {
+    btn.disabled = false;
+    btn.style.opacity = '';
+    btn.style.cursor = 'pointer';
+    btn.removeAttribute('aria-disabled');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg> Add link to your Media Kit';
   }
 }
 
@@ -3507,6 +3530,14 @@ function buildPreviewHTML() {
   .fl-b{padding:14px 18px 16px;text-align:center;}
   .fl-t{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:-0.2px;word-break:break-word;}
   .fl-d{font-size:12px;color:${t.muted};line-height:1.4;margin-top:3px;word-break:break-word;}
+  .mkh{position:relative;border-radius:14px;overflow:hidden;min-height:90px;background:#000;border:1px solid #7c3aed;box-shadow:0 0 20px rgba(124,58,237,0.35);}
+  .mkh-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:block;}
+  .mkh-ov{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.55) 50%,rgba(124,58,237,0.45) 100%);}
+  .mkh-c{position:relative;z-index:2;display:flex;align-items:center;gap:12px;padding:18px 18px;}
+  .mkh-i{width:20px;height:20px;color:#fff;flex-shrink:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5));}
+  .mkh-b{flex:1;min-width:0;}
+  .mkh-t{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.4);letter-spacing:-0.2px;}
+  .mkh-d{font-size:12px;color:rgba(255,255,255,0.85);text-shadow:0 1px 3px rgba(0,0,0,0.4);line-height:1.4;margin-top:3px;word-break:break-word;}
   .vids{width:100%;margin-top:8px;overflow-x:auto;scrollbar-width:none;}
   .vids::-webkit-scrollbar{display:none;}
   .vids-r{display:flex;gap:10px;padding:2px 0;}
@@ -3540,6 +3571,19 @@ function buildPreviewLink(l, t) {
       <div class="fl-b">
         <div class="fl-t">${escapeHtml(l.title || 'Untitled')}</div>
         ${l.description ? `<div class="fl-d">${escapeHtml(l.description)}</div>` : ''}
+      </div>
+    </div>`;
+  }
+  if (l.isMediaKit && l.photoUrl) {
+    return `<div class="mkh">
+      <img class="mkh-bg" src="${escapeHtml(l.photoUrl)}" alt="">
+      <div class="mkh-ov"></div>
+      <div class="mkh-c">
+        <svg class="mkh-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+        <div class="mkh-b">
+          <div class="mkh-t">${escapeHtml(l.title || 'Untitled')}</div>
+          ${l.description ? `<div class="mkh-d">${escapeHtml(l.description)}</div>` : ''}
+        </div>
       </div>
     </div>`;
   }

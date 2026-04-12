@@ -401,6 +401,67 @@
     text-align: left;
   }
 
+  /* Media Kit hero style — headshot fills the button background */
+  .link-btn.mediakit-hero {
+    position: relative;
+    padding: 22px 22px;
+    min-height: 110px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 24px var(--accent-glow);
+  }
+  .link-btn.mediakit-hero:hover,
+  .link-btn.mediakit-hero:focus-visible {
+    border-color: var(--accent2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 32px var(--accent-glow);
+    background: #000;
+  }
+  .mediakit-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    display: block;
+  }
+  .mediakit-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.55) 50%, rgba(124,58,237,0.45) 100%);
+    pointer-events: none;
+  }
+  .mediakit-hero:hover .mediakit-hero-overlay,
+  .mediakit-hero:focus-visible .mediakit-hero-overlay {
+    background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.45) 50%, rgba(124,58,237,0.4) 100%);
+  }
+  .mediakit-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+  }
+  .mediakit-hero .mediakit-icon {
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+  }
+  .mediakit-hero .link-title {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+  .mediakit-hero .link-desc {
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
   /* Featured link */
   .featured-link {
     display: block;
@@ -682,9 +743,25 @@ function buildLink(link) {
     }
     // Featured without a valid photo falls back to regular style
   }
-  // Media Kit link gets a distinct purple-gradient style with an icon
+  // Media Kit link gets a distinct style — headshot background if available, gradient fallback
   if (link.isMediaKit) {
     const mkIconSvg = '<svg class="mediakit-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>';
+    const safePhoto = validImageUrl(link.photoUrl);
+    if (safePhoto) {
+      // Hero style: headshot fills the card, darkened, text/icon in front
+      return `<a class="link-btn mediakit-link mediakit-hero" href="${esc(url)}" target="_blank" rel="noopener nofollow" aria-label="View Media Kit">
+        <img class="mediakit-hero-bg" src="${esc(safePhoto)}" alt="" loading="lazy">
+        <div class="mediakit-hero-overlay"></div>
+        <div class="mediakit-hero-content">
+          ${mkIconSvg}
+          <div class="mediakit-body">
+            <div class="link-title">${title}</div>
+            ${desc}
+          </div>
+        </div>
+      </a>`;
+    }
+    // No headshot — purple gradient fallback (original style)
     return `<a class="link-btn mediakit-link" href="${esc(url)}" target="_blank" rel="noopener nofollow">
       ${mkIconSvg}
       <div class="mediakit-body">
