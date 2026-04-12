@@ -102,6 +102,7 @@
   .tier-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; }
   .tier-badge.free { background: rgba(124,58,237,0.1); color: #c4b5fd; border: 1px solid rgba(124,58,237,0.2); }
   .tier-badge.pro { background: rgba(168,85,247,0.15); color: #e879f9; border: 1px solid rgba(168,85,247,0.3); }
+  .tier-badge.max { background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(232,121,249,0.2)); color: #fff; border: 1px solid rgba(232,121,249,0.4); }
   .upgrade-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 20px var(--accent-glow); }
   .upgrade-btn:hover { background: var(--accent2); }
 
@@ -211,6 +212,29 @@
   .bio-theme-btn.locked { cursor: pointer; }
   .bio-theme-btn.locked .bio-theme-swatch, .bio-theme-btn.locked .bio-theme-name { opacity: 0.5; }
   .bio-theme-lock { position: absolute; top: 4px; right: 4px; background: rgba(124,58,237,0.85); color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+  .bio-theme-max-badge { position: absolute; top: 4px; left: 4px; background: linear-gradient(135deg,#a78bfa,#e879f9); color: #fff; font-size: 8px; font-weight: 700; letter-spacing: 0.05em; padding: 2px 5px; border-radius: 4px; }
+  .custom-editor { background: var(--surface); border: 1px solid rgba(232,121,249,0.25); border-radius: 12px; padding: 16px; margin-top: 14px; }
+  .custom-editor-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; background: linear-gradient(135deg,#a78bfa,#e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .custom-color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+  @media (max-width: 560px) { .custom-color-grid { grid-template-columns: repeat(2, 1fr); } }
+  .custom-color-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; }
+  .custom-color-item label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; }
+  .custom-color-input { width: 100%; height: 36px; border: none; border-radius: 6px; cursor: pointer; background: transparent; padding: 0; }
+  .custom-color-input::-webkit-color-swatch { border: 1px solid var(--border); border-radius: 6px; }
+  .custom-color-input::-moz-color-swatch { border: 1px solid var(--border); border-radius: 6px; }
+  .custom-color-hex { font-family: 'Courier New', monospace; font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .custom-bg-upload { background: var(--surface2); border: 1px dashed var(--border-hover); border-radius: 10px; padding: 14px; display: flex; align-items: center; gap: 12px; }
+  .custom-bg-thumb { width: 60px; height: 60px; border-radius: 8px; background-size: cover; background-position: center; background-color: var(--surface); flex-shrink: 0; border: 1px solid var(--border); }
+  .custom-bg-info { flex: 1; min-width: 0; font-size: 12px; color: var(--muted); }
+  .custom-bg-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .custom-bg-btn { padding: 6px 10px; background: transparent; border: 1px solid var(--border-hover); color: var(--muted); border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; position: relative; white-space: nowrap; }
+  .custom-bg-btn.primary { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); color: #c4b5fd; }
+  .custom-bg-btn.danger { border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+  .custom-bg-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .custom-opacity-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .custom-opacity-row label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .custom-opacity-row input[type=range] { flex: 1; }
+  .custom-opacity-val { font-family: 'Courier New', monospace; font-size: 11px; color: var(--muted); min-width: 30px; text-align: right; }
   .bio-theme-lock svg { width: 10px; height: 10px; stroke: #fff; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   @media (max-width: 500px) {
     .bio-themes-grid { grid-template-columns: repeat(3, 1fr); }
@@ -236,6 +260,40 @@
     border: 1px solid rgba(124,58,237,0.35) !important;
   }
   .bio-link-row.bio-link-mediakit:hover { border-color: rgba(124,58,237,0.55) !important; }
+  .bio-link-row.bio-link-hero {
+    background: linear-gradient(135deg, rgba(167,139,250,0.08), rgba(232,121,249,0.06)) !important;
+    border: 1px solid rgba(232,121,249,0.3) !important;
+  }
+  .bio-link-row.bio-link-hero:hover { border-color: rgba(232,121,249,0.5) !important; }
+  .bio-hero-badge {
+    font-size: 10px;
+    background: linear-gradient(135deg, rgba(167,139,250,0.3), rgba(232,121,249,0.25));
+    color: #f9a8d4;
+    border: 1px solid rgba(232,121,249,0.4);
+    border-radius: 100px;
+    padding: 2px 8px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .bio-hero-photo-slot {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--surface2);
+    border: 1px dashed rgba(232,121,249,0.4);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    color: #f9a8d4;
+    font-size: 12px;
+  }
+  .bio-hero-photo-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .bio-hero-photo-slot input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   .bio-mediakit-badge {
     font-size: 10px;
     background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(232,121,249,0.2));
@@ -962,11 +1020,14 @@
     <div id="settings-sub-section" style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:12px;">Subscription</div>
       <div id="settings-sub-free" style="display:none;">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">You are on the Free plan. Upgrade to Pro to unlock full access to all tools.</p>
-        <button onclick="closeSettingsModal();startCheckout();" style="width:100%;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);">Upgrade to Pro — $10/mo</button>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">You are on the Free plan. Upgrade to unlock full access.</p>
+        <button onclick="closeSettingsModal();startCheckout('monthly');" style="width:100%;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);margin-bottom:8px;">Upgrade to Pro — $10/mo</button>
+        <button onclick="closeSettingsModal();startCheckout('max');" style="width:100%;padding:11px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.35);">Get Creator Max — $20/mo</button>
       </div>
       <div id="settings-sub-pro" style="display:none;">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">You are on the <strong style="color:#e879f9;">Pro plan</strong>. You have full access to all tools and features.</p>
+        <p id="settings-sub-pro-msg" style="font-size:13px;color:var(--muted);margin-bottom:16px;">You are on the <strong id="settings-sub-pro-label" style="color:#e879f9;">Pro plan</strong>. You have full access to all tools and features.</p>
+        <button id="settings-upgrade-max" onclick="confirmUpgradeToMax()" style="display:none;width:100%;padding:11px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.35);margin-bottom:8px;">Upgrade to Creator Max — $20/mo</button>
+        <button id="settings-downgrade-pro" onclick="confirmDowngradeToPro()" style="display:none;width:100%;padding:11px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;margin-bottom:8px;">Downgrade to Pro — $10/mo</button>
         <button id="settings-cancel-btn" onclick="handleSettingsCancel()" style="width:100%;padding:11px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.08)'" onmouseout="this.style.background='transparent'">Cancel subscription</button>
         <div id="settings-cancel-confirm" style="display:none;margin-top:12px;padding:14px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:8px;">
           <p style="font-size:13px;color:#fca5a5;margin-bottom:12px;">Are you sure? You will keep Pro access until the end of your billing period.</p>
@@ -1289,6 +1350,65 @@
             <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:20px;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:14px;">Theme</div>
               <div id="bio-themes" class="bio-themes-grid"></div>
+
+              <!-- Custom theme editor (Creator Max only) -->
+              <div id="bio-custom-editor" class="custom-editor" style="display:none;">
+                <div class="custom-editor-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                  Custom theme — your branding
+                </div>
+
+                <!-- Background upload -->
+                <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BACKGROUND IMAGE</div>
+                <div class="custom-bg-upload">
+                  <div id="bio-custom-bg-thumb" class="custom-bg-thumb"></div>
+                  <div class="custom-bg-info">
+                    <div id="bio-custom-bg-status">No background uploaded</div>
+                    <div style="font-size:10px;margin-top:2px;">Auto-compressed to keep page loads fast</div>
+                  </div>
+                  <div class="custom-bg-actions">
+                    <label class="custom-bg-btn primary">
+                      Upload
+                      <input type="file" accept="image/*" aria-label="Upload background" onchange="onBioCustomBgSelected(this)">
+                    </label>
+                    <button type="button" id="bio-custom-bg-remove" class="custom-bg-btn danger" onclick="removeBioCustomBg()" style="display:none;">Remove</button>
+                  </div>
+                </div>
+
+                <!-- Opacity -->
+                <div class="custom-opacity-row">
+                  <label>Background opacity</label>
+                  <input type="range" id="bio-custom-bg-opacity" min="0" max="1" step="0.05" value="0.4" oninput="onBioCustomOpacityChange(this.value)">
+                  <span id="bio-custom-bg-opacity-val" class="custom-opacity-val">40%</span>
+                </div>
+
+                <!-- 4 color pickers -->
+                <div style="font-size:11px;color:var(--muted);margin:16px 0 8px;">COLORS</div>
+                <div class="custom-color-grid">
+                  <div class="custom-color-item">
+                    <label for="bio-color-bg">Page BG</label>
+                    <input type="color" id="bio-color-bg" class="custom-color-input" value="#07070f" onchange="onBioColorChange('bg', this.value)">
+                    <div id="bio-color-bg-hex" class="custom-color-hex">#07070f</div>
+                  </div>
+                  <div class="custom-color-item">
+                    <label for="bio-color-card">Card</label>
+                    <input type="color" id="bio-color-card" class="custom-color-input" value="#161625" onchange="onBioColorChange('card', this.value)">
+                    <div id="bio-color-card-hex" class="custom-color-hex">#161625</div>
+                  </div>
+                  <div class="custom-color-item">
+                    <label for="bio-color-text">Text</label>
+                    <input type="color" id="bio-color-text" class="custom-color-input" value="#ffffff" onchange="onBioColorChange('text', this.value)">
+                    <div id="bio-color-text-hex" class="custom-color-hex">#ffffff</div>
+                  </div>
+                  <div class="custom-color-item">
+                    <label for="bio-color-accent">Accent</label>
+                    <input type="color" id="bio-color-accent" class="custom-color-input" value="#a78bfa" onchange="onBioColorChange('accent', this.value)">
+                    <div id="bio-color-accent-hex" class="custom-color-hex">#a78bfa</div>
+                  </div>
+                </div>
+
+                <button type="button" onclick="resetBioCustomColors()" style="width:100%;padding:8px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;">Reset to defaults</button>
+              </div>
             </div>
 
             <!-- Branding toggle -->
@@ -1326,6 +1446,10 @@
                 <button type="button" id="bio-add-link-btn" onclick="addLink(false)" style="flex:1;min-width:140px;padding:10px;background:transparent;border:1px dashed rgba(124,58,237,0.4);color:var(--accent2);border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;">+ Add link</button>
                 <button type="button" id="bio-add-featured-btn" onclick="addLink(true)" style="flex:1;min-width:140px;padding:10px;background:transparent;border:1px dashed rgba(124,58,237,0.4);color:var(--accent2);border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;">+ Add featured link</button>
               </div>
+              <button type="button" id="bio-add-hero-btn" onclick="addLink(false, true)" style="display:none;width:100%;margin-top:8px;padding:10px;background:linear-gradient(135deg,rgba(167,139,250,0.12),rgba(232,121,249,0.08));border:1px solid rgba(232,121,249,0.35);color:#e879f9;border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;align-items:center;justify-content:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                + Add hero link <span style="font-size:9px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;padding:2px 6px;border-radius:3px;letter-spacing:0.04em;font-weight:700;">MAX</span>
+              </button>
               <button type="button" id="bio-add-mediakit-link" onclick="addMediaKitLink()" style="display:none;width:100%;margin-top:8px;padding:10px;background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(232,121,249,0.06));border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;align-items:center;justify-content:center;gap:8px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="16" y1="17" x2="16" y2="15"/></svg>
                 Add link to your Media Kit
@@ -1536,6 +1660,58 @@
               </button>
               <div class="mk-section-body" id="mk-body-theme" style="display:none;">
                 <div id="mk-themes" class="bio-themes-grid"></div>
+
+                <!-- Custom theme editor for Media Kit (Creator Max only) -->
+                <div id="mk-custom-editor" class="custom-editor" style="display:none;">
+                  <div class="custom-editor-title">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                    Custom theme — your branding
+                  </div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BACKGROUND IMAGE</div>
+                  <div class="custom-bg-upload">
+                    <div id="mk-custom-bg-thumb" class="custom-bg-thumb"></div>
+                    <div class="custom-bg-info">
+                      <div id="mk-custom-bg-status">No background uploaded</div>
+                      <div style="font-size:10px;margin-top:2px;">Auto-compressed to keep page loads fast</div>
+                    </div>
+                    <div class="custom-bg-actions">
+                      <label class="custom-bg-btn primary">
+                        Upload
+                        <input type="file" accept="image/*" aria-label="Upload MK background" onchange="onMKCustomBgSelected(this)">
+                      </label>
+                      <button type="button" id="mk-custom-bg-remove" class="custom-bg-btn danger" onclick="removeMKCustomBg()" style="display:none;">Remove</button>
+                    </div>
+                  </div>
+                  <div class="custom-opacity-row">
+                    <label>Background opacity</label>
+                    <input type="range" id="mk-custom-bg-opacity" min="0" max="1" step="0.05" value="0.4" oninput="onMKCustomOpacityChange(this.value)">
+                    <span id="mk-custom-bg-opacity-val" class="custom-opacity-val">40%</span>
+                  </div>
+                  <div style="font-size:11px;color:var(--muted);margin:16px 0 8px;">COLORS</div>
+                  <div class="custom-color-grid">
+                    <div class="custom-color-item">
+                      <label for="mk-color-bg">Page BG</label>
+                      <input type="color" id="mk-color-bg" class="custom-color-input" value="#07070f" onchange="onMKColorChange('bg', this.value)">
+                      <div id="mk-color-bg-hex" class="custom-color-hex">#07070f</div>
+                    </div>
+                    <div class="custom-color-item">
+                      <label for="mk-color-card">Card</label>
+                      <input type="color" id="mk-color-card" class="custom-color-input" value="#161625" onchange="onMKColorChange('card', this.value)">
+                      <div id="mk-color-card-hex" class="custom-color-hex">#161625</div>
+                    </div>
+                    <div class="custom-color-item">
+                      <label for="mk-color-text">Text</label>
+                      <input type="color" id="mk-color-text" class="custom-color-input" value="#ffffff" onchange="onMKColorChange('text', this.value)">
+                      <div id="mk-color-text-hex" class="custom-color-hex">#ffffff</div>
+                    </div>
+                    <div class="custom-color-item">
+                      <label for="mk-color-accent">Accent</label>
+                      <input type="color" id="mk-color-accent" class="custom-color-input" value="#a78bfa" onchange="onMKColorChange('accent', this.value)">
+                      <div id="mk-color-accent-hex" class="custom-color-hex">#a78bfa</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="resetMKCustomColors()" style="width:100%;padding:8px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;">Reset to defaults</button>
+                </div>
               </div>
             </div>
 
@@ -2164,11 +2340,21 @@
 const SUPABASE_URL = 'https://kjytapcgxukalwsyputk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMTcxMzEsImV4cCI6MjA5MDg5MzEzMX0.VC8mcU5lUeA56kG2gHssvl88EVWr018XttA86jpfEn0';
 const STRIPE_PRICE_MONTHLY = 'price_1TIZ8pFQ1L0aeJrZEX1bQnUI';
+const STRIPE_PRICE_MAX = 'price_1TLQdmFQ1L0aeJrZxntN3EhI';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 let userTier = 'free';
+
+// Tier helpers — use these everywhere instead of raw string comparison
+function isPro() { return userTier === 'monthly' || userTier === 'max'; }
+function isMax() { return userTier === 'max'; }
+function tierLabel(t) {
+  if (t === 'max') return 'Creator Max';
+  if (t === 'monthly') return 'Pro';
+  return 'Free';
+}
 let userStatus = 'free';
 let currentTool = 'welcome';
 
@@ -2204,6 +2390,16 @@ async function setUser(user) {
   if (avatar) avatar.textContent = user.email[0].toUpperCase();
   await fetchTier(user.id);
 
+  // Post-signup checkout: if user arrived with a plan intent from pricing page
+  try {
+    const intent = localStorage.getItem('fts_intended_plan');
+    if (intent && !isPro()) {
+      localStorage.removeItem('fts_intended_plan');
+      setTimeout(() => startCheckout(intent), 500);
+    } else if (intent) {
+      localStorage.removeItem('fts_intended_plan');
+    }
+  } catch (e) {}
 }
 
 async function fetchTier(userId) {
@@ -2217,20 +2413,28 @@ async function fetchTier(userId) {
 }
 
 function updateTierUI() {
-  const isPro = userTier === 'monthly';
-  const isCancelling = isPro && userStatus === 'cancelling';
+  const pro = isPro();
+  const max = isMax();
+  const isCancelling = pro && userStatus === 'cancelling';
   const tierBadge = document.getElementById('topbar-tier-badge');
   const sidebarTier = document.getElementById('sidebar-tier');
   const upgradeBtn = document.getElementById('topbar-upgrade-btn');
   const upgradeBanner = document.getElementById('upgrade-banner');
 
+  const badgeText = isCancelling
+    ? (max ? 'Max (Cancelling)' : 'Pro (Cancelling)')
+    : max ? 'Max' : pro ? 'Pro' : 'Free';
+  const planText = isCancelling
+    ? (max ? 'Max (Cancelling)' : 'Pro (Cancelling)')
+    : max ? 'Creator Max' : pro ? 'Pro Plan' : 'Free Plan';
+
   if (tierBadge) {
-    tierBadge.textContent = isCancelling ? 'Pro (Cancelling)' : isPro ? 'Pro' : 'Free';
-    tierBadge.className = 'tier-badge ' + (isPro ? 'pro' : 'free');
+    tierBadge.textContent = badgeText;
+    tierBadge.className = 'tier-badge ' + (max ? 'max' : pro ? 'pro' : 'free');
   }
-  if (sidebarTier) sidebarTier.textContent = isCancelling ? 'Pro (Cancelling)' : isPro ? 'Pro Plan' : 'Free Plan';
-  if (upgradeBtn) upgradeBtn.style.display = isPro ? 'none' : 'block';
-  if (upgradeBanner) upgradeBanner.style.display = isPro ? 'none' : 'flex';
+  if (sidebarTier) sidebarTier.textContent = planText;
+  if (upgradeBtn) upgradeBtn.style.display = pro ? 'none' : 'block';
+  if (upgradeBanner) upgradeBanner.style.display = pro ? 'none' : 'flex';
 
   // Refresh tax tracker if it's the active tool (Pro gating may have changed)
   if (currentTool === 'tax') initTaxTracker();
@@ -2241,8 +2445,9 @@ function updateTierUI() {
 }
 
 function updateSettingsCancelBtn() {
-  const isPro = userTier === 'monthly';
-  const isCancelling = isPro && userStatus === 'cancelling';
+  const pro = isPro();
+  const max = isMax();
+  const isCancelling = pro && userStatus === 'cancelling';
   const cancelBtn = document.getElementById('settings-cancel-btn');
   const settingsTier = document.getElementById('settings-tier');
   if (cancelBtn) {
@@ -2260,7 +2465,19 @@ function updateSettingsCancelBtn() {
       cancelBtn.onmouseout = () => cancelBtn.style.background = 'transparent';
     }
   }
-  if (settingsTier) settingsTier.textContent = isCancelling ? 'Pro (Cancelling)' : isPro ? 'Pro Plan' : 'Free Plan';
+  if (settingsTier) settingsTier.textContent = isCancelling
+    ? (max ? 'Max (Cancelling)' : 'Pro (Cancelling)')
+    : max ? 'Creator Max' : pro ? 'Pro Plan' : 'Free Plan';
+
+  // Update the "You are on..." label
+  const subProLabel = document.getElementById('settings-sub-pro-label');
+  if (subProLabel) subProLabel.textContent = max ? 'Creator Max plan' : 'Pro plan';
+
+  // Update upgrade/downgrade button visibility
+  const upgradeToMaxBtn = document.getElementById('settings-upgrade-max');
+  const downgradeToProBtn = document.getElementById('settings-downgrade-pro');
+  if (upgradeToMaxBtn) upgradeToMaxBtn.style.display = (pro && !max) ? 'block' : 'none';
+  if (downgradeToProBtn) downgradeToProBtn.style.display = max ? 'block' : 'none';
 }
 
 function showFollowerTool() {
@@ -2302,19 +2519,38 @@ function showTool(tool) {
   closeSidebar();
 }
 
-async function startCheckout() {
+async function startCheckout(plan) {
   if (!currentUser) { window.location.href = 'index.html'; return; }
+  // Resolve plan: explicit arg → localStorage intent → default Pro
+  let targetPlan = plan;
+  if (!targetPlan) {
+    try { targetPlan = localStorage.getItem('fts_intended_plan'); } catch (e) {}
+  }
+  targetPlan = targetPlan === 'max' ? 'max' : 'monthly';
+  const priceId = targetPlan === 'max' ? STRIPE_PRICE_MAX : STRIPE_PRICE_MONTHLY;
+
   try {
     const { data, error } = await sb.functions.invoke('create-checkout-session', {
       body: {
-        priceId: STRIPE_PRICE_MONTHLY,
+        priceId,
         userId: currentUser.id,
         successUrl: window.location.origin + '/dashboard.html?payment=success',
         cancelUrl: window.location.origin + '/dashboard.html?payment=cancelled',
       }
     });
     if (error) throw error;
-    if (data?.url) window.location.href = data.url;
+    // Clear localStorage intent after successful initiation
+    try { localStorage.removeItem('fts_intended_plan'); } catch (e) {}
+    if (data?.url) {
+      if (data.upgraded || data.alreadyOnPlan) {
+        // Tier updated in-place — refresh user tier and show status
+        await fetchTier(currentUser.id);
+        alert(data.alreadyOnPlan ? "You're already on this plan." : "Plan updated successfully.");
+        window.location.href = data.url;
+      } else {
+        window.location.href = data.url;
+      }
+    }
   } catch (err) {
     console.error('Checkout error:', err);
     alert('Something went wrong. Please try again.');
@@ -2324,6 +2560,16 @@ async function startCheckout() {
 function openSignoutModal() {
   const modal = document.getElementById('signout-modal');
   if (modal) modal.style.display = 'flex';
+}
+
+async function confirmUpgradeToMax() {
+  if (!confirm("Upgrade to Creator Max for $20/month? You'll be charged a prorated amount today and $20/month going forward.")) return;
+  await startCheckout('max');
+}
+
+async function confirmDowngradeToPro() {
+  if (!confirm("Downgrade to Pro for $10/month? You'll keep your custom theme settings but they won't display until you upgrade again. The change takes effect at your next billing cycle or prorated now.")) return;
+  await startCheckout('monthly');
 }
 function closeSignoutModal() {
   const modal = document.getElementById('signout-modal');
@@ -2378,7 +2624,9 @@ let bioState = {
   videos: [],
   published: false,
   show_branding: true,
+  custom_theme: null, // { bgUrl, bgOpacity, colors: {bg, card, text, accent}, applied: bool }
 };
+let bioStaleBgs = []; // queue old bg urls to delete on save
 let bioInited = false;
 let bioCropper = null;
 let bioCropTarget = null;  // 'avatar' or {type:'featured', linkId}
@@ -2452,11 +2700,17 @@ async function loadBioData() {
       bioState.links = Array.isArray(bio.links) ? bio.links.map(l => ({ ...l, _id: linkIdSeq++ })) : [];
       bioState.videos = Array.isArray(bio.videos) ? bio.videos.map(v => ({ ...v, _id: linkIdSeq++ })) : [];
       bioState.published = !!bio.published;
-      bioState.show_branding = bio.show_branding !== false; // default true
+      bioState.show_branding = bio.show_branding !== false;
+      bioState.custom_theme = bio.custom_theme || null;
+      // Guard: if user selected custom but is no longer Max, revert to purple
+      if (bioState.theme === 'custom' && !isMax()) {
+        bioState.theme = 'purple';
+      }
     }
   } catch (e) { console.error('loadBioData', e); }
   syncBioForm();
   renderBioThemes();
+  syncBioCustomEditorUI();
   renderBioSocials();
   renderBioLinks();
   renderBioVideos();
@@ -2478,14 +2732,14 @@ function syncBioForm() {
 }
 
 function syncBrandingToggle() {
-  const isPro = userTier === 'monthly';
+  const pro = isPro();
   const cb = document.getElementById('bio-show-branding');
   const label = document.getElementById('bio-branding-label');
   const pill = document.getElementById('bio-branding-pro-pill');
   const hint = document.getElementById('bio-branding-hint');
   if (!cb) return;
 
-  if (isPro) {
+  if (pro) {
     cb.disabled = false;
     cb.checked = bioState.show_branding;
     label.style.opacity = '1';
@@ -2506,8 +2760,8 @@ function syncBrandingToggle() {
 }
 
 function onBrandingToggle() {
-  const isPro = userTier === 'monthly';
-  if (!isPro) {
+  const pro = isPro();
+  if (!pro) {
     // Shouldn't be able to toggle, but force it back on if it somehow fires
     document.getElementById('bio-show-branding').checked = true;
     bioState.show_branding = true;
@@ -2663,41 +2917,255 @@ const BIO_THEMES = [
   { key:'mint',     name:'Mint',     bg:'#030e0c', bg2:'#102623', grad:'linear-gradient(135deg,#2dd4bf,#a7f3d0)', pro:true  },
   { key:'violet',   name:'Violet',   bg:'#0c0418', bg2:'#220f37', grad:'linear-gradient(135deg,#c084fc,#e9d5ff)', pro:true  },
   { key:'graphite', name:'Graphite', bg:'#0a0a0a', bg2:'#1e1e1e', grad:'linear-gradient(135deg,#d1d5db,#f3f4f6)', pro:true  },
+  { key:'custom',   name:'Custom',   bg:'#07070f', bg2:'#161625', grad:'linear-gradient(135deg,#a78bfa,#e879f9)', pro:false, max:true },
 ];
+
+// Default colors for custom theme
+const CUSTOM_THEME_DEFAULTS = {
+  bg:     '#07070f',  // page background
+  card:   '#161625',  // card/surface background
+  text:   '#ffffff',  // primary text
+  accent: '#a78bfa',  // accent/button color
+};
+
+// Given the 4 user-picked colors, derive the full theme object
+function deriveThemeFromCustom(colors) {
+  const c = { ...CUSTOM_THEME_DEFAULTS, ...(colors || {}) };
+  return {
+    bg: c.bg,
+    bg2: c.card,
+    surface: c.card,
+    surface2: c.card,
+    border: hexAlpha(c.text, 0.1),
+    muted: hexAlpha(c.text, 0.6),
+    text: c.text,
+    accent: c.accent,
+    accent2: c.accent,
+    grad: `linear-gradient(135deg, ${c.accent}, ${c.accent})`,
+    _colors: c,
+  };
+}
+
+function hexAlpha(hex, alpha) {
+  // Convert #RRGGBB to rgba(r,g,b,a)
+  const h = (hex || '#ffffff').replace('#', '');
+  const bigint = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+  const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// Build the full theme var object used by preview/public pages from the 4 user-picked colors
+function buildCustomThemeVars(customTheme) {
+  const colors = customTheme?.colors || CUSTOM_THEME_DEFAULTS;
+  const c = { ...CUSTOM_THEME_DEFAULTS, ...colors };
+  return {
+    bg: c.bg,
+    surface: c.card,
+    surface2: c.card,
+    text: c.text,
+    muted: hexAlpha(c.text, 0.65),
+    muted2: hexAlpha(c.text, 0.8),
+    accent: c.accent,
+    accent2: c.accent,
+    glow: hexAlpha(c.accent, 0.3),
+    border: hexAlpha(c.text, 0.1),
+    avatarBorder: `linear-gradient(135deg, ${c.accent}, ${c.accent})`,
+    _customColors: c,
+  };
+}
 
 function renderBioThemes() {
   const container = document.getElementById('bio-themes');
   if (!container) return;
-  const isPro = userTier === 'monthly';
+  const pro = isPro();
+  const max = isMax();
   container.innerHTML = BIO_THEMES.map(t => {
-    const locked = t.pro && !isPro;
+    // Free-locked OR Max-locked
+    const locked = (t.pro && !pro) || (t.max && !max);
     const selected = bioState.theme === t.key ? 'selected' : '';
     const lockedClass = locked ? 'locked' : '';
     const lock = locked ? `<div class="bio-theme-lock" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>` : '';
+    const maxBadge = t.max ? '<div class="bio-theme-max-badge">MAX</div>' : '';
+    const swatch = t.key === 'custom'
+      ? '<div class="bio-theme-swatch" style="background:conic-gradient(from 45deg,#a78bfa,#e879f9,#fb7185,#fbbf24,#34d399,#22d3ee,#a78bfa);"></div>'
+      : `<div class="bio-theme-swatch" style="background:${t.grad};"></div>`;
     return `<button type="button" class="bio-theme-btn ${selected} ${lockedClass}" data-theme="${t.key}" onclick="pickTheme('${t.key}')"
       style="background:linear-gradient(135deg,${t.bg},${t.bg2});">
-      <div class="bio-theme-swatch" style="background:${t.grad};"></div>
+      ${swatch}
       <div class="bio-theme-name">${t.name}</div>
+      ${maxBadge}
       ${lock}
     </button>`;
   }).join('');
+
+  // Show/hide custom editor panel based on selected theme + tier
+  const editor = document.getElementById('bio-custom-editor');
+  if (editor) editor.style.display = (bioState.theme === 'custom' && max) ? 'block' : 'none';
 }
 
 function pickTheme(t) {
   const theme = BIO_THEMES.find(x => x.key === t);
   if (!theme) return;
-  const isPro = userTier === 'monthly';
-  if (theme.pro && !isPro) {
-    // Pro-gated theme — open upgrade flow
+  const pro = isPro();
+  const max = isMax();
+  if (theme.pro && !pro) {
     showBioStatus('error', `${theme.name} is a Pro theme. Upgrade to unlock 12 themes.`);
-    if (typeof startCheckout === 'function') {
-      setTimeout(() => { try { startCheckout(); } catch(e){} }, 200);
-    }
+    setTimeout(() => { try { startCheckout('monthly'); } catch(e){} }, 200);
+    return;
+  }
+  if (theme.max && !max) {
+    showBioStatus('error', `Custom theme is a Creator Max feature. Upgrade to unlock full branding control.`);
+    setTimeout(() => { try { startCheckout('max'); } catch(e){} }, 200);
     return;
   }
   bioState.theme = t;
+  // If picking custom for the first time, init state with defaults
+  if (t === 'custom' && !bioState.custom_theme) {
+    bioState.custom_theme = { bgUrl: '', bgOpacity: 0.4, colors: { ...CUSTOM_THEME_DEFAULTS }, applied: true };
+  }
   renderBioThemes();
+  syncBioCustomEditorUI();
   schedulePreviewUpdate();
+}
+
+// Populate the custom editor inputs from bioState.custom_theme
+function syncBioCustomEditorUI() {
+  if (!bioState.custom_theme) return;
+  const ct = bioState.custom_theme;
+  const colors = ct.colors || CUSTOM_THEME_DEFAULTS;
+  ['bg','card','text','accent'].forEach(k => {
+    const input = document.getElementById(`bio-color-${k}`);
+    const hex = document.getElementById(`bio-color-${k}-hex`);
+    if (input) input.value = colors[k] || CUSTOM_THEME_DEFAULTS[k];
+    if (hex) hex.textContent = (colors[k] || CUSTOM_THEME_DEFAULTS[k]).toLowerCase();
+  });
+  const bgThumb = document.getElementById('bio-custom-bg-thumb');
+  const bgStatus = document.getElementById('bio-custom-bg-status');
+  const bgRemove = document.getElementById('bio-custom-bg-remove');
+  if (ct.bgUrl) {
+    if (bgThumb) bgThumb.style.backgroundImage = `url("${ct.bgUrl}")`;
+    if (bgStatus) bgStatus.textContent = 'Background uploaded';
+    if (bgRemove) bgRemove.style.display = 'inline-block';
+  } else {
+    if (bgThumb) bgThumb.style.backgroundImage = '';
+    if (bgStatus) bgStatus.textContent = 'No background uploaded';
+    if (bgRemove) bgRemove.style.display = 'none';
+  }
+  const opIn = document.getElementById('bio-custom-bg-opacity');
+  const opVal = document.getElementById('bio-custom-bg-opacity-val');
+  const op = ct.bgOpacity != null ? ct.bgOpacity : 0.4;
+  if (opIn) opIn.value = op;
+  if (opVal) opVal.textContent = Math.round(op * 100) + '%';
+}
+
+function onBioColorChange(slot, value) {
+  if (!bioState.custom_theme) bioState.custom_theme = { bgUrl: '', bgOpacity: 0.4, colors: { ...CUSTOM_THEME_DEFAULTS }, applied: true };
+  if (!bioState.custom_theme.colors) bioState.custom_theme.colors = { ...CUSTOM_THEME_DEFAULTS };
+  bioState.custom_theme.colors[slot] = value;
+  const hex = document.getElementById(`bio-color-${slot}-hex`);
+  if (hex) hex.textContent = value.toLowerCase();
+  schedulePreviewUpdate();
+}
+
+function resetBioCustomColors() {
+  if (!bioState.custom_theme) bioState.custom_theme = { bgUrl: '', bgOpacity: 0.4, colors: { ...CUSTOM_THEME_DEFAULTS }, applied: true };
+  bioState.custom_theme.colors = { ...CUSTOM_THEME_DEFAULTS };
+  syncBioCustomEditorUI();
+  schedulePreviewUpdate();
+}
+
+function onBioCustomOpacityChange(val) {
+  if (!bioState.custom_theme) return;
+  bioState.custom_theme.bgOpacity = parseFloat(val);
+  const opVal = document.getElementById('bio-custom-bg-opacity-val');
+  if (opVal) opVal.textContent = Math.round(bioState.custom_theme.bgOpacity * 100) + '%';
+  schedulePreviewUpdate();
+}
+
+// Compress image to very small WebP and upload to bio-backgrounds bucket
+async function onBioCustomBgSelected(input) {
+  const file = input.files[0];
+  input.value = '';
+  if (!file) return;
+  if (!isMax()) { showBioStatus('error', 'Custom background is a Creator Max feature.'); return; }
+  if (!file.type.startsWith('image/')) { showBioStatus('error', 'Please upload an image file.'); return; }
+  if (file.size > 15 * 1024 * 1024) { showBioStatus('error', 'Image is too large (15MB max).'); return; }
+
+  const btnLabel = document.querySelector('.custom-bg-btn.primary');
+  const origText = btnLabel ? btnLabel.firstChild.textContent : '';
+  if (btnLabel) btnLabel.firstChild.textContent = 'Uploading...';
+
+  try {
+    // Compress to ~250KB WebP, max 1600x900
+    const blob = await compressBgImage(file, 1600, 900, 250 * 1024);
+    // Upload
+    const fileName = `bg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
+    const path = `${currentUser.id}/${fileName}`;
+    const { error: upErr } = await sb.storage.from('bio-backgrounds').upload(path, blob, {
+      contentType: 'image/webp', upsert: false,
+    });
+    if (upErr) throw upErr;
+    const { data: { publicUrl } } = sb.storage.from('bio-backgrounds').getPublicUrl(path);
+
+    // Queue old bg for cleanup on save
+    if (bioState.custom_theme?.bgUrl) bioStaleBgs.push(bioState.custom_theme.bgUrl);
+    if (!bioState.custom_theme) bioState.custom_theme = { bgUrl: '', bgOpacity: 0.4, colors: { ...CUSTOM_THEME_DEFAULTS }, applied: true };
+    bioState.custom_theme.bgUrl = publicUrl;
+    syncBioCustomEditorUI();
+    schedulePreviewUpdate();
+    showBioStatus('success', 'Background uploaded. Remember to save.');
+  } catch (e) {
+    console.error(e);
+    showBioStatus('error', `Upload failed: ${e.message || 'unknown'}`);
+  } finally {
+    if (btnLabel) btnLabel.firstChild.textContent = origText || 'Upload';
+  }
+}
+
+function removeBioCustomBg() {
+  if (!bioState.custom_theme) return;
+  if (bioState.custom_theme.bgUrl) bioStaleBgs.push(bioState.custom_theme.bgUrl);
+  bioState.custom_theme.bgUrl = '';
+  syncBioCustomEditorUI();
+  schedulePreviewUpdate();
+}
+
+// Shared image compressor — scales down and outputs WebP targeting a size
+async function compressBgImage(file, maxW, maxH, targetBytes) {
+  const imgUrl = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error('Could not read image'));
+      i.src = imgUrl;
+    });
+    // Fit within box while preserving aspect
+    let w = img.width, h = img.height;
+    const scale = Math.min(maxW / w, maxH / h, 1);
+    w = Math.round(w * scale);
+    h = Math.round(h * scale);
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+
+    // Binary-search quality until under target size
+    let q = 0.82, lo = 0.3, hi = 0.95;
+    let blob = await new Promise(res => canvas.toBlob(res, 'image/webp', q));
+    for (let i = 0; i < 6 && blob; i++) {
+      if (blob.size > targetBytes) {
+        hi = q; q = (lo + q) / 2;
+      } else if (blob.size < targetBytes * 0.75) {
+        lo = q; q = (q + hi) / 2;
+      } else break;
+      blob = await new Promise(res => canvas.toBlob(res, 'image/webp', q));
+    }
+    if (!blob) throw new Error('Could not compress image');
+    return blob;
+  } finally {
+    URL.revokeObjectURL(imgUrl);
+  }
 }
 
 function renderBioSocials() {
@@ -2721,40 +3189,63 @@ function onSocialChange(key, val) {
 
 // ====== LINKS ======
 function bioLimits() {
-  const isPro = userTier === 'monthly';
+  const pro = isPro();
+  const max = isMax();
   return {
-    maxLinks: isPro ? 50 : 10,
-    maxFeatured: isPro ? 3 : 1,
-    maxVideos: isPro ? 20 : 5,
-    isPro,
+    maxLinks: max ? 150 : (pro ? 50 : 10),
+    maxFeatured: max ? 10 : (pro ? 3 : 1),
+    maxHero: max ? 10 : 0,
+    maxVideos: pro ? 20 : 5,
+    pro: pro,
+    isMax: max,
   };
 }
 
-function addLink(isFeatured) {
-  const { maxLinks, maxFeatured } = bioLimits();
-  const regularCount = bioState.links.filter(l => !l.featured).length;
+function addLink(isFeatured, isHero) {
+  const { maxLinks, maxFeatured, maxHero } = bioLimits();
+  const regularCount = bioState.links.filter(l => !l.featured && !l.isHero).length;
   const featuredCount = bioState.links.filter(l => l.featured).length;
-  if (isFeatured) {
+  const heroCount = bioState.links.filter(l => l.isHero).length;
+
+  if (isHero) {
+    if (!isMax()) {
+      showBioStatus('error', 'Hero links are a Creator Max feature.');
+      setTimeout(() => { try { startCheckout('max'); } catch(e){} }, 200);
+      return;
+    }
+    if (heroCount >= maxHero) {
+      showBioStatus('error', `Hero link limit reached (${maxHero}).`);
+      return;
+    }
+  } else if (isFeatured) {
     if (featuredCount >= maxFeatured) {
-      showBioStatus('error', `Featured link limit reached (${maxFeatured}). ${userTier !== 'monthly' ? 'Upgrade to Pro for 3.' : ''}`);
+      showBioStatus('error', `Featured link limit reached (${maxFeatured}). ${!isPro() ? 'Upgrade to Pro for 3.' : ''}`);
       return;
     }
   } else {
     if (regularCount >= maxLinks) {
-      showBioStatus('error', `Link limit reached (${maxLinks}). ${userTier !== 'monthly' ? 'Upgrade to Pro for 50.' : ''}`);
+      showBioStatus('error', `Link limit reached (${maxLinks}). ${!isPro() ? 'Upgrade to Pro for 50.' : ''}`);
       return;
     }
   }
   const newId = linkIdSeq++;
-  bioState.links.push({ _id: newId, title:'', description:'', url:'', featured: !!isFeatured, photoUrl:'' });
-  bioExpandedLinks.add(newId); // new links start expanded
+  bioState.links.push({
+    _id: newId,
+    title: '',
+    description: '',
+    url: '',
+    featured: !!isFeatured,
+    isHero: !!isHero,
+    photoUrl: '',
+  });
+  bioExpandedLinks.add(newId);
   renderBioLinks();
   schedulePreviewUpdate();
 }
 
 // If user has a published Media Kit, add a pre-filled link to it
 async function addMediaKitLink() {
-  if (userTier !== 'monthly') {
+  if (!isPro()) {
     showBioStatus('error', 'Media Kit is a Pro feature.');
     return;
   }
@@ -2824,8 +3315,8 @@ async function addMediaKitLink() {
 async function updateMediaKitLinkButton() {
   const btn = document.getElementById('bio-add-mediakit-link');
   if (!btn) return;
-  const isPro = userTier === 'monthly';
-  if (!isPro || !currentUser) {
+  const pro = isPro();
+  if (!pro || !currentUser) {
     btn.style.display = 'none';
     return;
   }
@@ -2888,10 +3379,15 @@ function renderBioLinks() {
   const el = document.getElementById('bio-links-list');
   if (!el) return;
   const counts = document.getElementById('bio-links-counts');
-  const { maxLinks, maxFeatured, isPro } = bioLimits();
-  const regularCount = bioState.links.filter(l => !l.featured).length;
+  const { maxLinks, maxFeatured, maxHero, isPro: pro, isMax: max } = bioLimits();
+  const regularCount = bioState.links.filter(l => !l.featured && !l.isHero).length;
   const featuredCount = bioState.links.filter(l => l.featured).length;
-  if (counts) counts.textContent = `${regularCount}/${maxLinks} links · ${featuredCount}/${maxFeatured} featured`;
+  const heroCount = bioState.links.filter(l => l.isHero).length;
+  if (counts) {
+    const parts = [`${regularCount}/${maxLinks} links`, `${featuredCount}/${maxFeatured} featured`];
+    if (max) parts.push(`${heroCount}/${maxHero} hero`);
+    counts.textContent = parts.join(' · ');
+  }
 
   if (bioState.links.length === 0) {
     el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No links yet. Click below to add one.</div>';
@@ -2903,6 +3399,13 @@ function renderBioLinks() {
   document.getElementById('bio-add-link-btn').style.opacity = regularCount >= maxLinks ? 0.5 : 1;
   document.getElementById('bio-add-featured-btn').disabled = featuredCount >= maxFeatured;
   document.getElementById('bio-add-featured-btn').style.opacity = featuredCount >= maxFeatured ? 0.5 : 1;
+  // Hero button: visible only for Max users
+  const heroBtn = document.getElementById('bio-add-hero-btn');
+  if (heroBtn) {
+    heroBtn.style.display = max ? 'flex' : 'none';
+    heroBtn.disabled = heroCount >= maxHero;
+    heroBtn.style.opacity = heroCount >= maxHero ? 0.5 : 1;
+  }
   // Enable Sortable (reinit)
   if (window.Sortable) {
     const prev = el._sortable;
@@ -2935,6 +3438,26 @@ function renderLinkCollapsed(link, dragSvg, editSvg) {
   const url = (link.url || '').trim();
   const urlDisplay = url ? escapeHtml(url.length > 50 ? url.slice(0, 47) + '…' : url) : '<span style="color:#fca5a5;">No URL set</span>';
   const mkClass = link.isMediaKit ? ' bio-link-mediakit' : '';
+  const heroClass = link.isHero ? ' bio-link-hero' : '';
+
+  if (link.isHero) {
+    const thumb = link.photoUrl
+      ? `<img alt="" src="${escapeHtml(link.photoUrl)}" style="width:56px;height:56px;object-fit:cover;border-radius:6px;flex-shrink:0;">`
+      : `<div style="width:56px;height:56px;border-radius:6px;background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(232,121,249,0.1));border:1px dashed rgba(232,121,249,0.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#e879f9;">Hero</div>`;
+    return `<div class="bio-link-row bio-link-collapsed${heroClass}" data-id="${link._id}" onclick="expandLink(${link._id})" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 12px;">
+      <div class="bio-link-drag" aria-label="Drag to reorder" onclick="event.stopPropagation();">${dragSvg}</div>
+      ${thumb}
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:13px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;">${title}</span>
+          <span class="bio-hero-badge">Hero</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">${urlDisplay}</div>
+      </div>
+      <button type="button" aria-label="Edit link" onclick="event.stopPropagation();expandLink(${link._id})" style="background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:6px;padding:5px 9px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;">${editSvg} Edit</button>
+      <button class="bio-link-remove" onclick="event.stopPropagation();removeLink(${link._id})">Remove</button>
+    </div>`;
+  }
 
   if (link.featured) {
     const thumb = link.photoUrl
@@ -2973,18 +3496,63 @@ function renderLinkCollapsed(link, dragSvg, editSvg) {
   </div>`;
 }
 
+async function onHeroPhotoSelected(input, linkId) {
+  const file = input.files[0];
+  input.value = '';
+  if (!file) return;
+  if (!isMax()) { showBioStatus('error', 'Hero links are a Creator Max feature.'); return; }
+  if (!file.type.startsWith('image/')) { showBioStatus('error', 'Please upload an image.'); return; }
+  if (file.size > 15 * 1024 * 1024) { showBioStatus('error', 'Image is too large (15MB max).'); return; }
+
+  const link = bioState.links.find(l => l._id === linkId);
+  if (!link) return;
+
+  try {
+    showBioStatus('info', 'Uploading…');
+    // Compress aggressively since we may have up to 10 hero photos
+    const blob = await compressBgImage(file, 1200, 1200, 180 * 1024);
+    const fileName = `hero-${linkId}-${Date.now()}-${Math.random().toString(36).slice(2,8)}.webp`;
+    const path = `${currentUser.id}/${fileName}`;
+    const { error: upErr } = await sb.storage.from('bio-photos').upload(path, blob, { contentType: 'image/webp', upsert: false });
+    if (upErr) throw upErr;
+    const { data: { publicUrl } } = sb.storage.from('bio-photos').getPublicUrl(path);
+
+    // Queue old photo for cleanup if replacing
+    if (link.photoUrl) bioStalePhotos.push(link.photoUrl);
+    link.photoUrl = publicUrl;
+    renderBioLinks();
+    schedulePreviewUpdate();
+    showBioStatus('success', 'Hero photo uploaded. Remember to save.');
+  } catch (e) {
+    console.error(e);
+    showBioStatus('error', `Upload failed: ${e.message || 'unknown'}`);
+  }
+}
+
 function renderLinkExpanded(link, dragSvg) {
-  const photoSlot = link.featured ? `
+  let photoSlot = '';
+  if (link.featured) {
+    photoSlot = `
     <div class="bio-featured-photo-slot">
       ${link.photoUrl
         ? `<img alt="" src="${escapeHtml(link.photoUrl)}">`
         : '<span>+ Upload 16:9 photo</span>'}
       <input type="file" accept="image/*" aria-label="Upload featured photo" onchange="openCropper(this,'featured',${link._id})">
-    </div>` : '';
-  return `<div class="bio-link-row" data-id="${link._id}">
+    </div>`;
+  } else if (link.isHero) {
+    photoSlot = `
+    <div class="bio-hero-photo-slot">
+      ${link.photoUrl
+        ? `<img alt="" src="${escapeHtml(link.photoUrl)}">`
+        : '<span>+ Upload hero image</span>'}
+      <input type="file" accept="image/*" aria-label="Upload hero photo" onchange="onHeroPhotoSelected(this,${link._id})">
+    </div>`;
+  }
+  return `<div class="bio-link-row${link.isHero ? ' bio-link-hero' : ''}" data-id="${link._id}">
     <div class="bio-link-header">
       <div class="bio-link-drag" aria-label="Drag to reorder">${dragSvg}</div>
       ${link.featured ? '<span class="bio-featured-badge">Featured</span>' : ''}
+      ${link.isHero ? '<span class="bio-hero-badge">Hero</span>' : ''}
       <div style="flex:1;"></div>
       <button class="bio-link-remove" onclick="removeLink(${link._id})">Remove</button>
     </div>
@@ -3040,7 +3608,7 @@ function removeVideo(id) {
 function openVideoDraft() {
   const { maxVideos } = bioLimits();
   if (bioState.videos.length >= maxVideos) {
-    showBioStatus('error', `Video limit reached (${maxVideos}). ${userTier !== 'monthly' ? 'Upgrade to Pro for 20.' : ''}`);
+    showBioStatus('error', `Video limit reached (${maxVideos}). ${!isPro() ? 'Upgrade to Pro for 20.' : ''}`);
     return;
   }
   bioVideoDraftOpen = true;
@@ -3375,6 +3943,7 @@ async function saveBio() {
         featured: !!l.featured,
         photoUrl: l.photoUrl || '',
         ...(l.isMediaKit ? { isMediaKit: true } : {}),
+        ...(l.isHero ? { isHero: true } : {}),
       }));
     const cleanVideos = bioState.videos
       .filter(v => (v.url || '').trim())
@@ -3389,7 +3958,8 @@ async function saveBio() {
         // Defense-in-depth: Free users cannot save a Pro theme
         const chosen = BIO_THEMES.find(x => x.key === bioState.theme);
         if (!chosen) return 'purple';
-        if (chosen.pro && userTier !== 'monthly') return 'purple';
+        if (chosen.pro && !isPro()) return 'purple';
+        if (chosen.max && !isMax()) return 'purple';
         return bioState.theme;
       })(),
       socials: bioState.socials,
@@ -3397,12 +3967,15 @@ async function saveBio() {
       videos: cleanVideos,
       published: bioState.published,
       // Free users cannot hide branding — force true regardless of client state
-      show_branding: userTier === 'monthly' ? !!bioState.show_branding : true,
+      show_branding: isPro() ? !!bioState.show_branding : true,
+      // Max users can save custom_theme. Preserve for downgraded users but blank-out on write for non-Max to avoid RLS overreach
+      custom_theme: isMax() ? (bioState.custom_theme || null) : (bioState.custom_theme || null),
     };
     const { error } = await sb.from('link_in_bio').upsert(payload, { onConflict: 'user_id' });
     if (error) throw error;
 
     await deleteStalePhotos();
+    await deleteStaleBios();
 
     updatePublishUI();
     showBioStatus('success', 'Saved ✓');
@@ -3413,6 +3986,22 @@ async function saveBio() {
     btn.disabled = false;
     btn.textContent = 'Save';
   }
+}
+
+// Delete queued stale background URLs from storage
+async function deleteStaleBios() {
+  if (!bioStaleBgs.length) return;
+  const paths = bioStaleBgs
+    .map(url => {
+      // Extract storage path from public URL
+      const m = url.match(/\/bio-backgrounds\/(.+)$/);
+      return m ? m[1] : null;
+    })
+    .filter(Boolean);
+  if (paths.length) {
+    try { await sb.storage.from('bio-backgrounds').remove(paths); } catch (e) { console.warn('bg cleanup', e); }
+  }
+  bioStaleBgs = [];
 }
 
 async function togglePublish() {
@@ -3499,7 +4088,20 @@ function buildPreviewHTML() {
     violet:   { bg:'#0c0418', surface:'#170a26', surface2:'#220f37', text:'#f5ecff', muted:'#c9b8e6', muted2:'#dccdf0', accent:'#6d28d9', accent2:'#c084fc', glow:'rgba(192,132,252,0.3)', border:'rgba(200,170,255,0.12)', avatarBorder:'linear-gradient(135deg,#c084fc,#e9d5ff)' },
     graphite: { bg:'#0a0a0a', surface:'#141414', surface2:'#1e1e1e', text:'#f5f5f5', muted:'#b3b3b3', muted2:'#d1d1d1', accent:'#6b7280', accent2:'#d1d5db', glow:'rgba(209,213,219,0.2)', border:'rgba(255,255,255,0.08)', avatarBorder:'linear-gradient(135deg,#d1d5db,#f3f4f6)' },
   };
-  const t = themes[bioState.theme] || themes.purple;
+  // Build custom theme from bioState.custom_theme if tier allows
+  let t;
+  let bgImageCSS = '';
+  let bgOverlayCSS = '';
+  if (bioState.theme === 'custom' && isMax() && bioState.custom_theme) {
+    t = buildCustomThemeVars(bioState.custom_theme);
+    if (bioState.custom_theme.bgUrl) {
+      bgImageCSS = `body::after{content:'';position:fixed;inset:0;background-image:url("${escapeHtml(bioState.custom_theme.bgUrl)}");background-size:cover;background-position:center;z-index:-2;}`;
+      const darkness = 1 - (bioState.custom_theme.bgOpacity || 0.4);
+      bgOverlayCSS = `body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,${darkness.toFixed(2)});z-index:-1;}`;
+    }
+  } else {
+    t = themes[bioState.theme] || themes.purple;
+  }
   const name = bioState.display_name || bioState.username || 'Your name';
   const initial = (name[0] || '?').toUpperCase();
   const avatarHtml = bioState.avatar_url
@@ -3509,12 +4111,18 @@ function buildPreviewHTML() {
   const linksHtml = bioState.links.filter(l => (l.url || '').trim()).map(l => buildPreviewLink(l, t)).join('');
   const videosHtml = buildPreviewVideos(t);
 
+  // For custom themes with a bg image, we dim the radial glow (since bg image is already bg)
+  const glowCSS = (bioState.theme === 'custom' && isMax() && bioState.custom_theme?.bgUrl)
+    ? '' // no radial glow when custom bg is set
+    : `body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,${t.glow} 0%,transparent 60%);pointer-events:none;z-index:0;}`;
+
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
   body{margin:0;padding:40px 18px 24px;font-family:'DM Sans',sans-serif;background:${t.bg};color:${t.text};min-height:100vh;}
-  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,${t.glow} 0%,transparent 60%);pointer-events:none;z-index:0;}
+  ${bgImageCSS}
+  ${bgOverlayCSS || glowCSS}
   .w{position:relative;z-index:1;max-width:480px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;}
   .avfr{width:100px;height:100px;border-radius:50%;padding:3px;background:${t.avatarBorder};margin-bottom:6px;}
   .nm{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-0.4px;text-align:center;word-break:break-word;}
@@ -3539,6 +4147,12 @@ function buildPreviewHTML() {
   .mkh-b{flex:1;min-width:0;}
   .mkh-t{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.4);letter-spacing:-0.2px;}
   .mkh-d{font-size:12px;color:rgba(255,255,255,0.85);text-shadow:0 1px 3px rgba(0,0,0,0.4);line-height:1.4;margin-top:3px;word-break:break-word;}
+  .hl{position:relative;border-radius:14px;overflow:hidden;min-height:110px;background:#000;border:1px solid ${t.border};}
+  .hl-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:block;}
+  .hl-ov{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.65) 100%);}
+  .hl-c{position:relative;z-index:2;display:flex;flex-direction:column;padding:20px;min-height:110px;justify-content:flex-end;}
+  .hl-t{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,0.5);letter-spacing:-0.3px;}
+  .hl-d{font-size:13px;color:rgba(255,255,255,0.9);text-shadow:0 1px 4px rgba(0,0,0,0.5);line-height:1.35;margin-top:4px;word-break:break-word;}
   .vids{width:100%;margin-top:8px;overflow-x:auto;scrollbar-width:none;}
   .vids::-webkit-scrollbar{display:none;}
   .vids-r{display:flex;gap:10px;padding:2px 0;}
@@ -3566,6 +4180,16 @@ function buildPreviewSocials(t) {
 }
 
 function buildPreviewLink(l, t) {
+  if (l.isHero && l.photoUrl) {
+    return `<div class="hl">
+      <img class="hl-bg" src="${escapeHtml(l.photoUrl)}" alt="">
+      <div class="hl-ov"></div>
+      <div class="hl-c">
+        <div class="hl-t">${escapeHtml(l.title || 'Untitled')}</div>
+        ${l.description ? `<div class="hl-d">${escapeHtml(l.description)}</div>` : ''}
+      </div>
+    </div>`;
+  }
   if (l.featured && l.photoUrl) {
     return `<div class="fl">
       <img src="${escapeHtml(l.photoUrl)}" alt="">
@@ -3642,17 +4266,19 @@ let mkState = {
   theme: 'purple',
   show_branding: false,
   published: false,
+  custom_theme: null,
 };
+let mkStaleBgs = [];
 let mkInited = false;
 let mkPreviewTimer = null;
 let mkStalePhotos = [];
 let mkRateIdSeq = 1;
 
 function initMediaKitTool() {
-  const isPro = userTier === 'monthly';
-  document.getElementById('mediakit-paywall').style.display = isPro ? 'none' : 'block';
-  document.getElementById('mediakit-editor').style.display = isPro ? 'block' : 'none';
-  if (!isPro) return;
+  const pro = isPro();
+  document.getElementById('mediakit-paywall').style.display = pro ? 'none' : 'block';
+  document.getElementById('mediakit-editor').style.display = pro ? 'block' : 'none';
+  if (!pro) return;
 
   if (mkInited) {
     // Re-sync username from profiles in case it was changed in the Link in Bio tool
@@ -3743,6 +4369,8 @@ async function loadMediaKit() {
       mkState.theme = kit.theme || 'purple';
       mkState.show_branding = !!kit.show_branding;
       mkState.published = !!kit.published;
+      mkState.custom_theme = kit.custom_theme || null;
+      if (mkState.theme === 'custom' && !isMax()) mkState.theme = 'purple';
       // Merge DB rate card with predefined rows
       const dbRates = Array.isArray(kit.rate_card) ? kit.rate_card : [];
       mkState.rate_card = MK_PREDEFINED_RATES.map(r => {
@@ -3759,6 +4387,7 @@ async function loadMediaKit() {
   renderMKSocials();
   renderMKRates();
   renderMKThemes();
+  syncMKCustomEditorUI();
   updateMKPublishUI();
   updateMKPreview();
 }
@@ -4048,20 +4677,136 @@ function toggleEngagementHelp() {
 function renderMKThemes() {
   const container = document.getElementById('mk-themes');
   if (!container) return;
-  // All 12 themes unlocked for Pro (Media Kit is Pro-only)
+  const max = isMax();
+  // All 12 themes unlocked for Pro (Media Kit is Pro-only). Custom only for Max.
   container.innerHTML = BIO_THEMES.map(t => {
+    const locked = t.max && !max;
     const selected = mkState.theme === t.key ? 'selected' : '';
-    return `<button type="button" class="bio-theme-btn ${selected}" data-theme="${t.key}" onclick="pickMKTheme('${t.key}')"
+    const lockedClass = locked ? 'locked' : '';
+    const lock = locked ? `<div class="bio-theme-lock" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>` : '';
+    const maxBadge = t.max ? '<div class="bio-theme-max-badge">MAX</div>' : '';
+    const swatch = t.key === 'custom'
+      ? '<div class="bio-theme-swatch" style="background:conic-gradient(from 45deg,#a78bfa,#e879f9,#fb7185,#fbbf24,#34d399,#22d3ee,#a78bfa);"></div>'
+      : `<div class="bio-theme-swatch" style="background:${t.grad};"></div>`;
+    return `<button type="button" class="bio-theme-btn ${selected} ${lockedClass}" data-theme="${t.key}" onclick="pickMKTheme('${t.key}')"
       style="background:linear-gradient(135deg,${t.bg},${t.bg2});">
-      <div class="bio-theme-swatch" style="background:${t.grad};"></div>
+      ${swatch}
       <div class="bio-theme-name">${t.name}</div>
+      ${maxBadge}
+      ${lock}
     </button>`;
   }).join('');
+  // Show/hide custom editor panel
+  const editor = document.getElementById('mk-custom-editor');
+  if (editor) editor.style.display = (mkState.theme === 'custom' && max) ? 'block' : 'none';
 }
 
 function pickMKTheme(t) {
+  const theme = BIO_THEMES.find(x => x.key === t);
+  if (!theme) return;
+  if (theme.max && !isMax()) {
+    showMKStatus('error', 'Custom theme is a Creator Max feature.');
+    setTimeout(() => { try { startCheckout('max'); } catch(e){} }, 200);
+    return;
+  }
   mkState.theme = t;
+  if (t === 'custom' && !mkState.custom_theme) {
+    mkState.custom_theme = { bgUrl: '', bgOpacity: 0.4, colors: { ...CUSTOM_THEME_DEFAULTS }, applied: true };
+  }
   renderMKThemes();
+  syncMKCustomEditorUI();
+  scheduleMKPreview();
+}
+
+function syncMKCustomEditorUI() {
+  if (!mkState.custom_theme) return;
+  const ct = mkState.custom_theme;
+  const colors = ct.colors || CUSTOM_THEME_DEFAULTS;
+  ['bg','card','text','accent'].forEach(k => {
+    const input = document.getElementById(`mk-color-${k}`);
+    const hex = document.getElementById(`mk-color-${k}-hex`);
+    if (input) input.value = colors[k] || CUSTOM_THEME_DEFAULTS[k];
+    if (hex) hex.textContent = (colors[k] || CUSTOM_THEME_DEFAULTS[k]).toLowerCase();
+  });
+  const bgThumb = document.getElementById('mk-custom-bg-thumb');
+  const bgStatus = document.getElementById('mk-custom-bg-status');
+  const bgRemove = document.getElementById('mk-custom-bg-remove');
+  if (ct.bgUrl) {
+    if (bgThumb) bgThumb.style.backgroundImage = `url("${ct.bgUrl}")`;
+    if (bgStatus) bgStatus.textContent = 'Background uploaded';
+    if (bgRemove) bgRemove.style.display = 'inline-block';
+  } else {
+    if (bgThumb) bgThumb.style.backgroundImage = '';
+    if (bgStatus) bgStatus.textContent = 'No background uploaded';
+    if (bgRemove) bgRemove.style.display = 'none';
+  }
+  const opIn = document.getElementById('mk-custom-bg-opacity');
+  const opVal = document.getElementById('mk-custom-bg-opacity-val');
+  const op = ct.bgOpacity != null ? ct.bgOpacity : 0.4;
+  if (opIn) opIn.value = op;
+  if (opVal) opVal.textContent = Math.round(op * 100) + '%';
+}
+
+function onMKColorChange(slot, value) {
+  if (!mkState.custom_theme) mkState.custom_theme = { bgUrl: '', bgOpacity: 0.4, colors: { ...CUSTOM_THEME_DEFAULTS }, applied: true };
+  if (!mkState.custom_theme.colors) mkState.custom_theme.colors = { ...CUSTOM_THEME_DEFAULTS };
+  mkState.custom_theme.colors[slot] = value;
+  const hex = document.getElementById(`mk-color-${slot}-hex`);
+  if (hex) hex.textContent = value.toLowerCase();
+  scheduleMKPreview();
+}
+
+function resetMKCustomColors() {
+  if (!mkState.custom_theme) mkState.custom_theme = { bgUrl: '', bgOpacity: 0.4, colors: { ...CUSTOM_THEME_DEFAULTS }, applied: true };
+  mkState.custom_theme.colors = { ...CUSTOM_THEME_DEFAULTS };
+  syncMKCustomEditorUI();
+  scheduleMKPreview();
+}
+
+function onMKCustomOpacityChange(val) {
+  if (!mkState.custom_theme) return;
+  mkState.custom_theme.bgOpacity = parseFloat(val);
+  const opVal = document.getElementById('mk-custom-bg-opacity-val');
+  if (opVal) opVal.textContent = Math.round(mkState.custom_theme.bgOpacity * 100) + '%';
+  scheduleMKPreview();
+}
+
+async function onMKCustomBgSelected(input) {
+  const file = input.files[0];
+  input.value = '';
+  if (!file) return;
+  if (!isMax()) { showMKStatus('error', 'Custom background is a Creator Max feature.'); return; }
+  if (!file.type.startsWith('image/')) { showMKStatus('error', 'Please upload an image file.'); return; }
+  if (file.size > 15 * 1024 * 1024) { showMKStatus('error', 'Image is too large (15MB max).'); return; }
+
+  try {
+    showMKStatus('info', 'Uploading…');
+    const blob = await compressBgImage(file, 1920, 1280, 450 * 1024);
+    const fileName = `bg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
+    const path = `${currentUser.id}/${fileName}`;
+    const { error: upErr } = await sb.storage.from('mediakit-backgrounds').upload(path, blob, {
+      contentType: 'image/webp', upsert: false,
+    });
+    if (upErr) throw upErr;
+    const { data: { publicUrl } } = sb.storage.from('mediakit-backgrounds').getPublicUrl(path);
+
+    if (mkState.custom_theme?.bgUrl) mkStaleBgs.push(mkState.custom_theme.bgUrl);
+    if (!mkState.custom_theme) mkState.custom_theme = { bgUrl: '', bgOpacity: 0.4, colors: { ...CUSTOM_THEME_DEFAULTS }, applied: true };
+    mkState.custom_theme.bgUrl = publicUrl;
+    syncMKCustomEditorUI();
+    scheduleMKPreview();
+    showMKStatus('success', 'Background uploaded. Remember to save.');
+  } catch (e) {
+    console.error(e);
+    showMKStatus('error', `Upload failed: ${e.message || 'unknown'}`);
+  }
+}
+
+function removeMKCustomBg() {
+  if (!mkState.custom_theme) return;
+  if (mkState.custom_theme.bgUrl) mkStaleBgs.push(mkState.custom_theme.bgUrl);
+  mkState.custom_theme.bgUrl = '';
+  syncMKCustomEditorUI();
   scheduleMKPreview();
 }
 
@@ -4076,7 +4821,7 @@ function showMKStatus(kind, msg) {
 
 async function saveMediaKit() {
   if (!currentUser) return;
-  if (userTier !== 'monthly') { showMKStatus('error', 'Media Kit is a Pro feature.'); return; }
+  if (!isPro()) { showMKStatus('error', 'Media Kit is a Pro feature.'); return; }
   const btn = document.getElementById('mk-save-btn');
   btn.disabled = true;
   btn.textContent = 'Saving…';
@@ -4143,14 +4888,21 @@ async function saveMediaKit() {
       rate_card: cleanRates,
       contact_email: mkState.contact_email || null,
       contact_note: mkState.contact_note || null,
-      theme: mkState.theme,
+      theme: (() => {
+        const chosen = BIO_THEMES.find(x => x.key === mkState.theme);
+        if (!chosen) return 'purple';
+        if (chosen.max && !isMax()) return 'purple';
+        return mkState.theme;
+      })(),
       show_branding: !!mkState.show_branding,
       published: mkState.published,
+      custom_theme: mkState.custom_theme || null,
     };
     const { error } = await sb.from('media_kit').upsert(payload, { onConflict: 'user_id' });
     if (error) throw error;
 
     await deleteMKStalePhotos();
+    await deleteMKStaleBgs();
     updateMKPublishUI();
     showMKStatus('success', 'Saved ✓');
   } catch (e) {
@@ -4162,9 +4914,23 @@ async function saveMediaKit() {
   }
 }
 
+async function deleteMKStaleBgs() {
+  if (!mkStaleBgs.length) return;
+  const paths = mkStaleBgs
+    .map(url => {
+      const m = url.match(/\/mediakit-backgrounds\/(.+)$/);
+      return m ? m[1] : null;
+    })
+    .filter(Boolean);
+  if (paths.length) {
+    try { await sb.storage.from('mediakit-backgrounds').remove(paths); } catch (e) { console.warn('mk bg cleanup', e); }
+  }
+  mkStaleBgs = [];
+}
+
 async function toggleMediaKitPublish() {
   if (!currentUser) return;
-  if (userTier !== 'monthly') { showMKStatus('error', 'Media Kit is a Pro feature.'); return; }
+  if (!isPro()) { showMKStatus('error', 'Media Kit is a Pro feature.'); return; }
   const wantPublish = !mkState.published;
   if (wantPublish) {
     const uname = document.getElementById('mk-username').value.trim();
@@ -4411,13 +5177,13 @@ let gridDirty = false; // true if there are unsaved changes (for Pro users)
 let gridLoaded = false; // has data been loaded from DB yet
 
 function initGridTool() {
-  const isPro = userTier === 'monthly';
-  document.getElementById('grid-free-banner').style.display = isPro ? 'none' : 'flex';
-  document.getElementById('grid-save-btn').style.display = isPro ? 'inline-block' : 'none';
+  const pro = isPro();
+  document.getElementById('grid-free-banner').style.display = pro ? 'none' : 'flex';
+  document.getElementById('grid-save-btn').style.display = pro ? 'inline-block' : 'none';
   updateGridHandle();
   if (gridInited) { renderGrid(); return; }
   gridInited = true;
-  if (isPro) loadSavedGrid();
+  if (pro) loadSavedGrid();
   renderGrid();
 }
 
@@ -4560,7 +5326,7 @@ async function clearGrid() {
   renderGrid();
 
   // If Pro + user has a saved grid, delete it from Supabase
-  if (userTier === 'monthly' && currentUser) {
+  if (isPro() && currentUser) {
     const btn = document.getElementById('grid-clear-btn');
     if (btn) { btn.disabled = true; }
     try {
@@ -4738,7 +5504,7 @@ let gridLastSaveAt = 0;
 const GRID_SAVE_COOLDOWN_MS = 3000; // min 3s between saves
 
 async function saveGrid() {
-  if (userTier !== 'monthly') { showGridStatus('error', 'Upgrade to Pro to save your grid.'); return; }
+  if (!isPro()) { showGridStatus('error', 'Upgrade to Pro to save your grid.'); return; }
   if (!currentUser) return;
   if (gridPhotos.length === 0) { showGridStatus('error', 'Add at least one photo first.'); return; }
 
@@ -5688,10 +6454,10 @@ let taxInited = false;
 
 function initTaxTracker() {
   // Pro gate check
-  const isPro = userTier === 'monthly';
-  document.getElementById('tax-pro-gate').style.display = isPro ? 'none' : 'block';
-  document.getElementById('tax-main').style.display = isPro ? 'block' : 'none';
-  if (!isPro) return;
+  const pro = isPro();
+  document.getElementById('tax-pro-gate').style.display = pro ? 'none' : 'block';
+  document.getElementById('tax-main').style.display = pro ? 'block' : 'none';
+  if (!pro) return;
 
   if (!taxInited) {
     // Populate year dropdown (current year + 4 prior)
@@ -5925,13 +6691,13 @@ initAuth();
 function openSettingsModal() {
   const modal = document.getElementById('settings-modal');
   if (!modal) return;
-  const isPro = userTier === 'monthly';
+  const pro = isPro();
   if (currentUser) {
     document.getElementById('settings-avatar').textContent = currentUser.email[0].toUpperCase();
     document.getElementById('settings-email').textContent = currentUser.email;
   }
-  document.getElementById('settings-sub-free').style.display = isPro ? 'none' : 'block';
-  document.getElementById('settings-sub-pro').style.display = isPro ? 'block' : 'none';
+  document.getElementById('settings-sub-free').style.display = pro ? 'none' : 'block';
+  document.getElementById('settings-sub-pro').style.display = pro ? 'block' : 'none';
   updateSettingsCancelBtn();
   // Reset password section each time modal opens
   const pwBtn = document.getElementById('settings-reset-password-btn');
@@ -6048,17 +6814,17 @@ const IMG_SIZE_FREE = 5 * 1024 * 1024; // 5MB
 const IMG_SIZE_PRO = 50 * 1024 * 1024; // 50MB
 
 function initImageConverter() {
-  const isPro = userTier === 'monthly';
+  const pro = isPro();
   const key = 'fts_img_' + new Date().toDateString();
   imgDailyCount = parseInt(localStorage.getItem(key) || '0');
-  const limit = isPro ? IMG_LIMIT_PRO : IMG_LIMIT_FREE;
+  const limit = pro ? IMG_LIMIT_PRO : IMG_LIMIT_FREE;
   const remaining = Math.max(0, limit - imgDailyCount);
-  document.getElementById('img-limit-note').textContent = isPro
+  document.getElementById('img-limit-note').textContent = pro
     ? `Pro: ${remaining} of ${limit} conversions remaining today`
     : `Free: ${remaining} of ${limit} conversions remaining today. Upgrade to Pro for 10/day and 50MB files.`;
-  const sizeNote = document.getElementById('img-size-note'); if(sizeNote) sizeNote.textContent = `Supports JPEG, PNG, WebP, GIF, BMP, TIFF, AVIF, ICO, SVG (max ${isPro ? '50MB' : '5MB'})`;
+  const sizeNote = document.getElementById('img-size-note'); if(sizeNote) sizeNote.textContent = `Supports JPEG, PNG, WebP, GIF, BMP, TIFF, AVIF, ICO, SVG (max ${pro ? '50MB' : '5MB'})`;
   document.getElementById('img-usage').textContent = '';
-  if (isPro) { document.getElementById('pro-resize').style.display = 'grid'; }
+  if (pro) { document.getElementById('pro-resize').style.display = 'grid'; }
   document.getElementById('img-format').addEventListener('change', function() {
     const noQuality = ['image/png','image/gif','image/bmp','image/x-icon','image/tiff']; document.getElementById('quality-group').style.display = noQuality.includes(this.value) ? 'none' : 'block';
   });
@@ -6072,10 +6838,10 @@ function initImageConverter() {
 }
 
 function handleImageFile(file) {
-  const isPro = userTier === 'monthly';
-  const maxSize = isPro ? IMG_SIZE_PRO : IMG_SIZE_FREE;
+  const pro = isPro();
+  const maxSize = pro ? IMG_SIZE_PRO : IMG_SIZE_FREE;
   if (file.size > maxSize) {
-    alert(`File too large. ${isPro ? 'Pro' : 'Free'} plan allows up to ${isPro ? '50MB' : '5MB'}.`);
+    alert(`File too large. ${pro ? 'Pro' : 'Free'} plan allows up to ${pro ? '50MB' : '5MB'}.`);
     return;
   }
   imgFile = file;
@@ -6103,8 +6869,8 @@ function clearImage() {
 
 async function convertImage() {
   if (!imgFile) return;
-  const isPro = userTier === 'monthly';
-  const limit = isPro ? IMG_LIMIT_PRO : IMG_LIMIT_FREE;
+  const pro = isPro();
+  const limit = pro ? IMG_LIMIT_PRO : IMG_LIMIT_FREE;
   const key = 'fts_img_' + new Date().toDateString();
   imgDailyCount = parseInt(localStorage.getItem(key) || '0');
   if (imgDailyCount >= limit) {
@@ -6119,7 +6885,7 @@ async function convertImage() {
   img.onload = () => {
     const canvas = document.createElement('canvas');
     let w = img.width, h = img.height;
-    if (isPro) {
+    if (pro) {
       const wInput = document.getElementById('img-width').value;
       const hInput = document.getElementById('img-height').value;
       if (wInput) { w = parseInt(wInput); h = Math.round(img.height * (w / img.width)); }
@@ -6159,8 +6925,8 @@ async function convertImage() {
     imgDailyCount++;
     localStorage.setItem(key, imgDailyCount.toString());
     const remaining = Math.max(0, limit - imgDailyCount);
-    document.getElementById('img-usage').textContent = isPro ? `Unlimited conversions` : `${remaining} conversion${remaining !== 1 ? 's' : ''} remaining today`;
-    document.getElementById('img-limit-note').textContent = `${isPro ? 'Pro' : 'Free'}: ${remaining} of ${limit} conversions remaining today`;
+    document.getElementById('img-usage').textContent = pro ? `Unlimited conversions` : `${remaining} conversion${remaining !== 1 ? 's' : ''} remaining today`;
+    document.getElementById('img-limit-note').textContent = `${pro ? 'Pro' : 'Free'}: ${remaining} of ${limit} conversions remaining today`;
     btn.textContent = 'Convert Image'; btn.disabled = false;
   };
   img.src = URL.createObjectURL(imgFile);
@@ -6175,17 +6941,17 @@ const QR_LIMIT_FREE_DAY = true; // per day for free
 const QR_LIMIT_PRO = 9999; // unlimited
 
 function initQRGenerator() {
-  const isPro = userTier === 'monthly';
+  const pro = isPro();
   // Free: per day, Pro: per month
-  const key = isPro ? 'fts_qr_pro_' + new Date().toISOString().slice(0,7) : 'fts_qr_' + new Date().toDateString();
+  const key = pro ? 'fts_qr_pro_' + new Date().toISOString().slice(0,7) : 'fts_qr_' + new Date().toDateString();
   qrMonthCount = parseInt(localStorage.getItem(key) || '0');
-  const limit = isPro ? QR_LIMIT_PRO : QR_LIMIT_FREE;
-  const period = isPro ? 'this month' : 'today';
+  const limit = pro ? QR_LIMIT_PRO : QR_LIMIT_FREE;
+  const period = pro ? 'this month' : 'today';
   const remaining = Math.max(0, limit - qrMonthCount);
-  document.getElementById('qr-limit-note').textContent = isPro
+  document.getElementById('qr-limit-note').textContent = pro
     ? `Pro: ${remaining} of ${limit} QR codes remaining this month`
     : `Free: ${remaining} of ${limit} QR codes remaining today. Upgrade to Pro for 10/month with custom colors.`;
-  if (isPro) document.getElementById('qr-pro-options').style.display = 'grid';
+  if (pro) document.getElementById('qr-pro-options').style.display = 'grid';
   document.getElementById('qr-fg-color')?.addEventListener('input', function() {
     document.getElementById('qr-fg-hex').textContent = this.value.toUpperCase();
     previewQR();
@@ -6212,9 +6978,9 @@ function generateQR() {
 }
 
 function renderQRCanvas(text) {
-  const isPro = userTier === 'monthly';
-  const fg = isPro ? (document.getElementById('qr-fg-color')?.value || '#000000') : '#000000';
-  const bg = isPro ? (document.getElementById('qr-bg-color')?.value || '#ffffff') : '#ffffff';
+  const pro = isPro();
+  const fg = pro ? (document.getElementById('qr-fg-color')?.value || '#000000') : '#000000';
+  const bg = pro ? (document.getElementById('qr-bg-color')?.value || '#ffffff') : '#ffffff';
   const canvas = document.getElementById('qr-canvas');
   try {
     new QRious({
@@ -6235,12 +7001,12 @@ function renderQRCanvas(text) {
 function downloadQR() {
   const text = document.getElementById('qr-text').value.trim();
   if (!text) return;
-  const isPro = userTier === 'monthly';
-  const key = isPro ? 'fts_qr_pro_' + new Date().toISOString().slice(0,7) : 'fts_qr_' + new Date().toDateString();
+  const pro = isPro();
+  const key = pro ? 'fts_qr_pro_' + new Date().toISOString().slice(0,7) : 'fts_qr_' + new Date().toDateString();
   qrMonthCount = parseInt(localStorage.getItem(key) || '0');
-  const limit = isPro ? QR_LIMIT_PRO : QR_LIMIT_FREE;
+  const limit = pro ? QR_LIMIT_PRO : QR_LIMIT_FREE;
   if (qrMonthCount >= limit) {
-    alert(isPro ? 'Unexpected error.' : `You have used all ${QR_LIMIT_FREE} free QR codes for today. Upgrade to Pro for unlimited.`);
+    alert(pro ? 'Unexpected error.' : `You have used all ${QR_LIMIT_FREE} free QR codes for today. Upgrade to Pro for unlimited.`);
     return;
   }
   const canvas = document.getElementById('qr-canvas');
@@ -6251,8 +7017,8 @@ function downloadQR() {
   qrMonthCount++;
   localStorage.setItem(key, qrMonthCount.toString());
   const remaining = Math.max(0, limit - qrMonthCount);
-  document.getElementById('qr-usage').textContent = isPro ? 'Unlimited QR codes' : `${remaining} QR code${remaining !== 1 ? 's' : ''} remaining today`;
-  document.getElementById('qr-limit-note').textContent = isPro ? 'Pro: Unlimited QR codes' : `Free: ${remaining} of ${limit} QR code remaining today`;
+  document.getElementById('qr-usage').textContent = pro ? 'Unlimited QR codes' : `${remaining} QR code${remaining !== 1 ? 's' : ''} remaining today`;
+  document.getElementById('qr-limit-note').textContent = pro ? 'Pro: Unlimited QR codes' : `Free: ${remaining} of ${limit} QR code remaining today`;
 }
 
 // ════════════════════════════════════════════
@@ -6264,7 +7030,7 @@ let invDailyCount = 0;
 const INV_LIMIT_FREE = 3;
 
 function initInvoiceGenerator() {
-  const isPro = userTier === 'monthly';
+  const pro = isPro();
   const key = 'fts_inv_' + new Date().toDateString();
   invDailyCount = parseInt(localStorage.getItem(key) || '0');
 
@@ -6276,7 +7042,7 @@ function initInvoiceGenerator() {
   const logoPlaceholderText = document.getElementById('logo-placeholder-text');
   const fileInput = document.getElementById('inv-logo');
 
-  if (isPro) {
+  if (pro) {
     // Pro: fully enabled
     if (logoUploadArea) { logoUploadArea.style.cursor = 'pointer'; logoUploadArea.style.opacity = '1'; }
     if (fileInput) fileInput.style.pointerEvents = 'auto';
@@ -6354,7 +7120,7 @@ async function uploadLogo(input) {
 }
 
 async function loadSavedLogo() {
-  if (!currentUser || userTier !== 'monthly') return;
+  if (!currentUser || !isPro()) return;
   try {
     const path = `${currentUser.id}/logo`;
     const { data, error } = await sb.storage.from('logos').createSignedUrl(path, 3600);
@@ -6440,10 +7206,10 @@ function calcTotals() {
 }
 
 function downloadInvoicePDF() {
-  const isPro = userTier === 'monthly';
+  const pro = isPro();
   const key = 'fts_inv_' + new Date().toDateString();
   invDailyCount = parseInt(localStorage.getItem(key) || '0');
-  if (!isPro && invDailyCount >= INV_LIMIT_FREE) {
+  if (!pro && invDailyCount >= INV_LIMIT_FREE) {
     alert(`You have used all ${INV_LIMIT_FREE} free invoices for today. Upgrade to Pro for unlimited.`);
     return;
   }
@@ -6463,7 +7229,7 @@ function downloadInvoicePDF() {
   const total = subtotal + taxAmt;
   const fmt = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-  const logoHtml = (isPro && invLogoDataUrl)
+  const logoHtml = (pro && invLogoDataUrl)
     ? `<img src="${invLogoDataUrl}" alt="Invoice logo" style="max-height:60px;max-width:160px;object-fit:contain;display:block;margin-bottom:8px;">`
     : '';
 
@@ -6543,7 +7309,7 @@ ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'
   window.open(url, '_blank');
   setTimeout(() => URL.revokeObjectURL(url), 10000);
 
-  if (!isPro) {
+  if (!pro) {
     invDailyCount++;
     localStorage.setItem(key, invDailyCount.toString());
     const remaining = Math.max(0, INV_LIMIT_FREE - invDailyCount);

@@ -43,7 +43,7 @@
   .gradient-text{background:linear-gradient(135deg,#a78bfa,#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
   .page-header p{color:var(--muted);font-size:17px;line-height:1.7;}
   .pricing-section{max-width:900px;margin:0 auto;padding:0 48px 100px;}
-  .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .pricing-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
   .plan{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px 32px;position:relative;overflow:hidden;}
   .plan.featured{border-color:rgba(124,58,237,0.5);background:linear-gradient(160deg,rgba(124,58,237,0.07) 0%,var(--surface) 60%);}
   .plan-badge{position:absolute;top:20px;right:20px;background:var(--accent);color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;letter-spacing:0.03em;}
@@ -56,6 +56,10 @@
   .plan-btn.free:hover{border-color:rgba(124,58,237,0.4);color:var(--accent2);}
   .plan-btn.pro{background:var(--accent);color:#fff;border:none;box-shadow:0 0 30px var(--accent-glow);}
   .plan-btn.pro:hover{background:var(--accent2);transform:translateY(-1px);}
+  .plan-btn.max{background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;box-shadow:0 0 30px rgba(232,121,249,0.45);}
+  .plan-btn.max:hover{filter:brightness(1.1);transform:translateY(-1px);}
+  .plan.max-plan{background:linear-gradient(180deg,rgba(124,58,237,0.04),transparent);border-color:rgba(232,121,249,0.25);}
+  .plan-badge.max-badge{background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;}
   .plan-features{display:flex;flex-direction:column;gap:12px;}
   .plan-feature{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--muted);}
   .plan-feature-check{color:#4ade80;flex-shrink:0;font-size:14px;margin-top:1px;}
@@ -86,6 +90,7 @@
   .footer-links{display:flex;gap:24px;flex-wrap:wrap;}
   .footer-links a{color:var(--muted);font-size:13px;text-decoration:none;transition:color 0.2s;}
   .footer-links a:hover{color:var(--text);}
+  @media(max-width:1024px){.pricing-grid{grid-template-columns:1fr;max-width:500px;margin:0 auto;}}
   @media(max-width:768px){nav{padding:0 20px;}.nav-links,.nav-right{display:none;}.hamburger{display:flex;}.pricing-grid{grid-template-columns:1fr;}.pricing-section{padding:0 20px 60px;}.page-header{padding:60px 20px 40px;}footer{flex-direction:column;text-align:center;padding:24px 20px;}}
 
   /* === A11Y: visible focus ring for keyboard users === */
@@ -188,7 +193,7 @@
       <div class="plan-name">Pro</div>
       <div class="plan-price">$10 <span>/ month</span></div>
       <div class="plan-desc">Everything in Free, plus full access to all tools and features.</div>
-      <button class="plan-btn pro" onclick="openAuthModal()">Get started with Pro</button>
+      <button class="plan-btn pro" onclick="openAuthModal('monthly')">Get started with Pro</button>
       <div class="plan-features">
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Link in Bio</strong> — 50 links, 3 featured, 20 YouTube videos, remove branding</span></div>
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Media Kit</strong> — Professional brand pitch page with rate card, downloadable PDF</span></div>
@@ -203,6 +208,25 @@
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span>Whitelist and Snake List</span></div>
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span>Account notes</span></div>
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span>Cancel anytime</span></div>
+      </div>
+    </div>
+
+    <!-- CREATOR MAX -->
+    <div class="plan max-plan">
+      <div class="plan-badge max-badge">Take control</div>
+      <div class="plan-name">Creator Max</div>
+      <div class="plan-price">$20 <span>/ month</span></div>
+      <div class="plan-desc">Everything in Pro, plus full branding control to make your pages truly yours.</div>
+      <button class="plan-btn max" onclick="openAuthModal('max')">Get Creator Max</button>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Custom backgrounds</strong> — Upload your own image for Link in Bio and Media Kit</span></div>
+        <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Custom colors</strong> — Full RGB control over your page colors</span></div>
+        <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Hero links</strong> — Up to 10 full-image hero links for Link in Bio</span></div>
+        <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Link in Bio</strong> — 150 links and 10 featured links</span></div>
+        <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Everything in Pro</strong> — All Pro tools and features included</span></div>
+        <div class="plan-divider"></div>
+        <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span>Priority on new features</span></div>
+        <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span>Cancel or downgrade anytime</span></div>
       </div>
     </div>
 
@@ -228,13 +252,22 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let authMode = 'signin';
+let intendedPlan = null; // 'monthly' or 'max' — remembered across signup for post-signup checkout
 document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
 
 sb.auth.getSession().then(({ data: { session } }) => {
   if (session?.user) window.location.href = 'dashboard.html';
 });
 
-function openAuthModal() { authMode = 'signup'; syncAuthModal(); document.getElementById('auth-modal').classList.add('open'); }
+function openAuthModal(plan) {
+  authMode = 'signup';
+  intendedPlan = plan || null;
+  if (intendedPlan) {
+    try { localStorage.setItem('fts_intended_plan', intendedPlan); } catch (e) {}
+  }
+  syncAuthModal();
+  document.getElementById('auth-modal').classList.add('open');
+}
 function closeAuthModal() { document.getElementById('auth-modal').classList.remove('open'); }
 function syncAuthModal() {
   const isSignIn = authMode === 'signin';

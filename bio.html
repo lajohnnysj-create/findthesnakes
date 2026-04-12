@@ -462,6 +462,62 @@
     color: rgba(255,255,255,0.85);
     text-shadow: 0 1px 3px rgba(0,0,0,0.4);
   }
+
+  /* Hero link — full-image background, no icon, bottom-anchored text */
+  .link-btn.hero-link {
+    position: relative;
+    padding: 0;
+    min-height: 140px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: #000;
+    display: block;
+  }
+  .link-btn.hero-link:hover, .link-btn.hero-link:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--accent2);
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    display: block;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 20px 22px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    text-align: left;
+  }
+  .hero-link .link-title {
+    color: #fff;
+    font-size: 19px;
+    font-weight: 800;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    text-align: left;
+  }
+  .hero-link .link-desc {
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    text-align: left;
+    margin-top: 4px;
+  }
+
   /* Featured link */
   .featured-link {
     display: block;
@@ -730,6 +786,22 @@ function buildLink(link) {
   const title = esc(link.title || '');
   const desc = link.description ? `<div class="link-desc">${esc(link.description)}</div>` : '';
 
+  // Hero link — full-image background, no icon
+  if (link.isHero) {
+    const safePhoto = validImageUrl(link.photoUrl);
+    if (safePhoto) {
+      return `<a class="link-btn hero-link" href="${esc(url)}" target="_blank" rel="noopener nofollow">
+        <img class="hero-bg" src="${esc(safePhoto)}" alt="" loading="lazy">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="link-title">${title}</div>
+          ${desc}
+        </div>
+      </a>`;
+    }
+    // Hero without photo falls through to regular style
+  }
+
   if (link.featured) {
     const safePhoto = validImageUrl(link.photoUrl);
     if (safePhoto) {
@@ -860,13 +932,79 @@ function playVideo(cardEl, videoId) {
   </div>`;
 }
 
+function hexAlpha(hex, alpha) {
+  const h = (hex || '#ffffff').replace('#', '');
+  const bigint = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+  const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function applyCustomTheme(ct) {
+  const colors = ct?.colors || {};
+  const bg = colors.bg || '#07070f';
+  const card = colors.card || '#161625';
+  const text = colors.text || '#ffffff';
+  const accent = colors.accent || '#a78bfa';
+
+  const root = document.documentElement;
+  root.style.setProperty('--bg', bg);
+  root.style.setProperty('--surface', card);
+  root.style.setProperty('--surface2', card);
+  root.style.setProperty('--text', text);
+  root.style.setProperty('--muted', hexAlpha(text, 0.65));
+  root.style.setProperty('--muted2', hexAlpha(text, 0.8));
+  root.style.setProperty('--border', hexAlpha(text, 0.1));
+  root.style.setProperty('--accent', accent);
+  root.style.setProperty('--accent2', accent);
+  root.style.setProperty('--accent-glow', hexAlpha(accent, 0.3));
+  root.style.setProperty('--avatar-border', `linear-gradient(135deg, ${accent}, ${accent})`);
+
+  // Custom background image
+  if (ct.bgUrl) {
+    const op = ct.bgOpacity != null ? ct.bgOpacity : 0.4;
+    const darkness = 1 - op;
+    // Inject a style tag for the bg image
+    let bgStyle = document.getElementById('custom-bg-style');
+    if (!bgStyle) {
+      bgStyle = document.createElement('style');
+      bgStyle.id = 'custom-bg-style';
+      document.head.appendChild(bgStyle);
+    }
+    bgStyle.textContent = `
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("${ct.bgUrl.replace(/"/g, '&quot;')}");
+        background-size: cover;
+        background-position: center;
+        z-index: -2;
+      }
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,${darkness.toFixed(2)});
+        z-index: -1;
+      }
+    `;
+  }
+}
+
 function render(profile, bio, userTier) {
-  const name = bio.display_name || profile.username;
   const title = `${name} | FindTheSnakes`;
   document.title = title;
 
-  // Apply theme
-  document.documentElement.setAttribute('data-theme', bio.theme || 'purple');
+  // Apply theme — custom theme only honored if user is Max tier
+  const isMaxTier = userTier === 'max';
+  if (bio.theme === 'custom' && isMaxTier && bio.custom_theme) {
+    applyCustomTheme(bio.custom_theme);
+    document.documentElement.setAttribute('data-theme', 'custom');
+  } else {
+    // Theme was custom but user isn't Max, or just a normal preset
+    const theme = (bio.theme === 'custom' && !isMaxTier) ? 'purple' : (bio.theme || 'purple');
+    document.documentElement.setAttribute('data-theme', theme);
+  }
 
   // Meta tags
   const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -927,7 +1065,7 @@ async function load() {
 
   if (bErr || !bio) { renderNotFound(username); return; }
 
-  render(profile, bio);
+  render(profile, bio, profile.tier);
 }
 
 load().catch(err => {

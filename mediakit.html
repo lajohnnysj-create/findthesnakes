@@ -767,13 +767,21 @@ function render(profile, kit) {
     if (desc) desc.setAttribute('content', kit.bio);
   }
 
-  document.documentElement.setAttribute('data-theme', kit.theme || 'purple');
+  // Apply theme — custom theme only honored if user is Max tier
+  const isMaxTier = profile.tier === 'max';
+  if (kit.theme === 'custom' && isMaxTier && kit.custom_theme) {
+    applyCustomTheme(kit.custom_theme);
+    document.documentElement.setAttribute('data-theme', 'custom');
+  } else {
+    const theme = (kit.theme === 'custom' && !isMaxTier) ? 'purple' : (kit.theme || 'purple');
+    document.documentElement.setAttribute('data-theme', theme);
+  }
 
   const headshot = validImageUrl(kit.headshot_url);
 
-  // Banner rule: always on for non-Pro users. Pro users can opt out via show_branding=false.
-  const isPro = profile.tier === 'monthly';
-  const showBanner = !isPro || kit.show_branding === true;
+  // Banner rule: always on for non-Pro. Pro/Max can opt out via show_branding=false.
+  const isPaid = profile.tier === 'monthly' || profile.tier === 'max';
+  const showBanner = !isPaid || kit.show_branding === true;
 
   const bannerHtml = showBanner ? `<div class="banner-wrap">
     <a class="brand-banner" href="https://www.findthesnakes.com">
@@ -794,6 +802,63 @@ function render(profile, kit) {
     ${buildContact(kit)}
     ${bannerHtml}
   `;
+}
+
+// ====== Custom theme helpers (Creator Max) ======
+function hexAlpha(hex, alpha) {
+  const h = (hex || '#ffffff').replace('#', '');
+  const bigint = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+  const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function applyCustomTheme(ct) {
+  const colors = ct?.colors || {};
+  const bg = colors.bg || '#07070f';
+  const card = colors.card || '#161625';
+  const text = colors.text || '#ffffff';
+  const accent = colors.accent || '#a78bfa';
+
+  const root = document.documentElement;
+  root.style.setProperty('--bg', bg);
+  root.style.setProperty('--surface', card);
+  root.style.setProperty('--surface2', card);
+  root.style.setProperty('--text', text);
+  root.style.setProperty('--muted', hexAlpha(text, 0.65));
+  root.style.setProperty('--muted2', hexAlpha(text, 0.8));
+  root.style.setProperty('--border', hexAlpha(text, 0.1));
+  root.style.setProperty('--accent', accent);
+  root.style.setProperty('--accent2', accent);
+  root.style.setProperty('--accent-glow', hexAlpha(accent, 0.3));
+
+  if (ct.bgUrl) {
+    const op = ct.bgOpacity != null ? ct.bgOpacity : 0.4;
+    const darkness = 1 - op;
+    let bgStyle = document.getElementById('custom-bg-style');
+    if (!bgStyle) {
+      bgStyle = document.createElement('style');
+      bgStyle.id = 'custom-bg-style';
+      document.head.appendChild(bgStyle);
+    }
+    bgStyle.textContent = `
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("${ct.bgUrl.replace(/"/g, '&quot;')}");
+        background-size: cover;
+        background-position: center;
+        z-index: -2;
+      }
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,${darkness.toFixed(2)});
+        z-index: -1;
+      }
+    `;
+  }
 }
 
 async function load() {
