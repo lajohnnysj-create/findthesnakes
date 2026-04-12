@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="shortcut icon" href="favicon.svg">
+<title>Loading… | FindTheSnakes</title>
+<meta name="description" content="A creator's link-in-bio page on FindTheSnakes.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Loading… | FindTheSnakes">
+<meta property="og:description" content="A creator's link-in-bio page on FindTheSnakes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* Theme: Purple (default) */
+  :root, [data-theme="purple"] {
+    --bg: #07070f;
+    --surface: #0f0f1a;
+    --surface2: #161625;
+    --border: rgba(255,255,255,0.1);
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --accent-glow: rgba(124,58,237,0.3);
+    --text: #f0eef8;
+    --muted: #b4b2c8;
+    --muted2: #c9c7dc;
+    --avatar-border: linear-gradient(135deg, #a78bfa, #e879f9);
+  }
+  [data-theme="midnight"] {
+    --bg: #050508;
+    --surface: #0c0c12;
+    --surface2: #13131b;
+    --border: rgba(255,255,255,0.09);
+    --accent: #4b5563;
+    --accent2: #9ca3af;
+    --accent-glow: rgba(156,163,175,0.25);
+    --text: #f3f4f6;
+    --muted: #c9ccd4;
+    --muted2: #dde0e6;
+    --avatar-border: linear-gradient(135deg, #9ca3af, #e5e7eb);
+  }
+  [data-theme="sunset"] {
+    --bg: #120808;
+    --surface: #1c0e0e;
+    --surface2: #251414;
+    --border: rgba(255,180,150,0.12);
+    --accent: #f97316;
+    --accent2: #ec4899;
+    --accent-glow: rgba(249,115,22,0.3);
+    --text: #fff6f0;
+    --muted: #f3c8b2;
+    --muted2: #f7dcca;
+    --avatar-border: linear-gradient(135deg, #fb923c, #f472b6);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 48px 20px 24px;
+    overflow-x: hidden;
+  }
+
+  /* Soft glow background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--accent-glow) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* Loading / error states */
+  .state {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--muted);
+  }
+  .state h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .state p { font-size: 14px; line-height: 1.6; max-width: 360px; margin: 0 auto 24px; }
+  .state a.cta {
+    display: inline-block;
+    padding: 11px 22px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  /* Profile header */
+  .avatar-frame {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    padding: 3px;
+    background: var(--avatar-border);
+    box-shadow: 0 0 40px var(--accent-glow);
+    flex-shrink: 0;
+    margin-bottom: 8px;
+  }
+  .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    background: var(--surface2);
+  }
+  .avatar-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -1px;
+  }
+  .name {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-align: center;
+    word-break: break-word;
+    max-width: 100%;
+  }
+  .handle {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    font-weight: 500;
+  }
+  .bio {
+    font-size: 14px;
+    color: var(--muted2);
+    line-height: 1.5;
+    text-align: center;
+    max-width: 400px;
+    margin: 4px 0 12px;
+    word-break: break-word;
+  }
+
+  /* Links */
+  .links {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .link-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.15s, border-color 0.15s, background 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .link-btn:hover, .link-btn:focus-visible {
+    transform: translateY(-1px);
+    border-color: var(--accent2);
+    background: var(--surface2);
+  }
+  .link-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+    word-break: break-word;
+  }
+  .link-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  /* Featured link */
+  .featured-link {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .featured-link:hover, .featured-link:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--accent2);
+  }
+  .featured-photo {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    background: var(--surface2);
+  }
+  .featured-body { padding: 16px 20px 18px; }
+  .featured-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+  .featured-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  /* YouTube videos — horizontal scroll */
+  .videos {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 4px 20px 4px;
+    margin-top: 12px;
+  }
+  .videos-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 max(20px, calc(50vw - 270px));
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .videos-scroll::-webkit-scrollbar { display: none; }
+  .video-card {
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+  }
+  .video-card:hover, .video-card:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--accent2);
+  }
+  .video-thumb-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface2);
+    overflow: hidden;
+  }
+  .video-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .video-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.15);
+    transition: background 0.2s;
+  }
+  .video-card:hover .video-play,
+  .video-card:focus-visible .video-play { background: rgba(0,0,0,0.3); }
+  .video-play-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  }
+  .video-play-icon::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 13px solid #000;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    margin-left: 3px;
+  }
+  .video-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  /* Footer banner (free tier) */
+  .brand-banner {
+    margin-top: 32px;
+    padding: 14px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .brand-banner:hover, .brand-banner:focus-visible {
+    border-color: var(--accent2);
+    color: var(--text);
+  }
+  .brand-banner strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Accessibility: visible focus ring */
+  *:focus-visible {
+    outline: 2px solid var(--accent2);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  a:focus-visible { border-radius: 14px; }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="wrap">
+  <div class="state" id="loading-state">
+    <h1>Loading…</h1>
+    <p>One moment.</p>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://kjytapcgxukalwsyputk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMTcxMzEsImV4cCI6MjA5MDg5MzEzMX0.VC8mcU5lUeA56kG2gHssvl88EVWr018XttA86jpfEn0';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false }
+});
+
+// Get username from either a URL query param (?u=username) or from the path segment
+function getUsername() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('u')) return params.get('u').replace(/^@/, '').toLowerCase().trim();
+  // Fallback: derive from /@username path
+  const m = window.location.pathname.match(/^\/@([a-z0-9_]+)/i);
+  if (m) return m[1].toLowerCase();
+  return null;
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+function validUrl(u) {
+  if (!u) return null;
+  try {
+    const url = new URL(u);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+    return url.toString();
+  } catch { return null; }
+}
+
+function extractYouTubeId(url) {
+  if (!url) return null;
+  // youtube.com/watch?v=ID  |  youtu.be/ID  |  youtube.com/shorts/ID
+  const m = String(url).match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function renderNotFound(username) {
+  document.title = 'Not found | FindTheSnakes';
+  document.getElementById('wrap').innerHTML = `
+    <div class="state">
+      <h1>This page isn't here yet</h1>
+      <p>${username ? `<strong>@${esc(username)}</strong> hasn't created their FindTheSnakes page — or it's not published yet.` : 'No username in the URL.'}</p>
+      <a class="cta" href="https://www.findthesnakes.com">Create your own →</a>
+    </div>
+  `;
+}
+
+function buildAvatar(profile, bio) {
+  const name = bio.display_name || profile.username || '';
+  const initial = (name[0] || profile.username[0] || '?').toUpperCase();
+  if (bio.avatar_url) {
+    return `<div class="avatar-frame">
+      <img class="avatar" src="${esc(bio.avatar_url)}" alt="${esc(name)}" onerror="this.outerHTML='<div class=&quot;avatar-fallback&quot;>${esc(initial)}</div>'">
+    </div>`;
+  }
+  return `<div class="avatar-frame"><div class="avatar-fallback">${esc(initial)}</div></div>`;
+}
+
+function buildLink(link) {
+  const url = validUrl(link.url);
+  if (!url) return '';
+  const title = esc(link.title || '');
+  const desc = link.description ? `<div class="link-desc">${esc(link.description)}</div>` : '';
+
+  if (link.featured && link.photoUrl) {
+    return `<a class="featured-link" href="${esc(url)}" target="_blank" rel="noopener nofollow">
+      <img class="featured-photo" src="${esc(link.photoUrl)}" alt="" loading="lazy">
+      <div class="featured-body">
+        <div class="featured-title">${title}</div>
+        ${link.description ? `<div class="featured-desc">${esc(link.description)}</div>` : ''}
+      </div>
+    </a>`;
+  }
+  return `<a class="link-btn" href="${esc(url)}" target="_blank" rel="noopener nofollow">
+    <div class="link-title">${title}</div>
+    ${desc}
+  </a>`;
+}
+
+function buildVideos(videos) {
+  if (!Array.isArray(videos) || videos.length === 0) return '';
+  const cards = videos.map(v => {
+    const id = extractYouTubeId(v.url || v.videoId);
+    if (!id) return '';
+    const thumb = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    return `<div class="video-card" tabindex="0" role="button" aria-label="Play video"
+              onclick="playVideo(this,'${id}')"
+              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();playVideo(this,'${id}')}">
+      <div class="video-thumb-wrap">
+        <img class="video-thumb" src="${thumb}" alt="" loading="lazy" onerror="this.src='https://i.ytimg.com/vi/${id}/default.jpg'">
+        <div class="video-play"><div class="video-play-icon"></div></div>
+      </div>
+    </div>`;
+  }).filter(Boolean).join('');
+  if (!cards) return '';
+  return `<div class="videos"><div class="videos-scroll">${cards}</div></div>`;
+}
+
+function playVideo(cardEl, videoId) {
+  cardEl.innerHTML = `<div class="video-thumb-wrap">
+    <iframe class="video-iframe"
+      src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen loading="lazy"></iframe>
+  </div>`;
+}
+
+function render(profile, bio, userTier) {
+  const name = bio.display_name || profile.username;
+  const title = `${name} | FindTheSnakes`;
+  document.title = title;
+
+  // Apply theme
+  document.documentElement.setAttribute('data-theme', bio.theme || 'purple');
+
+  // Meta tags
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if (ogTitle) ogTitle.setAttribute('content', title);
+  if (bio.bio) {
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', bio.bio);
+    const desc = document.querySelector('meta[name="description"]');
+    if (desc) desc.setAttribute('content', bio.bio);
+  }
+
+  const links = Array.isArray(bio.links) ? bio.links : [];
+  const videos = Array.isArray(bio.videos) ? bio.videos : [];
+
+  const linksHtml = links.map(buildLink).filter(Boolean).join('');
+  const videosHtml = buildVideos(videos);
+
+  // Free users see the banner. Pro users don't.
+  // Note: we don't know tier from public data — for now show on all pages; later
+  // this can be gated if we expose a public tier flag.
+  const banner = `<a class="brand-banner" href="https://www.findthesnakes.com">
+    Get your free link-in-bio at <strong>FindTheSnakes</strong>
+  </a>`;
+
+  document.getElementById('wrap').innerHTML = `
+    ${buildAvatar(profile, bio)}
+    <div class="name">${esc(name)}</div>
+    <div class="handle">@${esc(profile.username)}</div>
+    ${bio.bio ? `<div class="bio">${esc(bio.bio)}</div>` : ''}
+    ${linksHtml ? `<div class="links">${linksHtml}</div>` : ''}
+    ${videosHtml}
+    ${banner}
+  `;
+}
+
+async function load() {
+  const username = getUsername();
+  if (!username) { renderNotFound(null); return; }
+
+  // 1) Look up the profile by username
+  const { data: profile, error: pErr } = await sb
+    .from('profiles')
+    .select('user_id, username')
+    .eq('username', username)
+    .maybeSingle();
+
+  if (pErr || !profile) { renderNotFound(username); return; }
+
+  // 2) Fetch their published link-in-bio page
+  const { data: bio, error: bErr } = await sb
+    .from('link_in_bio')
+    .select('display_name, bio, avatar_url, theme, links, videos, published')
+    .eq('user_id', profile.user_id)
+    .eq('published', true)
+    .maybeSingle();
+
+  if (bErr || !bio) { renderNotFound(username); return; }
+
+  render(profile, bio);
+}
+
+load().catch(err => {
+  console.error(err);
+  renderNotFound(getUsername());
+});
+</script>
+</body>
+</html>
