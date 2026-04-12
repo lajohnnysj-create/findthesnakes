@@ -1650,6 +1650,19 @@ function removeAvatar() {
 }
 
 // ====== CROPPER ======
+function resetCropperButton() {
+  const btn = document.getElementById('bio-cropper-confirm');
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = 'Use photo';
+  }
+  const err = document.getElementById('bio-cropper-error');
+  if (err) {
+    err.style.display = 'none';
+    err.textContent = '';
+  }
+}
+
 function openCropper(input, target, linkId) {
   if (!input.files || !input.files[0]) return;
   const file = input.files[0];
@@ -1663,6 +1676,8 @@ function openCropper(input, target, linkId) {
     input.value = '';
     return;
   }
+  // Always reset the confirm button + error in case previous upload failed or hung
+  resetCropperButton();
   bioCropSource = file;
   bioCropTarget = target === 'avatar' ? 'avatar' : { type: 'featured', linkId };
   const reader = new FileReader();
@@ -1693,7 +1708,7 @@ function openCropper(input, target, linkId) {
 function closeCropper() {
   if (bioCropper) { bioCropper.destroy(); bioCropper = null; }
   document.getElementById('bio-cropper-modal').style.display = 'none';
-  document.getElementById('bio-cropper-error').style.display = 'none';
+  resetCropperButton();
   bioCropSource = null;
   bioCropTarget = null;
 }
