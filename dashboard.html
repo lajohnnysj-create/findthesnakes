@@ -1523,6 +1523,8 @@ function onUsernameInput() {
     const myToken = bioUsernameCheckToken;
     bioUsernameCheckTimer = setTimeout(() => checkUsernameAvailability(cleaned, myToken), 500);
   }
+  // If the user's page is currently published, re-render the "Live at" text + View Live link
+  if (bioState.published) updatePublishUI();
   schedulePreviewUpdate();
 }
 
@@ -2629,6 +2631,8 @@ function onMKUsernameInput() {
     const myToken = mkUsernameCheckToken;
     mkUsernameCheckTimer = setTimeout(() => checkMKUsernameAvailability(cleaned, myToken), 500);
   }
+  // If the media kit is currently published, re-render the "Live at" text + View Live link
+  if (mkState.published) updateMKPublishUI();
   scheduleMKPreview();
 }
 
