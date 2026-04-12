@@ -200,7 +200,7 @@
   .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
   .results-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
   .results-badge { display: none; align-items: center; gap: 6px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); color: #c4b5fd; border-radius: 100px; padding: 4px 14px; font-size: 13px; }
-  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
   .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
   .stat-card .num { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; line-height: 1; }
   .stat-card.danger .num { color: var(--accent); }
@@ -1017,7 +1017,6 @@ body { overflow-x: hidden; }
           <button class="filter-tab active" onclick="setFilter('unfollowers',this)">Not following back</button>
           <button class="filter-tab" id="mutual-tab" onclick="setFilter('mutual',this)">Mutual</button>
           <button class="filter-tab" id="whitelist-tab" onclick="setFilter('whitelist',this)">🛡 Whitelist <span id="wl-tab-count" style="display:none;background:rgba(74,222,128,0.2);color:#4ade80;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
-          <button class="filter-tab" id="analytics-tab" onclick="setFilter('analytics',this)">📊 Analytics</button>
           <button class="filter-tab" id="snake-tab" onclick="setFilter('snakes',this)">🐍 Snake List <span id="snake-tab-count" style="display:none;background:rgba(124,58,237,0.2);color:#ff7a8f;border-radius:100px;padding:1px 7px;font-size:11px;margin-left:2px"></span></button>
         </div>
         <div class="wl-banner" id="wl-banner" style="display:none"><div>🛡 <span></span></div><button onclick="clearWhitelist()">Clear whitelist</button></div>
@@ -2763,11 +2762,14 @@ function renderResults() {
   const unfollowers = allResults.filter(r => !r.mutual && !r.followerOnly);
   const mutuals = allResults.filter(r => r.mutual);
   const followerOnly = allResults.filter(r => r.followerOnly);
+  const totalFollowing = allResults.filter(r => !r.followerOnly).length;
+  const followBackRate = totalFollowing > 0 ? Math.round((mutuals.length / totalFollowing) * 100) : 0;
 
   document.getElementById('stats-row').innerHTML = `
     <div class="stat-card danger"><div class="num">${unfollowers.length}</div><div class="lbl">Not following back</div></div>
     <div class="stat-card safe"><div class="num">${mutuals.length}</div><div class="lbl">Mutual followers</div></div>
-    <div class="stat-card"><div class="num">${followerOnly.length}</div><div class="lbl">Follow you only</div></div>`;
+    <div class="stat-card"><div class="num">${followerOnly.length}</div><div class="lbl">Follow you only</div></div>
+    <div class="stat-card"><div class="num">${followBackRate}%</div><div class="lbl">Follow back rate</div></div>`;
 
   const badge = document.getElementById('results-badge');
   if (badge) {
