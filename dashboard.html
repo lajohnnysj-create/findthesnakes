@@ -1574,21 +1574,44 @@ async function confirmCrop() {
   const isAvatar = bioCropTarget === 'avatar';
   const targetW = isAvatar ? 400 : 800;
   const targetH = isAvatar ? 400 : 450;
-  const canvas = bioCropper.getCroppedCanvas({ width: targetW, height: targetH, imageSmoothingQuality: 'high' });
   const btn = document.getElementById('bio-cropper-confirm');
   btn.disabled = true;
   btn.textContent = 'Uploading…';
+
+  const err = document.getElementById('bio-cropper-error');
+  err.style.display = 'none';
+
   try {
-    const blob = await new Promise(res => canvas.toBlob(res, 'image/webp', 0.85));
-    if (!blob) throw new Error('Could not process image');
+    const canvas = bioCropper.getCroppedCanvas({ width: targetW, height: targetH, imageSmoothingQuality: 'high' });
+    if (!canvas) throw new Error('Could not read cropped image. Try a different photo.');
+
+    // Convert canvas to WebP blob, with a 15-second safety timeout
+    const blob = await Promise.race([
+      new Promise((resolve, reject) => {
+        canvas.toBlob(b => {
+          if (b) resolve(b);
+          else reject(new Error('Browser could not encode image. Try a PNG or JPEG.'));
+        }, 'image/webp', 0.85);
+      }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Image processing timed out.')), 15000))
+    ]);
+
+    if (!blob) throw new Error('Could not process image.');
+
     const kind = isAvatar ? 'avatar' : 'featured';
     const fileName = `${currentUser.id}/${kind}-${Date.now()}-${Math.random().toString(36).slice(2,8)}.webp`;
-    const { error: upErr } = await sb.storage.from('bio-photos').upload(fileName, blob, { contentType: 'image/webp', upsert: false });
-    if (upErr) throw upErr;
+
+    const { error: upErr } = await sb.storage.from('bio-photos').upload(fileName, blob, {
+      contentType: 'image/webp',
+      upsert: false
+    });
+    if (upErr) throw new Error(upErr.message || 'Upload rejected. Please try again.');
+
     const { data: urlData } = sb.storage.from('bio-photos').getPublicUrl(fileName);
-    const publicUrl = urlData.publicUrl;
+    const publicUrl = urlData?.publicUrl;
+    if (!publicUrl) throw new Error('Could not get photo URL.');
+
     if (isAvatar) {
-      // queue old avatar for deletion on save (or delete immediately)
       if (bioState.avatar_url) bioStalePhotos.push(bioState.avatar_url);
       bioState.avatar_url = publicUrl;
       renderAvatarPreview();
@@ -1603,9 +1626,8 @@ async function confirmCrop() {
     schedulePreviewUpdate();
     closeCropper();
   } catch (e) {
-    console.error(e);
-    const err = document.getElementById('bio-cropper-error');
-    err.textContent = 'Upload failed: ' + (e.message || 'Please try again.');
+    console.error('Upload error:', e);
+    err.textContent = e.message || 'Upload failed. Please try again.';
     err.style.display = 'block';
     btn.disabled = false;
     btn.textContent = 'Use photo';
