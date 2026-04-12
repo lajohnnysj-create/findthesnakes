@@ -1583,6 +1583,69 @@
               </div>
             </div>
 
+            <!-- Theme (expanded by default, under Profile) -->
+            <div class="mk-section">
+              <button type="button" class="mk-section-header mk-collapsible" onclick="toggleMKSection('theme')" aria-expanded="true">
+                <div class="mk-section-label">Theme</div>
+                <svg class="mk-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="mk-section-body" id="mk-body-theme" style="display:block;">
+                <div id="mk-themes" class="bio-themes-grid"></div>
+
+                <!-- Custom theme editor for Media Kit (Creator Max only) -->
+                <div id="mk-custom-editor" class="custom-editor" style="display:none;">
+                  <div class="custom-editor-title">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                    Custom theme — your branding
+                  </div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BACKGROUND IMAGE</div>
+                  <div class="custom-bg-upload">
+                    <div id="mk-custom-bg-thumb" class="custom-bg-thumb"></div>
+                    <div class="custom-bg-info">
+                      <div id="mk-custom-bg-status">No background uploaded</div>
+                      <div style="font-size:10px;margin-top:2px;">Auto-compressed to keep page loads fast</div>
+                    </div>
+                    <div class="custom-bg-actions">
+                      <label class="custom-bg-btn primary">
+                        Upload
+                        <input type="file" accept="image/*" aria-label="Upload MK background" onchange="onMKCustomBgSelected(this)">
+                      </label>
+                      <button type="button" id="mk-custom-bg-remove" class="custom-bg-btn danger" onclick="removeMKCustomBg()" style="display:none;">Remove</button>
+                    </div>
+                  </div>
+                  <div class="custom-opacity-row">
+                    <label>Background opacity</label>
+                    <input type="range" id="mk-custom-bg-opacity" min="0" max="1" step="0.05" value="0.4" oninput="onMKCustomOpacityChange(this.value)">
+                    <span id="mk-custom-bg-opacity-val" class="custom-opacity-val">40%</span>
+                  </div>
+                  <div style="font-size:11px;color:var(--muted);margin:16px 0 8px;">COLORS</div>
+                  <div class="custom-color-grid">
+                    <div class="custom-color-item">
+                      <label for="mk-color-bg">Page BG</label>
+                      <input type="color" id="mk-color-bg" class="custom-color-input" value="#07070f" onchange="onMKColorChange('bg', this.value)">
+                      <div id="mk-color-bg-hex" class="custom-color-hex">#07070f</div>
+                    </div>
+                    <div class="custom-color-item">
+                      <label for="mk-color-card">Card</label>
+                      <input type="color" id="mk-color-card" class="custom-color-input" value="#161625" onchange="onMKColorChange('card', this.value)">
+                      <div id="mk-color-card-hex" class="custom-color-hex">#161625</div>
+                    </div>
+                    <div class="custom-color-item">
+                      <label for="mk-color-text">Text</label>
+                      <input type="color" id="mk-color-text" class="custom-color-input" value="#ffffff" onchange="onMKColorChange('text', this.value)">
+                      <div id="mk-color-text-hex" class="custom-color-hex">#ffffff</div>
+                    </div>
+                    <div class="custom-color-item">
+                      <label for="mk-color-accent">Accent</label>
+                      <input type="color" id="mk-color-accent" class="custom-color-input" value="#a78bfa" onchange="onMKColorChange('accent', this.value)">
+                      <div id="mk-color-accent-hex" class="custom-color-hex">#a78bfa</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="resetMKCustomColors()" style="width:100%;padding:8px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;">Reset to defaults</button>
+                </div>
+              </div>
+            </div>
+
             <!-- Audience (collapsible) -->
             <div class="mk-section">
               <button type="button" class="mk-section-header mk-collapsible" onclick="toggleMKSection('audience')" aria-expanded="false">
@@ -1649,69 +1712,6 @@
                 <input type="email" id="mk-contact-email" oninput="onMKField()" placeholder="you@yourdomain.com" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;margin-bottom:10px;">
                 <label for="mk-contact-note" style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);display:block;margin-bottom:5px;">Note (optional)</label>
                 <textarea id="mk-contact-note" maxlength="200" rows="2" oninput="onMKField()" placeholder="e.g. Best reached via email. Typical response: 24-48 hours." style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;resize:vertical;line-height:1.5;"></textarea>
-              </div>
-            </div>
-
-            <!-- Theme (collapsible) -->
-            <div class="mk-section">
-              <button type="button" class="mk-section-header mk-collapsible" onclick="toggleMKSection('theme')" aria-expanded="false">
-                <div class="mk-section-label">Theme</div>
-                <svg class="mk-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              <div class="mk-section-body" id="mk-body-theme" style="display:none;">
-                <div id="mk-themes" class="bio-themes-grid"></div>
-
-                <!-- Custom theme editor for Media Kit (Creator Max only) -->
-                <div id="mk-custom-editor" class="custom-editor" style="display:none;">
-                  <div class="custom-editor-title">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
-                    Custom theme — your branding
-                  </div>
-                  <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BACKGROUND IMAGE</div>
-                  <div class="custom-bg-upload">
-                    <div id="mk-custom-bg-thumb" class="custom-bg-thumb"></div>
-                    <div class="custom-bg-info">
-                      <div id="mk-custom-bg-status">No background uploaded</div>
-                      <div style="font-size:10px;margin-top:2px;">Auto-compressed to keep page loads fast</div>
-                    </div>
-                    <div class="custom-bg-actions">
-                      <label class="custom-bg-btn primary">
-                        Upload
-                        <input type="file" accept="image/*" aria-label="Upload MK background" onchange="onMKCustomBgSelected(this)">
-                      </label>
-                      <button type="button" id="mk-custom-bg-remove" class="custom-bg-btn danger" onclick="removeMKCustomBg()" style="display:none;">Remove</button>
-                    </div>
-                  </div>
-                  <div class="custom-opacity-row">
-                    <label>Background opacity</label>
-                    <input type="range" id="mk-custom-bg-opacity" min="0" max="1" step="0.05" value="0.4" oninput="onMKCustomOpacityChange(this.value)">
-                    <span id="mk-custom-bg-opacity-val" class="custom-opacity-val">40%</span>
-                  </div>
-                  <div style="font-size:11px;color:var(--muted);margin:16px 0 8px;">COLORS</div>
-                  <div class="custom-color-grid">
-                    <div class="custom-color-item">
-                      <label for="mk-color-bg">Page BG</label>
-                      <input type="color" id="mk-color-bg" class="custom-color-input" value="#07070f" onchange="onMKColorChange('bg', this.value)">
-                      <div id="mk-color-bg-hex" class="custom-color-hex">#07070f</div>
-                    </div>
-                    <div class="custom-color-item">
-                      <label for="mk-color-card">Card</label>
-                      <input type="color" id="mk-color-card" class="custom-color-input" value="#161625" onchange="onMKColorChange('card', this.value)">
-                      <div id="mk-color-card-hex" class="custom-color-hex">#161625</div>
-                    </div>
-                    <div class="custom-color-item">
-                      <label for="mk-color-text">Text</label>
-                      <input type="color" id="mk-color-text" class="custom-color-input" value="#ffffff" onchange="onMKColorChange('text', this.value)">
-                      <div id="mk-color-text-hex" class="custom-color-hex">#ffffff</div>
-                    </div>
-                    <div class="custom-color-item">
-                      <label for="mk-color-accent">Accent</label>
-                      <input type="color" id="mk-color-accent" class="custom-color-input" value="#a78bfa" onchange="onMKColorChange('accent', this.value)">
-                      <div id="mk-color-accent-hex" class="custom-color-hex">#a78bfa</div>
-                    </div>
-                  </div>
-                  <button type="button" onclick="resetMKCustomColors()" style="width:100%;padding:8px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;">Reset to defaults</button>
-                </div>
               </div>
             </div>
 
