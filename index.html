@@ -130,39 +130,43 @@
   .mockup-welcome-icon { width: 28px; height: 28px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
   .mockup-welcome-name { font-size: 12px; font-weight: 600; color: var(--text); text-align: left; }
 
-  /* Phone-shaped link-in-bio mockup */
-  .phone-mockup { position: relative; display: inline-block; margin: 0 auto 80px; perspective: 1400px; }
-  .phone-glow { position: absolute; inset: -80px; background: radial-gradient(ellipse 60% 60% at 50% 40%, rgba(124,58,237,0.35), transparent 70%); z-index: -1; }
-  .phone-frame { width: min(340px, 85vw); background: #0b0b14; border: 8px solid #1a1a24; border-radius: 42px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(124,58,237,0.3), 0 0 40px rgba(124,58,237,0.25); transform: rotateY(-8deg) rotateX(4deg); transition: transform 0.5s ease; aspect-ratio: 9 / 19; position: relative; }
-  .phone-frame:hover { transform: rotateY(-4deg) rotateX(2deg); }
-  .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); background: #000; border-radius: 0 0 18px 18px; width: 110px; height: 20px; z-index: 5; }
-  .phone-screen { width: 100%; height: 100%; background: #07070f; padding: 36px 18px 20px; overflow: hidden; position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .phone-screen::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: radial-gradient(ellipse 100% 80% at 50% 0%, rgba(124,58,237,0.25), transparent 65%); pointer-events: none; }
-  .phone-avatar { width: 76px; height: 76px; border-radius: 50%; padding: 2px; background: linear-gradient(135deg, #a78bfa, #e879f9); position: relative; z-index: 1; }
-  .phone-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #9f7aea, #c084fc); display: flex; align-items: center; justify-content: center; font-family: "Syne", sans-serif; font-size: 26px; font-weight: 800; color: #fff; }
-  .phone-name { font-family: "Syne", sans-serif; font-size: 17px; font-weight: 800; color: #f0eef8; letter-spacing: -0.3px; position: relative; z-index: 1; text-align: center; }
-  .phone-bio { font-size: 11px; color: #c9c7dc; text-align: center; position: relative; z-index: 1; }
-  .phone-socials { display: flex; gap: 6px; position: relative; z-index: 1; }
-  .phone-social { width: 26px; height: 26px; border-radius: 50%; background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: #f0eef8; }
-  .phone-social svg { width: 13px; height: 13px; fill: currentColor; }
-  .phone-links { width: 100%; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; position: relative; z-index: 1; }
-  .phone-link { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 9px 12px; text-align: center; font-size: 11px; font-weight: 500; color: #f0eef8; }
-  .phone-link-featured { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; margin-top: 2px; }
-  .phone-link-featured-img { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #4c1d95, #7c3aed, #ec4899); display: flex; align-items: center; justify-content: center; font-size: 22px; }
-  .phone-link-featured-body { padding: 8px 12px 10px; text-align: center; }
-  .phone-link-featured-title { font-family: "Syne", sans-serif; font-size: 12px; font-weight: 700; color: #f0eef8; }
-  .phone-link-featured-desc { font-size: 10px; color: #b4b2c8; margin-top: 1px; }
-  .phone-videos { display: flex; gap: 6px; width: calc(100% + 36px); margin-left: -18px; padding: 0 14px; margin-top: 4px; overflow: hidden; position: relative; z-index: 1; }
-  .phone-video { flex: 0 0 100px; aspect-ratio: 16/9; border-radius: 7px; background: linear-gradient(135deg, #1e1e2e, #2d1b4e); position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
-  .phone-video::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.15); }
-  .phone-video::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.95); }
-  .phone-video .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-40%, -50%); width: 0; height: 0; border-left: 7px solid #000; border-top: 5px solid transparent; border-bottom: 5px solid transparent; z-index: 1; }
-  .phone-banner { margin-top: 6px; padding: 6px 12px; background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; font-size: 9px; color: #b4b2c8; position: relative; z-index: 1; }
-  .phone-banner strong { color: #f0eef8; font-weight: 600; }
-  @media (max-width: 720px) {
-    .phone-frame { transform: none; }
-    .phone-mockup { margin-bottom: 40px; }
-    .phone-glow { inset: -40px; }
+  /* Link in Bio tool mockup (inside dashboard frame) */
+  .mockup-bio-content { padding: 18px 20px !important; text-align: left !important; align-items: stretch !important; justify-content: flex-start !important; gap: 18px; flex-direction: row !important; overflow: hidden; }
+  .mockup-bio-left { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .mockup-bio-right { width: 180px; flex-shrink: 0; display: flex; align-items: flex-start; justify-content: center; }
+  .mockup-bio-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .mockup-bio-title { font-family: "Syne", sans-serif; font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
+  .mockup-bio-status { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: #4ade80; font-weight: 500; }
+  .mockup-bio-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; }
+  .mockup-bio-url-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 11px; color: var(--muted); font-family: monospace; }
+  .mockup-bio-url-box strong { color: #c4b5fd; font-weight: 600; }
+  .mockup-bio-section { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+  .mockup-bio-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: #a78bfa; font-weight: 600; margin-bottom: 8px; }
+  .mockup-bio-profile-row { display: flex; align-items: center; gap: 10px; }
+  .mockup-bio-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #a78bfa, #e879f9); display: flex; align-items: center; justify-content: center; font-family: "Syne", sans-serif; font-size: 15px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .mockup-bio-profile-fields { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .mockup-bio-field { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 5px 8px; font-size: 11px; color: var(--text); }
+  .mockup-bio-field.small { font-size: 10px; color: var(--muted); }
+  .mockup-bio-link-row { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 11px; color: var(--text); margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between; }
+  .mockup-bio-link-row:last-child { margin-bottom: 0; }
+  .mockup-bio-link-row.featured { border-color: rgba(124,58,237,0.3); }
+  .mockup-bio-tag { font-size: 8px; background: rgba(124,58,237,0.2); color: #c4b5fd; border-radius: 100px; padding: 1px 6px; font-weight: 700; letter-spacing: 0.05em; }
+
+  /* Phone preview inside mockup right column */
+  .mockup-bio-phone { width: 100%; background: #07070f; border: 3px solid #1a1a24; border-radius: 16px; padding: 14px 10px 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; overflow: hidden; }
+  .mockup-bio-phone::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 60%; background: radial-gradient(ellipse 100% 80% at 50% 0%, rgba(124,58,237,0.3), transparent 65%); pointer-events: none; }
+  .mockup-bio-phone-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #a78bfa, #e879f9); display: flex; align-items: center; justify-content: center; font-family: "Syne", sans-serif; font-size: 14px; font-weight: 800; color: #fff; z-index: 1; }
+  .mockup-bio-phone-name { font-family: "Syne", sans-serif; font-size: 11px; font-weight: 800; color: #f0eef8; z-index: 1; }
+  .mockup-bio-phone-socials { display: flex; gap: 3px; z-index: 1; }
+  .mockup-bio-phone-social { width: 12px; height: 12px; border-radius: 50%; background: #0f0f1a; border: 1px solid rgba(255,255,255,0.15); }
+  .mockup-bio-phone-bio { font-size: 8px; color: #c9c7dc; z-index: 1; }
+  .mockup-bio-phone-link { width: 100%; background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 5px; text-align: center; font-size: 8px; color: #f0eef8; z-index: 1; }
+  .mockup-bio-phone-featured { width: 100%; background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; z-index: 1; }
+  .mockup-bio-phone-featured-img { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #4c1d95, #7c3aed, #ec4899); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .mockup-bio-phone-featured-title { padding: 4px 6px 6px; text-align: center; font-size: 8px; font-weight: 600; color: #f0eef8; font-family: "Syne", sans-serif; }
+
+  @media (max-width: 900px) {
+    .mockup-bio-right { display: none; }
   }
   .mockup-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
   .mockup-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
@@ -308,37 +312,94 @@
       <button class="btn-primary" onclick="openSignupModal()">Get started free &#x2192;</button>
       <a class="btn-secondary" href="pricing.html">See pricing</a>
     </div>
-    <div class="phone-mockup">
-      <div class="phone-glow"></div>
-      <div class="phone-frame">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="phone-avatar"><div class="phone-avatar-inner">M</div></div>
-          <div class="phone-name">Mia Park</div>
-          <div class="phone-socials">
-            <div class="phone-social" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.22.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.05.41 2.22.06 1.26.07 1.64.07 4.82s-.01 3.57-.07 4.82c-.05 1.17-.25 1.8-.41 2.22a3.72 3.72 0 0 1-.9 1.38c-.42.42-.82.68-1.38.9-.42.16-1.05.36-2.22.41-1.26.06-1.64.07-4.82.07s-3.57-.01-4.82-.07c-1.17-.05-1.8-.25-2.22-.41a3.72 3.72 0 0 1-1.38-.9 3.72 3.72 0 0 1-.9-1.38c-.16-.42-.36-1.05-.41-2.22C2.21 15.57 2.2 15.19 2.2 12s.01-3.57.07-4.82c.05-1.17.25-1.8.41-2.22.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.05-.36 2.22-.41C8.43 2.21 8.81 2.2 12 2.2M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.92 5.92 0 0 0-2.13 1.39A5.92 5.92 0 0 0 .62 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12c0 3.26.01 3.67.07 4.95.06 1.27.26 2.15.56 2.91a5.92 5.92 0 0 0 1.39 2.13c.66.66 1.32 1.06 2.13 1.39.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24c3.26 0 3.67-.01 4.95-.07 1.27-.06 2.15-.26 2.91-.56a5.92 5.92 0 0 0 2.13-1.39c.66-.66 1.06-1.32 1.39-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.92 5.92 0 0 0-1.39-2.13A5.92 5.92 0 0 0 19.86.62c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0Zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32Zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.41-11.88a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88Z"/></svg></div>
-            <div class="phone-social" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.83a8.16 8.16 0 0 0 4.77 1.52V6.9a4.85 4.85 0 0 1-1.84-.21Z"/></svg></div>
-            <div class="phone-social" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.12C19.54 3.58 12 3.58 12 3.58s-7.54 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.07 0 12 0 12s0 3.93.5 5.8a3 3 0 0 0 2.1 2.12c1.86.5 9.4.5 9.4.5s7.54 0 9.4-.5a3 3 0 0 0 2.1-2.12C24 15.93 24 12 24 12s0-3.93-.5-5.8ZM9.55 15.57V8.43L15.82 12l-6.27 3.57Z"/></svg></div>
-            <div class="phone-social" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 4h20a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm10 9.44L3.3 6H20.7L12 13.44Z"/></svg></div>
+    <div class="hero-mockup">
+      <div class="mockup-glow"></div>
+      <div class="mockup-frame">
+        <div class="mockup-titlebar">
+          <div class="mockup-dot red"></div>
+          <div class="mockup-dot yellow"></div>
+          <div class="mockup-dot green"></div>
+          <div class="mockup-url">findthesnakes.com/dashboard</div>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-sidebar">
+            <div class="mockup-logo">
+              <div class="mockup-logo-text">FindTheSnakes</div>
+            </div>
+            <div class="mockup-section-label">Tools</div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1V10"/></svg>
+              Home
+            </div>
+            <div class="mockup-nav-item active">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              Link in Bio
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              Follow-Back Audit
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+              Image Converter
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20v1"/></svg>
+              QR Generator
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+              Invoice Generator
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Tax Tracker
+              <span class="mockup-pro-badge">PRO</span>
+            </div>
           </div>
-          <div class="phone-bio">Creator on the move 🐍</div>
-          <div class="phone-links">
-            <div class="phone-link">My new podcast episode</div>
-            <div class="phone-link-featured">
-              <div class="phone-link-featured-img">✨</div>
-              <div class="phone-link-featured-body">
-                <div class="phone-link-featured-title">Latest collab drop</div>
-                <div class="phone-link-featured-desc">Shop now — 20% off</div>
+          <div class="mockup-content mockup-bio-content">
+            <div class="mockup-bio-left">
+              <div class="mockup-bio-header">
+                <div class="mockup-bio-title">Link in Bio</div>
+                <div class="mockup-bio-status"><span class="mockup-bio-dot"></span> Published</div>
+              </div>
+              <div class="mockup-bio-url-box">findthesnakes.com/<strong>miapark</strong></div>
+              <div class="mockup-bio-section">
+                <div class="mockup-bio-label">Profile</div>
+                <div class="mockup-bio-profile-row">
+                  <div class="mockup-bio-avatar">M</div>
+                  <div class="mockup-bio-profile-fields">
+                    <div class="mockup-bio-field">Mia Park</div>
+                    <div class="mockup-bio-field small">Creator on the move 🐍</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mockup-bio-section">
+                <div class="mockup-bio-label">Links</div>
+                <div class="mockup-bio-link-row">📝 My new podcast episode</div>
+                <div class="mockup-bio-link-row featured">✨ Latest collab drop <span class="mockup-bio-tag">FEATURED</span></div>
               </div>
             </div>
-            <div class="phone-link">Book a 1:1 session</div>
+            <div class="mockup-bio-right">
+              <div class="mockup-bio-phone">
+                <div class="mockup-bio-phone-avatar">M</div>
+                <div class="mockup-bio-phone-name">Mia Park</div>
+                <div class="mockup-bio-phone-socials">
+                  <div class="mockup-bio-phone-social"></div>
+                  <div class="mockup-bio-phone-social"></div>
+                  <div class="mockup-bio-phone-social"></div>
+                  <div class="mockup-bio-phone-social"></div>
+                </div>
+                <div class="mockup-bio-phone-bio">Creator on the move 🐍</div>
+                <div class="mockup-bio-phone-link">My new podcast episode</div>
+                <div class="mockup-bio-phone-featured">
+                  <div class="mockup-bio-phone-featured-img">✨</div>
+                  <div class="mockup-bio-phone-featured-title">Latest collab drop</div>
+                </div>
+                <div class="mockup-bio-phone-link">Book a 1:1 session</div>
+              </div>
+            </div>
           </div>
-          <div class="phone-videos">
-            <div class="phone-video"><div class="play-icon"></div></div>
-            <div class="phone-video"><div class="play-icon"></div></div>
-            <div class="phone-video"><div class="play-icon"></div></div>
-          </div>
-          <div class="phone-banner">Get your free link-in-bio at <strong>FindTheSnakes</strong></div>
         </div>
       </div>
     </div>
