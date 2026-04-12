@@ -536,6 +536,55 @@
   }
   .pdfsign-privacy-badge svg { width: 12px; height: 12px; flex-shrink: 0; }
 
+  .pdfsign-palette-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 4px;
+    border-left: 1px solid var(--border);
+    margin-left: 4px;
+    padding-left: 12px;
+  }
+  .pdfsign-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+  }
+  .pdfsign-action-btn svg { flex-shrink: 0; }
+  .pdfsign-action-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border-hover);
+  }
+  .pdfsign-action-secondary:hover:not(:disabled) { border-color: var(--accent2); background: var(--surface); }
+  .pdfsign-action-primary {
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid transparent;
+    box-shadow: 0 0 16px var(--accent-glow);
+  }
+  .pdfsign-action-primary:hover:not(:disabled) { background: var(--accent2); }
+  .pdfsign-action-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  @media (max-width: 720px) {
+    .pdfsign-palette-actions {
+      border-left: none;
+      margin-left: 0;
+      padding-left: 0;
+      padding-top: 10px;
+      margin-top: 4px;
+      border-top: 1px solid var(--border);
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+
   .pdfsign-palette-item {
     display: flex;
     align-items: center;
@@ -1858,10 +1907,6 @@
                 <div id="pdfsign-pages-info" style="font-size:11px;color:var(--muted);margin-top:2px;"></div>
               </div>
             </div>
-            <div style="display:flex;gap:8px;">
-              <button id="pdfsign-print-btn" onclick="printSignedPdf()" style="padding:9px 14px;background:transparent;color:var(--muted);border:1px solid var(--border-hover);border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Print</button>
-              <button id="pdfsign-download-btn" onclick="downloadSignedPdf()" style="padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);">Download PDF</button>
-            </div>
           </div>
 
           <!-- Horizontal palette on top -->
@@ -1899,6 +1944,16 @@
                   </div>
                   <div class="pdfsign-palette-name">Other</div>
                 </div>
+              </div>
+              <div class="pdfsign-palette-actions">
+                <button id="pdfsign-print-btn" onclick="printSignedPdf()" class="pdfsign-action-btn pdfsign-action-secondary" aria-label="Print signed PDF">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                  Print
+                </button>
+                <button id="pdfsign-download-btn" onclick="downloadSignedPdf()" class="pdfsign-action-btn pdfsign-action-primary" aria-label="Download signed PDF">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download
+                </button>
               </div>
               <div class="pdfsign-privacy-badge">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -5380,8 +5435,9 @@ function dataUrlToBytes(dataUrl) {
 
 async function downloadSignedPdf() {
   const btn = document.getElementById('pdfsign-download-btn');
+  const origHtml = btn.innerHTML;
   btn.disabled = true;
-  btn.textContent = 'Preparing…';
+  btn.innerHTML = 'Preparing…';
   try {
     const pdfBytes = await buildSignedPdfBytes();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -5398,14 +5454,15 @@ async function downloadSignedPdf() {
     alert(e.message || 'Could not generate PDF.');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Download PDF';
+    btn.innerHTML = origHtml;
   }
 }
 
 async function printSignedPdf() {
   const btn = document.getElementById('pdfsign-print-btn');
+  const origHtml = btn.innerHTML;
   btn.disabled = true;
-  btn.textContent = 'Preparing…';
+  btn.innerHTML = 'Preparing…';
   try {
     const pdfBytes = await buildSignedPdfBytes();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -5438,7 +5495,7 @@ async function printSignedPdf() {
     alert(e.message || 'Could not prepare PDF for printing.');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Print';
+    btn.innerHTML = origHtml;
   }
 }
 
