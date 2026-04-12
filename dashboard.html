@@ -742,8 +742,30 @@
               <div class="mk-section-body" id="mk-body-audience" style="display:none;">
                 <div id="mk-socials-form" style="display:flex;flex-direction:column;gap:8px;"></div>
                 <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
-                  <label for="mk-engagement" style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);display:block;margin-bottom:5px;">Engagement rate (%)</label>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;flex-wrap:wrap;">
+                    <label for="mk-engagement" style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);">Engagement rate (%)</label>
+                    <button type="button" onclick="toggleEngagementHelp()" aria-expanded="false" id="mk-engagement-help-btn"
+                      style="background:transparent;border:none;color:var(--accent2);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:3px;padding:0;">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none"/></svg>
+                      How to calculate
+                    </button>
+                  </div>
                   <input type="number" id="mk-engagement" min="0" max="100" step="0.01" placeholder="e.g. 4.25" oninput="onMKField()" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+                  <div id="mk-engagement-help" style="display:none;margin-top:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted2);line-height:1.6;">
+                    <div style="font-weight:600;color:var(--text);margin-bottom:6px;">How to calculate engagement rate</div>
+                    <div style="margin-bottom:8px;">The industry-standard formula:</div>
+                    <div style="padding:8px 10px;background:var(--surface2);border-radius:6px;font-family:monospace;font-size:11px;color:var(--accent2);margin-bottom:8px;">
+                      (Avg. likes + comments per post) ÷ Followers × 100
+                    </div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--text);">Quick method:</strong> Take your last 10 posts. Add up all likes + comments. Divide by 10 (your average). Divide that by your follower count. Multiply by 100.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--text);">What's a good rate?</strong></div>
+                    <div style="padding-left:14px;">
+                      • <strong style="color:var(--text);">1-3%</strong> — Typical for accounts with 100K+ followers<br>
+                      • <strong style="color:var(--text);">3-6%</strong> — Strong engagement<br>
+                      • <strong style="color:var(--text);">6%+</strong> — Exceptional engagement
+                    </div>
+                    <div style="margin-top:8px;color:var(--muted);">Report your primary platform's rate (usually Instagram). Brands care most about this number.</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2737,17 +2759,27 @@ function renderMKRates() {
 
   el.innerHTML = mkState.rate_card.map(r => {
     const isPredefined = MK_PREDEFINED_RATES.some(p => p.id === r.id);
-    const labelEl = isPredefined
-      ? `<div class="mk-rate-label-text">${escapeHtml(r.label)}</div>`
-      : `<input type="text" class="mk-rate-label-input" placeholder="Rate label (e.g. Podcast Integration)" maxlength="60"
-           value="${escapeHtml(r.label || '')}"
-           oninput="onRateField(${r._id},'label',this.value)"
-           aria-label="Rate label">`;
-    const removeBtn = !isPredefined
-      ? `<button class="mk-rate-remove" onclick="removeRate(${r._id})">Remove</button>`
-      : '';
+
+    // Header row: label + action button
+    let headerHtml;
+    if (isPredefined) {
+      headerHtml = `<div class="mk-rate-top">
+        <div class="mk-rate-label-text">${escapeHtml(r.label)}</div>
+        <button class="mk-rate-remove" onclick="clearRate(${r._id})" aria-label="Clear this rate">Clear</button>
+      </div>`;
+    } else {
+      headerHtml = `<div class="mk-rate-top">
+        <input type="text" class="mk-rate-label-input" placeholder="Rate label (e.g. Podcast Integration)" maxlength="60"
+          value="${escapeHtml(r.label || '')}"
+          oninput="onRateField(${r._id},'label',this.value)"
+          aria-label="Rate label"
+          style="flex:1;margin-bottom:0;">
+        <button class="mk-rate-remove" onclick="removeRate(${r._id})" aria-label="Delete this custom rate">Delete</button>
+      </div>`;
+    }
+
     return `<div class="mk-rate-row">
-      ${isPredefined ? `<div class="mk-rate-top">${labelEl}${removeBtn}</div>` : labelEl}
+      ${headerHtml}
       <div class="mk-rate-price-row">
         <span class="mk-rate-prefix">$</span>
         <input type="number" min="0" step="1" placeholder="Price (USD)"
@@ -2761,9 +2793,25 @@ function renderMKRates() {
         oninput="onRateField(${r._id},'note',this.value)"
         aria-label="Rate note"
         style="margin-bottom:0;">
-      ${!isPredefined ? '' : `<div style="text-align:right;margin-top:6px;"><button class="mk-rate-remove" onclick="onRateField(${r._id},'price','');onRateField(${r._id},'note','');renderMKRates();scheduleMKPreview();">Clear</button></div>`}
     </div>`;
   }).join('');
+}
+
+function clearRate(id) {
+  const r = mkState.rate_card.find(x => x._id === id);
+  if (!r) return;
+  r.price = '';
+  r.note = '';
+  renderMKRates();
+  scheduleMKPreview();
+}
+
+function toggleEngagementHelp() {
+  const help = document.getElementById('mk-engagement-help');
+  const btn = document.getElementById('mk-engagement-help-btn');
+  const isOpen = help.style.display !== 'none';
+  help.style.display = isOpen ? 'none' : 'block';
+  if (btn) btn.setAttribute('aria-expanded', !isOpen);
 }
 
 // ==== Theme ====
