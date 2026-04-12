@@ -170,18 +170,25 @@
     .tax-entry-row > div:nth-child(4) { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
   }
   @media (max-width: 1100px) {
-    .bio-grid { grid-template-columns: 1fr !important; }
+    .bio-grid { grid-template-columns: 1fr !important; min-width: 0 !important; }
+    .bio-grid > div { min-width: 0 !important; }
     .bio-grid > div:last-child { position: static !important; }
     #bio-preview-frame { height: 600px; max-width: 400px; margin: 0 auto; }
   }
   /* Tighter mobile fixes */
   @media (max-width: 640px) {
-    .bio-tool-wrap { max-width: 100%; overflow: hidden; }
+    /* Force every descendant of the bio tool to respect viewport width */
+    .bio-tool-wrap, .bio-tool-wrap * { min-width: 0 !important; }
+    .bio-tool-wrap { max-width: 100%; overflow: hidden; padding: 0 !important; }
     .bio-tool-wrap h2 { font-size: 20px !important; }
     .bio-tool-wrap p { font-size: 13px !important; }
+    /* All bio form section cards — reduce padding so they don't overflow */
+    .bio-tool-wrap .bio-grid > div > div[style*="background:var(--surface2)"] { padding: 14px !important; }
     .bio-link-row { padding: 10px !important; }
     .bio-link-row input, .bio-link-row textarea { font-size: 13px !important; }
     .bio-link-row .bio-link-header { flex-wrap: wrap; }
+    /* Link rows: content can't push past parent */
+    .bio-link-row > div { min-width: 0 !important; flex-wrap: wrap !important; }
     /* Avatar + name side-by-side becomes stacked */
     .bio-tool-wrap .bio-avatar-row { flex-direction: column !important; align-items: center !important; text-align: center; }
     /* Username input — allow wrapping of the URL prefix */
@@ -196,12 +203,26 @@
     /* Input prefix "findthesnakes.com/" might overflow — allow wrap */
     .bio-username-prefix { font-size: 12px !important; }
     /* Ensure all inputs don't overflow */
-    .bio-tool-wrap input, .bio-tool-wrap textarea { max-width: 100% !important; box-sizing: border-box !important; }
+    .bio-tool-wrap input, .bio-tool-wrap textarea { max-width: 100% !important; box-sizing: border-box !important; width: 100% !important; }
     /* Video card thumbnails keep aspect */
     .bio-video-thumb { max-width: 100% !important; }
+    /* Social icon grid more compact */
+    .bio-tool-wrap .bio-socials-grid { grid-template-columns: 1fr !important; }
+    /* Custom theme color grid */
+    .custom-color-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .custom-editor { padding: 12px !important; }
+    .custom-bg-upload { flex-wrap: wrap !important; gap: 10px !important; }
+    .custom-bg-info { flex: 1 1 100% !important; order: 2; }
+    /* Settings (MK) input rows stack */
+    .mk-section-body { padding: 14px !important; }
+    .mk-section-header { padding: 12px 14px !important; }
   }
+  /* Extra-tight fixes for narrow phones */
   @media (max-width: 420px) {
     .bio-themes-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .bio-tool-wrap .bio-grid > div > div[style*="background:var(--surface2)"] { padding: 12px !important; }
+    .tool-area { padding: 14px 10px !important; }
+    .custom-color-grid { grid-template-columns: 1fr !important; }
   }
   .bio-theme.selected { border-color: var(--accent) !important; box-shadow: 0 0 0 2px var(--accent) !important; }
   .bio-themes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
