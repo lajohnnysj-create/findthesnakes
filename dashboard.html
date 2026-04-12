@@ -2905,6 +2905,7 @@ async function copyBioLink(url, btn) {
 
 // All 12 themes — first 3 are Free, rest are Pro
 const BIO_THEMES = [
+  { key:'custom',   name:'Custom',   bg:'#07070f', bg2:'#161625', grad:'linear-gradient(135deg,#a78bfa,#e879f9)', pro:false, max:true },
   { key:'purple',   name:'Purple',   bg:'#07070f', bg2:'#161625', grad:'linear-gradient(135deg,#a78bfa,#e879f9)', pro:false },
   { key:'midnight', name:'Midnight', bg:'#050508', bg2:'#13131b', grad:'linear-gradient(135deg,#9ca3af,#e5e7eb)', pro:false },
   { key:'sunset',   name:'Sunset',   bg:'#120808', bg2:'#251414', grad:'linear-gradient(135deg,#fb923c,#f472b6)', pro:false },
@@ -2917,7 +2918,6 @@ const BIO_THEMES = [
   { key:'mint',     name:'Mint',     bg:'#030e0c', bg2:'#102623', grad:'linear-gradient(135deg,#2dd4bf,#a7f3d0)', pro:true  },
   { key:'violet',   name:'Violet',   bg:'#0c0418', bg2:'#220f37', grad:'linear-gradient(135deg,#c084fc,#e9d5ff)', pro:true  },
   { key:'graphite', name:'Graphite', bg:'#0a0a0a', bg2:'#1e1e1e', grad:'linear-gradient(135deg,#d1d5db,#f3f4f6)', pro:true  },
-  { key:'custom',   name:'Custom',   bg:'#07070f', bg2:'#161625', grad:'linear-gradient(135deg,#a78bfa,#e879f9)', pro:false, max:true },
 ];
 
 // Default colors for custom theme
@@ -4936,8 +4936,39 @@ async function toggleMediaKitPublish() {
     const uname = document.getElementById('mk-username').value.trim();
     if (!uname) { showMKStatus('error', 'Pick a username first.'); return; }
     if (uname.length < 3) { showMKStatus('error', 'Username must be at least 3 characters.'); return; }
-    if (!mkState.contact_email) { showMKStatus('error', 'Add a contact email before publishing.'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mkState.contact_email)) { showMKStatus('error', 'Contact email looks invalid.'); return; }
+    if (!mkState.contact_email) {
+      // Expand contact section, scroll to it, focus the email input, flash it
+      const header = document.querySelector('[onclick*="toggleMKSection(\'contact\')"]');
+      const body = document.getElementById('mk-body-contact');
+      if (body && body.style.display === 'none') {
+        toggleMKSection('contact');
+      }
+      const emailInput = document.getElementById('mk-contact-email');
+      if (emailInput) {
+        setTimeout(() => {
+          emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          emailInput.focus();
+          emailInput.style.transition = 'box-shadow 0.3s, border-color 0.3s';
+          emailInput.style.borderColor = '#ef4444';
+          emailInput.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.2)';
+          setTimeout(() => {
+            emailInput.style.borderColor = '';
+            emailInput.style.boxShadow = '';
+          }, 2500);
+        }, 200);
+      }
+      showMKStatus('error', 'Add a contact email before publishing.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mkState.contact_email)) {
+      const emailInput = document.getElementById('mk-contact-email');
+      if (emailInput) {
+        emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        emailInput.focus();
+      }
+      showMKStatus('error', 'Contact email looks invalid.');
+      return;
+    }
   }
   const btn = document.getElementById('mk-publish-btn');
   btn.disabled = true;
@@ -5038,7 +5069,20 @@ function buildMKPreviewHTML() {
     violet:   { bg:'#0c0418', surface:'#170a26', surface2:'#220f37', text:'#f5ecff', muted:'#c9b8e6', muted2:'#dccdf0', accent:'#6d28d9', accent2:'#c084fc', glow:'rgba(192,132,252,0.3)', border:'rgba(200,170,255,0.12)', avatarBorder:'linear-gradient(135deg,#c084fc,#e9d5ff)' },
     graphite: { bg:'#0a0a0a', surface:'#141414', surface2:'#1e1e1e', text:'#f5f5f5', muted:'#b3b3b3', muted2:'#d1d1d1', accent:'#6b7280', accent2:'#d1d5db', glow:'rgba(209,213,219,0.2)', border:'rgba(255,255,255,0.08)', avatarBorder:'linear-gradient(135deg,#d1d5db,#f3f4f6)' },
   };
-  const t = themes[mkState.theme] || themes.purple;
+  // Apply custom theme if Max + selected
+  let t;
+  let bgImageCSS = '';
+  let bgOverlayCSS = '';
+  if (mkState.theme === 'custom' && isMax() && mkState.custom_theme) {
+    t = buildCustomThemeVars(mkState.custom_theme);
+    if (mkState.custom_theme.bgUrl) {
+      bgImageCSS = `body::after{content:'';position:fixed;inset:0;background-image:url("${escapeHtml(mkState.custom_theme.bgUrl)}");background-size:cover;background-position:center;z-index:-2;}`;
+      const darkness = 1 - (mkState.custom_theme.bgOpacity || 0.4);
+      bgOverlayCSS = `body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,${darkness.toFixed(2)});z-index:-1;}`;
+    }
+  } else {
+    t = themes[mkState.theme] || themes.purple;
+  }
   const name = mkState.display_name || 'Your name';
   const initial = (name[0] || '?').toUpperCase();
   const headshot = mkState.headshot_url
@@ -5108,7 +5152,8 @@ function buildMKPreviewHTML() {
   <style>
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'DM Sans',sans-serif;background:${t.bg};color:${t.text};min-height:100vh;padding:24px 14px;overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,${t.glow} 0%,transparent 60%);pointer-events:none;z-index:0;}
+  ${bgImageCSS}
+  ${bgOverlayCSS || `body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,${t.glow} 0%,transparent 60%);pointer-events:none;z-index:0;}`}
   .w{position:relative;z-index:1;max-width:100%;}
   .hero{display:flex;gap:14px;align-items:center;padding:16px;background:${t.surface};border:1px solid ${t.border};border-radius:14px;margin-bottom:10px;}
   .hs-frame{width:80px;height:80px;padding:2px;border-radius:12px;background:${t.avatarBorder};flex-shrink:0;}
