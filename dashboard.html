@@ -434,6 +434,13 @@
               <div class="welcome-tool-desc">Your one link to share everything — photo, links, videos</div>
             </div>
           </div>
+          <div class="welcome-tool-card" onclick="showTool('mediakit')">
+            <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
+            <div>
+              <div class="welcome-tool-name">Media Kit <span style="font-size:9px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;padding:2px 6px;border-radius:4px;margin-left:4px;vertical-align:middle;">PRO</span></div>
+              <div class="welcome-tool-desc">Pitch brands with a professional media kit and rate card</div>
+            </div>
+          </div>
           <div class="welcome-tool-card" onclick="showFollowerTool()">
             <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
             <div>
@@ -1387,11 +1394,20 @@ function initBioTool() {
   });
 }
 
-// Pulls the latest username from profiles and refreshes the publish UI.
-// Called every time the Link in Bio tool is reopened.
+// Pulls the latest username from the Media Kit input (if present) or profiles table,
+// then refreshes the publish UI. Called every time the Link in Bio tool is reopened.
 async function resyncBioUsername() {
   const input = document.getElementById('bio-username');
   if (!input || !currentUser) return;
+  // Priority 1: use the Media Kit input's current value (covers unsaved edits)
+  const mkInput = document.getElementById('mk-username');
+  if (mkInput && mkInput.value) {
+    input.value = mkInput.value;
+    bioState.username = mkInput.value;
+    updatePublishUI();
+    return;
+  }
+  // Fallback: query profiles table
   try {
     const { data: profile } = await sb.from('profiles').select('username').eq('user_id', currentUser.id).maybeSingle();
     if (profile?.username) {
@@ -2509,12 +2525,19 @@ function initMediaKitTool() {
   });
 }
 
-// Pulls the latest username from profiles (or bioOriginalUsername if already loaded) and refreshes the publish UI.
-// Called every time the Media Kit tool is reopened.
+// Pulls the latest username from the Link in Bio input (if present) or profiles table,
+// then refreshes the publish UI. Called every time the Media Kit tool is reopened.
 async function resyncMKUsername() {
   const input = document.getElementById('mk-username');
   if (!input || !currentUser) return;
-  // Fast path: use in-memory value if Link in Bio has already loaded
+  // Priority 1: use the Link in Bio input's current value (covers unsaved edits)
+  const bioInput = document.getElementById('bio-username');
+  if (bioInput && bioInput.value) {
+    input.value = bioInput.value;
+    updateMKPublishUI();
+    return;
+  }
+  // Priority 2: use in-memory original if Link in Bio has loaded
   if (typeof bioOriginalUsername !== 'undefined' && bioOriginalUsername) {
     input.value = bioOriginalUsername;
     updateMKPublishUI();
