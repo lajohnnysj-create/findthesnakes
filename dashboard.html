@@ -793,6 +793,242 @@
     .tp-ctrl-btn.primary { padding: 0 14px; }
     .tp-title { display: none; }
   }
+
+  /* ==================== CINEMATIC MODE ==================== */
+  #cinematic-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .cine-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s;
+  }
+  .cine-close-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .cine-stage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+  .cine-card {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .cine-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .cine-card.fading-out {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  /* Title card */
+  .cine-card-title .cine-title-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 7vw, 84px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 18px;
+    background: linear-gradient(135deg, #fff, #c4b5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hook card */
+  .cine-card-hook .cine-hook-label {
+    font-size: clamp(11px, 1.3vw, 14px);
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    font-weight: 700;
+    background: linear-gradient(135deg, #a78bfa, #e879f9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
+  }
+  .cine-card-hook .cine-hook-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 60px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+    color: #fff;
+    text-shadow: 0 0 40px rgba(232,121,249,0.25);
+  }
+
+  /* Section card */
+  .cine-card-section {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    justify-content: center;
+  }
+  .cine-card-section .cine-section-line {
+    flex: 1;
+    max-width: 160px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,121,249,0.5), transparent);
+  }
+  .cine-card-section .cine-section-text {
+    font-size: clamp(16px, 2vw, 22px);
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  /* Block card */
+  .cine-card-block .cine-block-title {
+    font-size: clamp(13px, 1.4vw, 16px);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 600;
+    color: rgba(196,181,253,0.8);
+    margin-bottom: 24px;
+  }
+  .cine-card-block .cine-block-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.3px;
+    color: #fff;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* End card */
+  .cine-card-end .cine-end-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(72px, 12vw, 140px);
+    font-weight: 800;
+    letter-spacing: 12px;
+    background: linear-gradient(135deg, #a78bfa, #e879f9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+  }
+
+  /* Title/End subtitle */
+  .cine-subtitle {
+    font-size: clamp(12px, 1.3vw, 15px);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-weight: 500;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* Paused overlay */
+  .cine-paused {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: cine-fade-in 300ms ease;
+  }
+  @keyframes cine-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .cine-paused-inner {
+    text-align: center;
+    color: rgba(255,255,255,0.9);
+  }
+  .cine-paused-inner svg {
+    color: rgba(232,121,249,0.8);
+    margin-bottom: 16px;
+  }
+  .cine-paused-inner > div:nth-child(2) {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .cine-paused-hint {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* Progress bar */
+  .cine-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    z-index: 6;
+  }
+  .cine-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #a78bfa, #e879f9);
+    transition: width 80ms linear;
+    box-shadow: 0 0 8px rgba(232,121,249,0.5);
+  }
+
+  /* Keyboard hint */
+  .cine-hint {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 6;
+    transition: opacity 800ms ease;
+    pointer-events: none;
+  }
+  .cine-hint.fade-out { opacity: 0; }
+
+  @media (max-width: 640px) {
+    .cine-close-btn { top: 14px; right: 14px; width: 36px; height: 36px; }
+    .cine-stage { padding: 24px; }
+    .cine-card-section .cine-section-line { max-width: 40px; }
+    .cine-hint { display: none; }
+  }
   .sidebar-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
   .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface2); margin-bottom: 8px; }
   .sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
@@ -8541,6 +8777,14 @@ function renderScriptEditor() {
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
           Storyboard
         </button>
+        <button class="scripts-view-btn" onclick="openTeleprompter()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M7 10h10M7 13h7"/></svg>
+          Teleprompter
+        </button>
+        <button class="scripts-view-btn" onclick="openCinematic()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 9h20M7 5v4M17 5v4M7 19v-4M17 19v-4"/></svg>
+          Cinematic
+        </button>
       </div>
       <div class="scripts-editor-status">
         <span id="scripts-save-status"></span>
@@ -8556,8 +8800,7 @@ function renderScriptEditor() {
             <button onclick="exportScriptCopyAll()">Copy all text</button>
             <button onclick="exportScriptCopySpoken()">Copy spoken lines only</button>
             <button onclick="exportScriptDownloadTxt()">Download as .txt</button>
-            <button onclick="exportScriptPDF()">Save as PDF</button>
-            <button onclick="openTeleprompter()" class="primary">Teleprompter mode</button>
+            <button onclick="exportScriptPDF()" class="primary">Save as PDF</button>
           </div>
         </div>
         <button class="scripts-action-btn primary" onclick="saveScriptNow()">Save</button>
@@ -8565,7 +8808,7 @@ function renderScriptEditor() {
     </div>
 
     <div class="scripts-editor-meta">
-      <input type="text" id="scripts-title-input" class="scripts-title-input" maxlength="80" value="${escapeHtml(currentScript.title || '')}" placeholder="Untitled script" oninput="onScriptTitleChange(this.value)" aria-label="Script title">
+      <input type="text" id="scripts-title-input" class="scripts-title-input" maxlength="80" value="${escapeHtml(currentScript.title || '')}" placeholder="Untitled script" oninput="onScriptTitleChange(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" aria-label="Script title">
       <div class="scripts-meta-row">
         <select id="scripts-platform" onchange="onScriptPlatformChange(this.value)" aria-label="Platform">${platformOpts}</select>
         <span class="scripts-meta-sep">·</span>
@@ -8582,7 +8825,7 @@ function renderScriptEditor() {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14a4 4 0 1 1-4-4c1.1 0 2.5.4 2.5.4L5 17"/><path d="M7 14v0"/><circle cx="18" cy="17" r="4"/></svg>
           Hook
         </div>
-        <textarea id="scripts-hook-input" class="scripts-hook-input" maxlength="200" rows="2" placeholder="What's the one sentence that stops the scroll?" oninput="onScriptHookChange(this.value)" aria-label="Hook">${escapeHtml(currentScript.hook || '')}</textarea>
+        <textarea id="scripts-hook-input" class="scripts-hook-input" maxlength="200" rows="2" placeholder="What's the one sentence that stops the scroll?" oninput="onScriptHookChange(this.value)" onkeydown="if((event.key==='Enter')&&(event.ctrlKey||event.metaKey)){event.preventDefault();this.blur();saveScriptNow();}" aria-label="Hook">${escapeHtml(currentScript.hook || '')}</textarea>
         <div class="scripts-hook-meta"><span id="scripts-hook-count">${(currentScript.hook || '').length}</span>/200</div>
       </div>
 
@@ -8804,12 +9047,12 @@ function renderBlockItem(item) {
       <div class="scripts-drag-handle" aria-label="Drag to reorder">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
       </div>
-      <input type="text" class="scripts-block-title" maxlength="60" value="${title}" placeholder="Title (optional)" oninput="onScriptBlockEdit('${item.id}', 'title', this.value)" aria-label="Block title">
+      <input type="text" class="scripts-block-title" maxlength="60" value="${title}" placeholder="Title (optional)" oninput="onScriptBlockEdit('${item.id}', 'title', this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" aria-label="Block title">
       <button class="scripts-remove-btn" onclick="removeScriptItem('${item.id}')" aria-label="Delete block">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
       </button>
     </div>
-    <textarea class="scripts-block-body" maxlength="1500" rows="3" placeholder="What you'll say..." oninput="onScriptBlockEdit('${item.id}', 'body', this.value)" aria-label="Block body">${body}</textarea>
+    <textarea class="scripts-block-body" maxlength="1500" rows="3" placeholder="What you'll say..." oninput="onScriptBlockEdit('${item.id}', 'body', this.value)" onkeydown="if((event.key==='Enter')&&(event.ctrlKey||event.metaKey)){event.preventDefault();this.blur();saveScriptNow();}" aria-label="Block body">${body}</textarea>
     <div class="scripts-block-meta">
       <span class="scripts-block-count" data-id="${item.id}">${wordCount} words · ${seconds}s</span>
     </div>
@@ -9175,7 +9418,6 @@ function buildScriptPrintHTML() {
 }
 
 function openTeleprompter() {
-  toggleScriptsExportMenu();
   if (!currentScript) return;
 
   // Build the text to scroll
@@ -9332,6 +9574,283 @@ function tpOnKey(e) {
   } else if (e.key === 'Home' || e.key === 'r') {
     e.preventDefault();
     tpRestart();
+  }
+}
+
+// ========== CINEMATIC MODE ==========
+let cineState = null;
+
+function openCinematic() {
+  if (!currentScript) return;
+  const cards = buildCinematicCards();
+  if (cards.length === 0) {
+    alert('Add some content first — cinematic mode needs text to play.');
+    return;
+  }
+
+  let el = document.getElementById('cinematic-overlay');
+  if (el) el.remove();
+
+  el = document.createElement('div');
+  el.id = 'cinematic-overlay';
+  el.innerHTML = `
+    <button class="cine-close-btn" onclick="closeCinematic()" aria-label="Exit cinematic mode">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="cine-stage" id="cine-stage"></div>
+    <div class="cine-paused" id="cine-paused" style="display:none;">
+      <div class="cine-paused-inner">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        <div>Paused</div>
+        <div class="cine-paused-hint">Click or press space to resume</div>
+      </div>
+    </div>
+    <div class="cine-progress">
+      <div class="cine-progress-bar" id="cine-progress-bar"></div>
+    </div>
+    <div class="cine-hint" id="cine-hint">Space: pause · ← →: skip · Esc: exit</div>
+  `;
+  document.body.appendChild(el);
+
+  cineState = {
+    cards,
+    idx: -1,         // will advance to 0 on first tick
+    playing: true,
+    phase: 'idle',   // 'in' | 'hold' | 'out' | 'idle'
+    phaseStart: 0,
+    rafId: null,
+    keyHandler: null,
+    totalDuration: cards.reduce((sum, c) => sum + c.duration, 0),
+    elapsedBeforeCurrent: 0,
+    hintTimeout: null,
+  };
+
+  cineState.keyHandler = cineOnKey;
+  document.addEventListener('keydown', cineState.keyHandler);
+
+  // Click to pause/resume
+  el.addEventListener('click', (e) => {
+    if (e.target.closest('.cine-close-btn')) return;
+    cineTogglePlay();
+  });
+
+  // Auto-hide hint after 4s
+  cineState.hintTimeout = setTimeout(() => {
+    const h = document.getElementById('cine-hint');
+    if (h) h.classList.add('fade-out');
+  }, 4000);
+
+  // Start
+  cineNextCard();
+}
+
+function buildCinematicCards() {
+  const cards = [];
+  const title = currentScript.title || 'Untitled script';
+  const platform = SCRIPT_PLATFORMS[currentScript.platform] || '';
+  const totalDuration = calcScriptDuration(currentScript);
+
+  // Title card
+  cards.push({
+    kind: 'title',
+    title: title,
+    subtitle: `${platform} · ${totalDuration}s`,
+    duration: 2500,
+  });
+
+  // Hook card
+  if (currentScript.hook) {
+    cards.push({
+      kind: 'hook',
+      label: 'HOOK',
+      text: currentScript.hook,
+      duration: Math.max(2500, estimateMs(currentScript.hook)),
+    });
+  }
+
+  // Walk items
+  (currentScript.items || []).forEach(item => {
+    if (item.type === 'section') {
+      cards.push({
+        kind: 'section',
+        text: item.text || 'Section',
+        duration: 1800,
+      });
+    } else if (item.type === 'block') {
+      const body = (item.body || '').trim();
+      if (!body && !item.title) return;
+      cards.push({
+        kind: 'block',
+        title: item.title || '',
+        body: body,
+        duration: Math.max(2500, estimateMs(body || item.title)),
+      });
+    }
+  });
+
+  // End card
+  cards.push({
+    kind: 'end',
+    text: 'FIN',
+    subtitle: `${totalDuration}s total`,
+    duration: 2500,
+  });
+
+  return cards;
+}
+
+function estimateMs(text) {
+  const words = (text || '').trim().split(/\s+/).filter(Boolean).length;
+  // 150 wpm, so each word = 400ms. Min 2.5s, max 15s per card.
+  return Math.min(15000, Math.max(2500, words * 400));
+}
+
+function cineNextCard() {
+  if (!cineState) return;
+  if (cineState.idx >= 0) {
+    cineState.elapsedBeforeCurrent += cineState.cards[cineState.idx].duration;
+  }
+  cineState.idx++;
+  if (cineState.idx >= cineState.cards.length) {
+    closeCinematic();
+    return;
+  }
+  renderCinematicCard();
+}
+
+function cinePrevCard() {
+  if (!cineState) return;
+  if (cineState.idx <= 0) return;
+  cineState.idx--;
+  cineState.elapsedBeforeCurrent = 0;
+  for (let i = 0; i < cineState.idx; i++) {
+    cineState.elapsedBeforeCurrent += cineState.cards[i].duration;
+  }
+  renderCinematicCard();
+}
+
+function renderCinematicCard() {
+  const stage = document.getElementById('cine-stage');
+  if (!stage || !cineState) return;
+  const card = cineState.cards[cineState.idx];
+  if (!card) return;
+
+  let html = '';
+  if (card.kind === 'title') {
+    html = `<div class="cine-card cine-card-title">
+      <div class="cine-title-text">${escapeHtml(card.title)}</div>
+      <div class="cine-subtitle">${escapeHtml(card.subtitle)}</div>
+    </div>`;
+  } else if (card.kind === 'hook') {
+    html = `<div class="cine-card cine-card-hook">
+      <div class="cine-hook-label">${escapeHtml(card.label)}</div>
+      <div class="cine-hook-text">${escapeHtml(card.text)}</div>
+    </div>`;
+  } else if (card.kind === 'section') {
+    html = `<div class="cine-card cine-card-section">
+      <div class="cine-section-line"></div>
+      <div class="cine-section-text">${escapeHtml(card.text)}</div>
+      <div class="cine-section-line"></div>
+    </div>`;
+  } else if (card.kind === 'block') {
+    const titleHtml = card.title ? `<div class="cine-block-title">${escapeHtml(card.title)}</div>` : '';
+    html = `<div class="cine-card cine-card-block">
+      ${titleHtml}
+      <div class="cine-block-text">${escapeHtml(card.body)}</div>
+    </div>`;
+  } else if (card.kind === 'end') {
+    html = `<div class="cine-card cine-card-end">
+      <div class="cine-end-text">${escapeHtml(card.text)}</div>
+      <div class="cine-subtitle">${escapeHtml(card.subtitle)}</div>
+    </div>`;
+  }
+
+  stage.innerHTML = html;
+  // Trigger animation
+  requestAnimationFrame(() => {
+    const cardEl = stage.querySelector('.cine-card');
+    if (cardEl) cardEl.classList.add('visible');
+  });
+
+  cineState.phase = 'in';
+  cineState.phaseStart = performance.now();
+  cineTick();
+}
+
+function cineTick() {
+  if (!cineState || !cineState.playing) return;
+  const card = cineState.cards[cineState.idx];
+  if (!card) return;
+
+  const now = performance.now();
+  const elapsed = now - cineState.phaseStart;
+  const FADE = 600;
+  const holdDuration = Math.max(400, card.duration - FADE * 2);
+
+  if (cineState.phase === 'in' && elapsed >= FADE) {
+    cineState.phase = 'hold';
+    cineState.phaseStart = now;
+  } else if (cineState.phase === 'hold' && elapsed >= holdDuration) {
+    cineState.phase = 'out';
+    cineState.phaseStart = now;
+    const cardEl = document.querySelector('#cine-stage .cine-card');
+    if (cardEl) cardEl.classList.add('fading-out');
+  } else if (cineState.phase === 'out' && elapsed >= FADE) {
+    cineNextCard();
+    return;
+  }
+
+  // Update progress bar
+  const bar = document.getElementById('cine-progress-bar');
+  if (bar) {
+    const cardProgress = Math.min(1, (now - (cineState.phaseStart - elapsed)) / card.duration);
+    const total = cineState.totalDuration;
+    const current = cineState.elapsedBeforeCurrent + (cardProgress * card.duration);
+    bar.style.width = Math.min(100, (current / total) * 100) + '%';
+  }
+
+  cineState.rafId = requestAnimationFrame(cineTick);
+}
+
+function cineTogglePlay() {
+  if (!cineState) return;
+  cineState.playing = !cineState.playing;
+  const pausedEl = document.getElementById('cine-paused');
+  if (cineState.playing) {
+    if (pausedEl) pausedEl.style.display = 'none';
+    // Resume: adjust phaseStart so the remaining time continues correctly
+    cineState.phaseStart = performance.now() - cineState.pausedElapsed;
+    cineTick();
+  } else {
+    if (cineState.rafId) cancelAnimationFrame(cineState.rafId);
+    cineState.pausedElapsed = performance.now() - cineState.phaseStart;
+    if (pausedEl) pausedEl.style.display = 'flex';
+  }
+}
+
+function closeCinematic() {
+  if (cineState?.rafId) cancelAnimationFrame(cineState.rafId);
+  if (cineState?.keyHandler) document.removeEventListener('keydown', cineState.keyHandler);
+  if (cineState?.hintTimeout) clearTimeout(cineState.hintTimeout);
+  cineState = null;
+  const el = document.getElementById('cinematic-overlay');
+  if (el) el.remove();
+}
+
+function cineOnKey(e) {
+  if (!cineState) return;
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    closeCinematic();
+  } else if (e.key === ' ') {
+    e.preventDefault();
+    cineTogglePlay();
+  } else if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    cineNextCard();
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    cinePrevCard();
   }
 }
 
