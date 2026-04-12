@@ -103,7 +103,8 @@
   .welcome-tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 640px; width: 100%; margin-bottom: 40px; }
   .welcome-tool-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 16px; }
   .welcome-tool-card:hover { border-color: rgba(124,58,237,0.4); background: rgba(124,58,237,0.05); transform: translateY(-2px); }
-  .welcome-tool-icon { width: 44px; height: 44px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .welcome-tool-icon { width: 44px; height: 44px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .welcome-tool-icon svg { width: 22px; height: 22px; stroke: #c4b5fd; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .welcome-tool-name { font-family: "Syne", sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 2px; }
   .welcome-tool-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
@@ -213,6 +214,14 @@
           <div id="settings-tier" style="font-size:12px;color:var(--accent2);margin-top:2px;"></div>
         </div>
       </div>
+    </div>
+
+    <!-- Password -->
+    <div id="settings-password-section" style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:12px;">Password</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5;">We'll email you a secure link to change your password.</p>
+      <button id="settings-reset-password-btn" onclick="sendPasswordReset()" style="width:100%;padding:11px;background:transparent;border:1px solid var(--border-hover);color:var(--text);border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(124,58,237,0.4)';this.style.color='#c4b5fd'" onmouseout="this.style.borderColor='var(--border-hover)';this.style.color='var(--text)'">Send password reset email</button>
+      <div id="settings-password-msg" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.5;"></div>
     </div>
 
     <!-- Subscription -->
@@ -376,42 +385,42 @@
         <p>Your creator toolkit is ready. Choose a tool from the sidebar or pick one below to get started.</p>
         <div class="welcome-tools-grid">
           <div class="welcome-tool-card" onclick="showTool('bio')">
-            <div class="welcome-tool-icon">&#x1F517;</div>
+            <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
             <div>
               <div class="welcome-tool-name">Link in Bio</div>
               <div class="welcome-tool-desc">Your one link to share everything — photo, links, videos</div>
             </div>
           </div>
           <div class="welcome-tool-card" onclick="showFollowerTool()">
-            <div class="welcome-tool-icon">&#x1F50D;</div>
+            <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
             <div>
               <div class="welcome-tool-name">Follow-Back Audit</div>
               <div class="welcome-tool-desc">Find who stopped following you on Instagram</div>
             </div>
           </div>
           <div class="welcome-tool-card" onclick="showTool('image')">
-            <div class="welcome-tool-icon">&#x1F5BC;</div>
+            <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div>
             <div>
               <div class="welcome-tool-name">Image Converter</div>
               <div class="welcome-tool-desc">Convert images between formats instantly</div>
             </div>
           </div>
           <div class="welcome-tool-card" onclick="showTool('qr')">
-            <div class="welcome-tool-icon">&#x2B1B;</div>
+            <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20v1"/></svg></div>
             <div>
               <div class="welcome-tool-name">QR Generator</div>
               <div class="welcome-tool-desc">Create QR codes for your links and profiles</div>
             </div>
           </div>
           <div class="welcome-tool-card" onclick="showTool('invoice')">
-            <div class="welcome-tool-icon">&#x1F9FE;</div>
+            <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></div>
             <div>
               <div class="welcome-tool-name">Invoice Generator</div>
               <div class="welcome-tool-desc">Create professional invoices for brand deals</div>
             </div>
           </div>
           <div class="welcome-tool-card" onclick="showTool('tax')">
-            <div class="welcome-tool-icon">&#x1F4B0;</div>
+            <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
             <div>
               <div class="welcome-tool-name">Tax Tracker</div>
               <div class="welcome-tool-desc">Track creator income and estimate taxes year-round</div>
@@ -2333,12 +2342,52 @@ function openSettingsModal() {
   document.getElementById('settings-sub-free').style.display = isPro ? 'none' : 'block';
   document.getElementById('settings-sub-pro').style.display = isPro ? 'block' : 'none';
   updateSettingsCancelBtn();
+  // Reset password section each time modal opens
+  const pwBtn = document.getElementById('settings-reset-password-btn');
+  const pwMsg = document.getElementById('settings-password-msg');
+  if (pwBtn) { pwBtn.disabled = false; pwBtn.textContent = 'Send password reset email'; }
+  if (pwMsg) pwMsg.style.display = 'none';
   modal.style.display = 'flex';
   closeSidebar();
 }
 
 function closeSettingsModal() {
   document.getElementById('settings-modal').style.display = 'none';
+}
+
+async function sendPasswordReset() {
+  if (!currentUser?.email) return;
+  const btn = document.getElementById('settings-reset-password-btn');
+  const msg = document.getElementById('settings-password-msg');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  msg.style.display = 'none';
+  try {
+    const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, {
+      redirectTo: window.location.origin + '/reset-password.html'
+    });
+    if (error) throw error;
+    msg.innerHTML = `Check your inbox — we sent a reset link to <strong>${escapeHtml(currentUser.email)}</strong>.`;
+    msg.style.background = 'rgba(74,222,128,0.08)';
+    msg.style.border = '1px solid rgba(74,222,128,0.2)';
+    msg.style.color = '#4ade80';
+    msg.style.display = 'block';
+    btn.textContent = 'Email sent ✓';
+    // Re-enable after 30s so they can resend if email didn't arrive
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = 'Resend reset email';
+    }, 30000);
+  } catch (e) {
+    console.error('Password reset error:', e);
+    msg.textContent = e.message || 'Something went wrong. Please try again.';
+    msg.style.background = 'rgba(239,68,68,0.08)';
+    msg.style.border = '1px solid rgba(239,68,68,0.2)';
+    msg.style.color = '#fca5a5';
+    msg.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Send password reset email';
+  }
 }
 
 function handleSettingsCancel() {
@@ -2824,7 +2873,7 @@ function downloadInvoicePDF() {
   const fmt = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   const logoHtml = (isPro && invLogoDataUrl)
-    ? `<img src="${invLogoDataUrl}" style="max-height:60px;max-width:160px;object-fit:contain;display:block;margin-bottom:8px;">`
+    ? `<img src="${invLogoDataUrl}" alt="Invoice logo" style="max-height:60px;max-width:160px;object-fit:contain;display:block;margin-bottom:8px;">`
     : '';
 
   const invoiceCSS = [
@@ -2942,7 +2991,7 @@ document.getElementById('signout-modal').addEventListener('click', function(e) {
       <button onclick="closeCropper()" aria-label="Cancel" style="background:none;border:none;color:#c9c7dc;font-size:20px;cursor:pointer;line-height:1;">&#x2715;</button>
     </div>
     <div style="background:#000;border-radius:10px;overflow:hidden;max-height:60vh;">
-      <img id="bio-cropper-img" style="display:block;max-width:100%;">
+      <img id="bio-cropper-img" alt="Photo to crop" style="display:block;max-width:100%;">
     </div>
     <div id="bio-cropper-error" style="display:none;margin-top:10px;font-size:12px;color:#fca5a5;"></div>
     <div style="display:flex;gap:10px;margin-top:14px;">
