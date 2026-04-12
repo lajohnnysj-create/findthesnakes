@@ -1,7 +1,5 @@
 // Vercel serverless function
 // Injects dynamic OG tags into bio.html for username URLs
-// Deploy to: /api/bio.js
-// Routed via vercel.json rewrite: /:username -> /api/bio?u=:username
 
 const fs = require('fs');
 const path = require('path');
@@ -34,7 +32,7 @@ async function fetchProfile(username) {
   const profile = profiles[0];
 
   const bioRes = await fetch(
-    `${SUPABASE_URL}/rest/v1/bio?user_id=eq.${profile.user_id}&select=display_name,avatar_url,bio,published`,
+    `${SUPABASE_URL}/rest/v1/link_in_bio?user_id=eq.${profile.user_id}&select=display_name,avatar_url,bio,published`,
     {
       headers: {
         apikey: SUPABASE_ANON_KEY,
