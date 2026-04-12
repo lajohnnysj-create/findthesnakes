@@ -991,9 +991,57 @@ function applyCustomTheme(ct) {
   }
 }
 
+function updateOgTags({ title, description, image, url }) {
+  const setMeta = (property, content) => {
+    if (!content) return;
+    let el = document.querySelector(`meta[property="${property}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute('property', property);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  };
+  const setName = (name, content) => {
+    if (!content) return;
+    let el = document.querySelector(`meta[name="${name}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute('name', name);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  };
+  setMeta('og:title', title);
+  setMeta('og:description', description);
+  setMeta('og:type', 'profile');
+  if (url) setMeta('og:url', url);
+  if (image) {
+    setMeta('og:image', image);
+    setMeta('og:image:width', '800');
+    setMeta('og:image:height', '800');
+  }
+  // Twitter card
+  setName('twitter:card', image ? 'summary_large_image' : 'summary');
+  setName('twitter:title', title);
+  setName('twitter:description', description);
+  if (image) setName('twitter:image', image);
+  // Standard description
+  setName('description', description);
+}
+
 function render(profile, bio, userTier) {
-  const title = `${name} | FindTheSnakes`;
-  document.title = title;
+  const name = bio.display_name || profile.username || '';
+  const username = profile.username || '';
+  const title = `all of ${username ? '@' + username : name}'s links`;
+  document.title = `${name} | FindTheSnakes`;
+  const avatar = validImageUrl(bio.avatar_url);
+  updateOgTags({
+    title: title,
+    description: bio.bio || `Find all of ${username ? '@' + username : name}'s links in one place on FindTheSnakes.`,
+    image: avatar,
+    url: window.location.href,
+  });
 
   // Apply theme — custom theme only honored if user is Max tier
   const isMaxTier = userTier === 'max';

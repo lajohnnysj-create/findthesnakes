@@ -754,18 +754,56 @@ function buildContact(kit) {
   </div>`;
 }
 
+function updateMKOgTags({ title, description, image, url }) {
+  const setMeta = (property, content) => {
+    if (!content) return;
+    let el = document.querySelector(`meta[property="${property}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute('property', property);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  };
+  const setName = (name, content) => {
+    if (!content) return;
+    let el = document.querySelector(`meta[name="${name}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute('name', name);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  };
+  setMeta('og:title', title);
+  setMeta('og:description', description);
+  setMeta('og:type', 'profile');
+  if (url) setMeta('og:url', url);
+  if (image) {
+    setMeta('og:image', image);
+    setMeta('og:image:width', '800');
+    setMeta('og:image:height', '800');
+  }
+  setName('twitter:card', image ? 'summary_large_image' : 'summary');
+  setName('twitter:title', title);
+  setName('twitter:description', description);
+  if (image) setName('twitter:image', image);
+  setName('description', description);
+}
+
 function render(profile, kit) {
   const name = kit.display_name || profile.username;
+  const username = profile.username || '';
   const title = `${name}. Media Kit | FindTheSnakes`;
   document.title = title;
-  const ogTitle = document.querySelector('meta[property="og:title"]');
-  if (ogTitle) ogTitle.setAttribute('content', title);
-  if (kit.bio) {
-    const ogDesc = document.querySelector('meta[property="og:description"]');
-    if (ogDesc) ogDesc.setAttribute('content', kit.bio);
-    const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute('content', kit.bio);
-  }
+  const headshot = validImageUrl(kit.headshot_url);
+  const description = kit.bio || `${name}'s creator media kit — collaborations, audience stats, and rates.`;
+  updateMKOgTags({
+    title: title,
+    description: description,
+    image: headshot,
+    url: window.location.href,
+  });
 
   // Apply theme — custom theme only honored if user is Max tier
   const isMaxTier = profile.tier === 'max';
@@ -776,8 +814,6 @@ function render(profile, kit) {
     const theme = (kit.theme === 'custom' && !isMaxTier) ? 'purple' : (kit.theme || 'purple');
     document.documentElement.setAttribute('data-theme', theme);
   }
-
-  const headshot = validImageUrl(kit.headshot_url);
 
   // Banner rule: always on for non-Pro. Pro/Max can opt out via show_branding=false.
   const isPaid = profile.tier === 'monthly' || profile.tier === 'max';
