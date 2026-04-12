@@ -623,6 +623,132 @@
     color: #fca5a5;
   }
 
+  /* Keyboard hint */
+  .scripts-kbd-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .scripts-kbd-hint kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    padding: 1px 5px;
+    font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+    font-size: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border-hover);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  /* Hook meta row */
+  .scripts-hook-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .scripts-hook-right { display: flex; align-items: center; gap: 10px; }
+
+  /* Block meta row */
+  .scripts-block-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .scripts-block-meta-right { display: flex; align-items: center; gap: 10px; }
+
+  /* Inline save button */
+  .scripts-inline-save {
+    padding: 4px 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: 0 0 10px rgba(124,58,237,0.25);
+  }
+  .scripts-inline-save:hover { background: var(--accent2); box-shadow: 0 0 14px rgba(124,58,237,0.45); }
+
+  /* Collapse / expand buttons */
+  .scripts-collapse-btn, .scripts-expand-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .scripts-collapse-btn:hover, .scripts-expand-btn:hover {
+    background: rgba(124,58,237,0.08);
+    border-color: rgba(124,58,237,0.25);
+    color: #c4b5fd;
+  }
+
+  /* Collapsed block */
+  .scripts-block.collapsed {
+    padding: 10px 12px;
+    cursor: pointer;
+  }
+  .scripts-block.collapsed:hover { border-color: rgba(124,58,237,0.3); }
+  .scripts-block.collapsed .scripts-block-header { margin-bottom: 0; }
+  .scripts-block-collapsed-main {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .scripts-block-collapsed-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 2px;
+  }
+  .scripts-block-collapsed-preview {
+    font-size: 11px;
+    color: var(--muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .scripts-block-collapsed-main .dim { color: var(--muted); opacity: 0.6; font-style: italic; font-weight: 400; }
+  .scripts-block-collapsed-meta {
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 3px 7px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
   /* Mobile */
   @media (max-width: 640px) {
     .scripts-title-input { font-size: 22px; }
@@ -2110,6 +2236,11 @@
       <span class="sidebar-item-label">Media Kit</span>
       <span class="sidebar-item-badge">PRO</span>
     </button>
+    <button class="sidebar-item" id="nav-scripts" onclick="showTool('scripts')">
+      <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/><path d="M6 21l-2-2 2-2M18 21l2-2-2-2"/></svg></div>
+      <span class="sidebar-item-label">Script Builder</span>
+      <span class="sidebar-item-badge max">MAX</span>
+    </button>
     <button class="sidebar-item" id="nav-grid" onclick="showTool('grid')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
       <span class="sidebar-item-label">Grid Planner</span>
@@ -2133,11 +2264,6 @@
     <button class="sidebar-item" id="nav-pdfsign" onclick="showTool('pdfsign')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M3 17l3-3 2 2 5-5 3 3"/></svg></div>
       <span class="sidebar-item-label">Sign PDF</span>
-    </button>
-    <button class="sidebar-item" id="nav-scripts" onclick="showTool('scripts')">
-      <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/><path d="M6 21l-2-2 2-2M18 21l2-2-2-2"/></svg></div>
-      <span class="sidebar-item-label">Script Builder</span>
-      <span class="sidebar-item-badge max">MAX</span>
     </button>
     <button class="sidebar-item" id="nav-tax" onclick="showTool('tax')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
@@ -8826,7 +8952,13 @@ function renderScriptEditor() {
           Hook
         </div>
         <textarea id="scripts-hook-input" class="scripts-hook-input" maxlength="200" rows="2" placeholder="What's the one sentence that stops the scroll?" oninput="onScriptHookChange(this.value)" onkeydown="if((event.key==='Enter')&&(event.ctrlKey||event.metaKey)){event.preventDefault();this.blur();saveScriptNow();}" aria-label="Hook">${escapeHtml(currentScript.hook || '')}</textarea>
-        <div class="scripts-hook-meta"><span id="scripts-hook-count">${(currentScript.hook || '').length}</span>/200</div>
+        <div class="scripts-hook-meta">
+          <span class="scripts-kbd-hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> to save</span>
+          <div class="scripts-hook-right">
+            <span><span id="scripts-hook-count">${(currentScript.hook || '').length}</span>/200</span>
+            <button class="scripts-inline-save" onclick="saveAndBlurHook()">Save</button>
+          </div>
+        </div>
       </div>
 
       <div class="scripts-add-row">
@@ -9042,21 +9174,85 @@ function renderBlockItem(item) {
   const body = escapeHtml(item.body || '');
   const wordCount = (item.body || '').trim().split(/\s+/).filter(Boolean).length;
   const seconds = Math.max(1, Math.round((wordCount / SCRIPT_WPM) * 60));
+  const isCollapsed = !!item.collapsed;
+  const bodyPreview = (item.body || '').trim().slice(0, 80) + ((item.body || '').length > 80 ? '…' : '');
+  if (isCollapsed) {
+    return `<div class="scripts-block collapsed" data-id="${item.id}">
+      <div class="scripts-block-header">
+        <div class="scripts-drag-handle" aria-label="Drag to reorder">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+        </div>
+        <div class="scripts-block-collapsed-main" onclick="expandScriptBlock('${item.id}')">
+          <div class="scripts-block-collapsed-title">${title || '<span class="dim">Untitled block</span>'}</div>
+          <div class="scripts-block-collapsed-preview">${escapeHtml(bodyPreview) || '<span class="dim">Empty</span>'}</div>
+        </div>
+        <span class="scripts-block-collapsed-meta">${wordCount}w · ${seconds}s</span>
+        <button class="scripts-expand-btn" onclick="expandScriptBlock('${item.id}')" aria-label="Expand block">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <button class="scripts-remove-btn" onclick="removeScriptItem('${item.id}')" aria-label="Delete block">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }
   return `<div class="scripts-block" data-id="${item.id}">
     <div class="scripts-block-header">
       <div class="scripts-drag-handle" aria-label="Drag to reorder">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
       </div>
       <input type="text" class="scripts-block-title" maxlength="60" value="${title}" placeholder="Title (optional)" oninput="onScriptBlockEdit('${item.id}', 'title', this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" aria-label="Block title">
+      <button class="scripts-collapse-btn" onclick="collapseScriptBlock('${item.id}')" aria-label="Collapse block" title="Collapse">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
       <button class="scripts-remove-btn" onclick="removeScriptItem('${item.id}')" aria-label="Delete block">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
       </button>
     </div>
-    <textarea class="scripts-block-body" maxlength="1500" rows="3" placeholder="What you'll say..." oninput="onScriptBlockEdit('${item.id}', 'body', this.value)" onkeydown="if((event.key==='Enter')&&(event.ctrlKey||event.metaKey)){event.preventDefault();this.blur();saveScriptNow();}" aria-label="Block body">${body}</textarea>
+    <textarea class="scripts-block-body" maxlength="1500" rows="3" placeholder="What you'll say..." oninput="onScriptBlockEdit('${item.id}', 'body', this.value)" onkeydown="if((event.key==='Enter')&&(event.ctrlKey||event.metaKey)){event.preventDefault();saveAndCollapseBlock('${item.id}');}" aria-label="Block body">${body}</textarea>
     <div class="scripts-block-meta">
-      <span class="scripts-block-count" data-id="${item.id}">${wordCount} words · ${seconds}s</span>
+      <span class="scripts-kbd-hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> to save & collapse</span>
+      <div class="scripts-block-meta-right">
+        <span class="scripts-block-count" data-id="${item.id}">${wordCount} words · ${seconds}s</span>
+        <button class="scripts-inline-save" onclick="saveAndCollapseBlock('${item.id}')">Save</button>
+      </div>
     </div>
   </div>`;
+}
+
+function collapseScriptBlock(id) {
+  const item = currentScript.items.find(x => x.id === id);
+  if (!item) return;
+  item.collapsed = true;
+  renderScriptItems();
+  markScriptDirty();
+}
+
+function expandScriptBlock(id) {
+  const item = currentScript.items.find(x => x.id === id);
+  if (!item) return;
+  item.collapsed = false;
+  renderScriptItems();
+  markScriptDirty();
+  // Focus the body so user can keep typing
+  setTimeout(() => {
+    const textarea = document.querySelector(`.scripts-block[data-id="${id}"] .scripts-block-body`);
+    if (textarea) textarea.focus();
+  }, 20);
+}
+
+async function saveAndCollapseBlock(id) {
+  const item = currentScript.items.find(x => x.id === id);
+  if (!item) return;
+  item.collapsed = true;
+  renderScriptItems();
+  await saveScriptNow();
+}
+
+async function saveAndBlurHook() {
+  const hook = document.getElementById('scripts-hook-input');
+  if (hook) hook.blur();
+  await saveScriptNow();
 }
 
 // ========== Item mutators ==========
