@@ -190,7 +190,8 @@
   .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .tool-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px; text-decoration: none; display: block; transition: all 0.25s; position: relative; overflow: hidden; cursor: pointer; }
   .tool-card:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-  .tool-card-icon { width: 44px; height: 44px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 16px; }
+  .tool-card-icon { width: 44px; height: 44px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #c4b5fd; }
+  .tool-card-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .tool-card-title { font-family: "Syne", sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.3px; background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .tool-card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
   .tool-card-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: #4ade80; font-weight: 500; }
@@ -203,7 +204,8 @@
   .features-inner { max-width: 1100px; margin: 0 auto; }
   .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px; }
   .feat { display: flex; flex-direction: column; gap: 12px; }
-  .feat-icon { width: 44px; height: 44px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .feat-icon { width: 44px; height: 44px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #c4b5fd; }
+  .feat-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .feat-title { font-family: "Syne", sans-serif; font-size: 16px; font-weight: 700; }
   .feat-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
   .cta-section { padding: 100px 48px; text-align: center; position: relative; overflow: hidden; }
@@ -307,7 +309,7 @@
       Built for creators, by a creator
     </div>
     <h1>A host of creator tools<br>to <span class="gradient-text">empower your growth</span></h1>
-    <p class="hero-sub">Build your link-in-bio, pitch brands with a media kit, run follow-back audits, generate invoices — everything creators need, in one dashboard. Free to start.</p>
+    <p class="hero-sub">Build your link-in-bio, pitch brands with a media kit, run follow-back audits, and generate invoices. Focused creator tools, all in one dashboard. Free to start.</p>
     <div class="hero-actions">
       <button class="btn-primary" onclick="openSignupModal()">Get started free &#x2192;</button>
       <a class="btn-secondary" href="pricing.html">See pricing</a>
@@ -425,63 +427,63 @@
   <p class="section-sub">Focused tools for the work behind the creating. Add them to your workflow.</p>
   <div class="tools-grid">
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x1F517;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
       <div class="tool-card-title">Link in Bio</div>
-      <div class="tool-card-desc">Your one link to share everything. Photo, bio, all your links, YouTube videos — on a clean, fast page.</div>
+      <div class="tool-card-desc">Your one link to share everything. Photo, bio, all your links, and YouTube videos on a clean, fast page.</div>
       <div class="tool-card-badge"><span class="tool-card-badge-dot"></span> Free to start</div>
       <div class="tool-card-arrow">&#x2197;</div>
     </a>
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x1F4C4;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="16" y1="17" x2="16" y2="15"/></svg></div>
       <div class="tool-card-title">Media Kit</div>
-      <div class="tool-card-desc">A professional media kit brands will actually read. Audience stats, engagement rate, rate card — share a link or download as PDF.</div>
+      <div class="tool-card-desc">A professional media kit brands will actually read. Audience stats, engagement rate, and a rate card. Share a link or download as PDF.</div>
       <div class="tool-card-badge pro"><span class="tool-card-badge-dot"></span> Pro only</div>
       <div class="tool-card-arrow">&#x2197;</div>
     </a>
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x1F5A5;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
       <div class="tool-card-title">Grid Planner</div>
-      <div class="tool-card-desc">Plan your feed before you post. Drop photos, drag to reorder, preview how your grid looks. Save with Pro.</div>
+      <div class="tool-card-desc">Plan your feed before you post. Drop photos, drag to reorder, and preview how your grid looks. Save with Pro.</div>
       <div class="tool-card-badge"><span class="tool-card-badge-dot"></span> Free to start</div>
       <div class="tool-card-arrow">&#x2197;</div>
     </a>
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x1F50D;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
       <div class="tool-card-title">Follower Audit</div>
       <div class="tool-card-desc">Find out who stopped following you on Instagram. No password required. Upload your own data and see the truth in seconds.</div>
       <div class="tool-card-badge"><span class="tool-card-badge-dot"></span> Free to start</div>
       <div class="tool-card-arrow">&#x2197;</div>
     </a>
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x1F5BC;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div>
       <div class="tool-card-title">Image Converter</div>
       <div class="tool-card-desc">Convert images between PNG, JPEG, WebP, TIFF and more. Fast, simple, and right in your browser.</div>
       <div class="tool-card-badge"><span class="tool-card-badge-dot"></span> Free to start</div>
       <div class="tool-card-arrow">&#x2197;</div>
     </a>
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x2B1B;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20v1"/></svg></div>
       <div class="tool-card-title">QR Code Generator</div>
       <div class="tool-card-desc">Generate clean, professional QR codes for your links, social profiles, and campaigns. Download instantly in high resolution.</div>
       <div class="tool-card-badge"><span class="tool-card-badge-dot"></span> Free to start</div>
       <div class="tool-card-arrow">&#x2197;</div>
     </a>
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x1F9FE;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></div>
       <div class="tool-card-title">Invoice Generator</div>
       <div class="tool-card-desc">Create professional invoices for your brand deals and collaborations. Add your logo, itemize services, and download as PDF.</div>
       <div class="tool-card-badge"><span class="tool-card-badge-dot"></span> Free to start</div>
       <div class="tool-card-arrow">&#x2197;</div>
     </a>
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x270D;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M3 17l3-3 2 2 5-5 3 3"/></svg></div>
       <div class="tool-card-title">Sign PDF</div>
       <div class="tool-card-desc">Fill out and sign any PDF right in your browser. Drop fields, type, draw your signature, and download. Nothing uploaded to servers.</div>
       <div class="tool-card-badge"><span class="tool-card-badge-dot"></span> Free to use</div>
       <div class="tool-card-arrow">&#x2197;</div>
     </a>
     <a class="tool-card" href="dashboard.html" onclick="requireAuth(event)">
-      <div class="tool-card-icon">&#x1F4B0;</div>
+      <div class="tool-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
       <div class="tool-card-title">Tax Tracker</div>
       <div class="tool-card-desc">Log your creator income year-round and see your estimated tax liability in real time. Export to CSV for your accountant.</div>
       <div class="tool-card-badge pro"><span class="tool-card-badge-dot"></span> Pro only</div>
@@ -495,12 +497,12 @@
     <span class="section-label">Why FindTheSnakes</span>
     <h2 class="section-title">Built by a creator. For creators.</h2>
     <div class="features-grid">
-      <div class="feat"><div class="feat-icon">&#x1F3AF;</div><div class="feat-title">Built by a creator</div><div class="feat-desc">I'm a creator myself. Every tool here was built because I needed it. If you've been in the trenches, you'll recognize these problems.</div></div>
-      <div class="feat"><div class="feat-icon">&#x1F40D;</div><div class="feat-title">Find your snakes</div><div class="feat-desc">Know who actually supports you. Stop giving energy to people who are not giving it back.</div></div>
-      <div class="feat"><div class="feat-icon">&#x1F49C;</div><div class="feat-title">Free to start</div><div class="feat-desc">Create a free account and start using most tools right away. Upgrade to Pro only when you need saves or unlimited use.</div></div>
-      <div class="feat"><div class="feat-icon">&#x1F4B0;</div><div class="feat-title">Affordable by design</div><div class="feat-desc">Pro is $10 a month. Less than a lunch. No surprise fees, no annual commitments. Cancel anytime.</div></div>
-      <div class="feat"><div class="feat-icon">&#x1F6E0;</div><div class="feat-title">One clean dashboard</div><div class="feat-desc">Your link-in-bio, media kit, invoices, and tax tracking in one place. No more paying 5 different services to run your creator business.</div></div>
-      <div class="feat"><div class="feat-icon">&#x1F4C8;</div><div class="feat-title">Always growing</div><div class="feat-desc">New tools are added regularly. One subscription unlocks everything, now and in the future.</div></div>
+      <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a7.5 7.5 0 0 1 13 0"/></svg></div><div class="feat-title">Built by a creator</div><div class="feat-desc">I'm a creator myself. Every tool here was built because I needed it. If you've been in the trenches, you'll recognize these problems.</div></div>
+      <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><div class="feat-title">Find your snakes</div><div class="feat-desc">Know who actually supports you. Stop giving energy to people who are not giving it back.</div></div>
+      <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="feat-title">Free to start</div><div class="feat-desc">Create a free account and start using most tools right away. Upgrade to Pro only when you need saves or unlimited use.</div></div>
+      <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="feat-title">Affordable by design</div><div class="feat-desc">Pro is $10 a month. Less than a lunch. No surprise fees, no annual commitments. Cancel anytime.</div></div>
+      <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><div class="feat-title">One clean dashboard</div><div class="feat-desc">Your link-in-bio, media kit, invoices, and tax tracking in one place. No more paying 5 different services to run your creator business.</div></div>
+      <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="feat-title">Focused, not bloated</div><div class="feat-desc">Every tool earns its place. No feature creep, no endless menus. Just what you actually need to run your creator business.</div></div>
     </div>
   </div>
 </section>

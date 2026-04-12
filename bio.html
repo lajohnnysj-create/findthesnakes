@@ -762,7 +762,7 @@ function renderNotFound(username) {
   document.getElementById('wrap').innerHTML = `
     <div class="state">
       <h1>This page isn't here yet</h1>
-      <p>${username ? `<strong>@${esc(username)}</strong> hasn't created their FindTheSnakes page — or it's not published yet.` : 'No username in the URL.'}</p>
+      <p>${username ? `<strong>@${esc(username)}</strong> hasn't created their FindTheSnakes page, or it's not published yet.` : 'No username in the URL.'}</p>
       <a class="cta" href="https://www.findthesnakes.com">Create your own →</a>
     </div>
   `;

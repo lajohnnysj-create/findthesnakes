@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="shortcut icon" href="favicon.svg">
-<title>Dashboard — FindTheSnakes</title>
+<title>Dashboard. FindTheSnakes</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
@@ -956,7 +956,7 @@ body { overflow-x: hidden; }
   <!-- UPGRADE BANNER (shown for free/one-time users) -->
   <div class="upgrade-banner" id="upgrade-banner">
     <div class="upgrade-banner-text">
-      <strong>Upgrade to unlock full results</strong> — See everyone who unfollowed you, manage your whitelist, snake list, audit history and more.
+      <strong>Upgrade to unlock full results</strong>. See everyone who unfollowed you, manage your whitelist, snake list, audit history and more.
     </div>
     <div class="upgrade-btns">
       <button class="upgrade-btn-one" id="upgrade-btn-one" onclick="startCheckout('one_time')">One-time unlock — $3</button>
@@ -979,7 +979,7 @@ body { overflow-x: hidden; }
         <input type="file" id="zip-input" accept=".zip" aria-label="Upload your Instagram data ZIP">
         <div class="upload-icon">📦</div>
         <div class="upload-label">Upload Instagram ZIP</div>
-        <div class="upload-sublabel">Drop your <span>instagram-XXXXXX.zip</span> here<br>or click to browse — no unzipping needed</div>
+        <div class="upload-sublabel">Drop your <span>instagram-XXXXXX.zip</span> here<br>or click to browse, no unzipping needed</div>
       </div>
       <div id="zip-file-list" style="max-width:520px;margin:0 auto 8px;"></div>
       <div id="zip-status" style="max-width:520px;margin:0 auto 16px;font-size:13px;color:var(--muted);text-align:center;min-height:20px;"></div>
@@ -1214,7 +1214,7 @@ function showDashboard() {
     if (userTier === 'monthly' && auditHistory.length > 0) {
       const lastDate = new Date(auditHistory[0].created_at);
       const formatted = lastDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      lastAuditMsg.innerHTML = ` — you last ran an audit on <strong style="color:var(--text)">${formatted}</strong>`;
+      lastAuditMsg.innerHTML = `, you last ran an audit on <strong style="color:var(--text)">${formatted}</strong>`;
     } else {
       lastAuditMsg.innerHTML = '';
     }
@@ -1563,7 +1563,7 @@ async function toggleWhitelist(handle) {
   } else {
     // Update UI instantly
     userWhitelist.add(handle);
-    showMiniToast(`@${handle} added to whitelist — hidden from results`);
+    showMiniToast(`@${handle} added to whitelist, hidden from results`);
     filterResults();
     if (currentFilter === 'whitelist') renderWhitelistSection();
     // Sync to Supabase in background
@@ -1642,7 +1642,7 @@ async function loadAuditHistory() {
     if (lastAuditMsg && auditHistory.length > 0) {
       const lastDate = new Date(auditHistory[0].created_at);
       const formatted = lastDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      lastAuditMsg.innerHTML = ` — you last ran an audit on <strong style="color:var(--text)">${formatted}</strong>`;
+      lastAuditMsg.innerHTML = `, you last ran an audit on <strong style="color:var(--text)">${formatted}</strong>`;
     }
 
     renderAuditHistory();
@@ -1689,7 +1689,7 @@ function renderAuditHistory() {
       </div>
       <div class="audit-body">
         <div style="font-size:12px;color:var(--muted);padding:14px 0 4px;line-height:1.6;">
-          Run a new audit anytime to see the full updated list of who isn't following you back. Individual usernames aren't stored — only counts — to keep your data private and your account fast.
+          Run a new audit anytime to see the full updated list of who isn't following you back. Individual usernames aren't stored, only counts, to keep your data private and your account fast.
         </div>
       </div>
     </div>`;
@@ -2254,7 +2254,7 @@ function updateToolBtns() {
 
 function handleToolBtn(type) {
   const isPaid = userTier === 'one_time' || userTier === 'monthly' || currentAnalysisPaid;
-  if (!isPaid) return; // locked — tooltip handles the message
+  if (!isPaid) return; // locked, tooltip handles the message
   if (type === 'print') printReport();
   if (type === 'csv') exportCSV();
 }
@@ -2268,7 +2268,7 @@ function exportCSV() {
   const rows = [];
 
   // ── HEADER ──
-  rows.push(['FindTheSnakes — Full Export', '', '', '', '']);
+  rows.push(['FindTheSnakes. Full Export', '', '', '', '']);
   rows.push(['Generated:', date, '', '', '']);
   rows.push([]);
 
@@ -2457,7 +2457,7 @@ function printReport() {
     if (userWhitelist.size > 0) {
       html += `<div style="margin-top:24px;border-top:1px solid #eee;padding-top:16px;">
         <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#7c3aed">WHITELIST (${userWhitelist.size} accounts)</div>`;
-      userWhitelist.forEach(h => { html += `<div style="font-size:12px;padding:3px 0;color:#333">@${h}${accountNotes[h] ? ' — ' + accountNotes[h] : ''}</div>`; });
+      userWhitelist.forEach(h => { html += `<div style="font-size:12px;padding:3px 0;color:#333">@${h}${accountNotes[h] ? ', ' + accountNotes[h] : ''}</div>`; });
       html += '</div>';
     }
 
@@ -2465,7 +2465,7 @@ function printReport() {
     if (userSnakeList.size > 0) {
       html += `<div style="margin-top:24px;border-top:1px solid #eee;padding-top:16px;">
         <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#7c3aed">🐍 SNAKE LIST (${userSnakeList.size} accounts)</div>`;
-      userSnakeList.forEach(h => { html += `<div style="font-size:12px;padding:3px 0;color:#333">@${h}${accountNotes[h] ? ' — ' + accountNotes[h] : ''}</div>`; });
+      userSnakeList.forEach(h => { html += `<div style="font-size:12px;padding:3px 0;color:#333">@${h}${accountNotes[h] ? ', ' + accountNotes[h] : ''}</div>`; });
       html += '</div>';
     }
 
@@ -2523,7 +2523,7 @@ zipInput.addEventListener('change', () => {
 
 async function handleZip(file) {
   if (!file.name.endsWith('.zip')) {
-    showError('Please upload a ZIP file. Download your Instagram data export and upload the ZIP directly — no unzipping needed.');
+    showError('Please upload a ZIP file. Download your Instagram data export and upload the ZIP directly, no unzipping needed.');
     return;
   }
   hideError();
@@ -2587,7 +2587,7 @@ async function handleZip(file) {
     `;
 
     statusEl.style.color = '#4ade80';
-    statusEl.textContent = `✓ Found ${followersData.length} followers file${followersData.length > 1 ? 's' : ''} and ${followingData.length} following file${followingData.length > 1 ? 's' : ''} — ready to analyze`;
+    statusEl.textContent = `✓ Found ${followersData.length} followers file${followersData.length > 1 ? 's' : ''} and ${followingData.length} following file${followingData.length > 1 ? 's' : ''}, ready to analyze`;
     updateBtn();
 
   } catch(err) {
@@ -2998,7 +2998,7 @@ function buildPaywall(hiddenCount, totalUnfollowers) {
     <div class="paywall-btns">
       <button class="paywall-btn primary" onclick="startCheckout('monthly')">
         <span>Upgrade to Pro</span>
-        <span class="paywall-btn-price">$10/mo — Unlimited access</span>
+        <span class="paywall-btn-price">$10/mo. Unlimited access</span>
       </button>
     </div>
     ${!currentUser ? `<p style="margin-top:20px;font-size:13px;color:var(--muted)">Already paid? <a href="#" onclick="openAuthModal();return false;" style="color:var(--accent)">Sign in to restore access</a></p>` : ''}

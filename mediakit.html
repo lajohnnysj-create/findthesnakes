@@ -756,7 +756,7 @@ function buildContact(kit) {
 
 function render(profile, kit) {
   const name = kit.display_name || profile.username;
-  const title = `${name} — Media Kit | FindTheSnakes`;
+  const title = `${name}. Media Kit | FindTheSnakes`;
   document.title = title;
   const ogTitle = document.querySelector('meta[property="og:title"]');
   if (ogTitle) ogTitle.setAttribute('content', title);
