@@ -2694,10 +2694,14 @@ function analyze() {
       // Clear uploaded files so user can do a fresh upload
       followersData = [];
       followingData = [];
-      document.getElementById('followers-files').innerHTML = '';
-      document.getElementById('following-files').innerHTML = '';
-      document.getElementById('followers-input').value = '';
-      document.getElementById('following-input').value = '';
+      const fFiles = document.getElementById('followers-files');
+      if (fFiles) fFiles.innerHTML = '';
+      const gFiles = document.getElementById('following-files');
+      if (gFiles) gFiles.innerHTML = '';
+      const fInput = document.getElementById('followers-input');
+      if (fInput) fInput.value = '';
+      const gInput = document.getElementById('following-input');
+      if (gInput) gInput.value = '';
     }
   }, 80);
 }
