@@ -2019,17 +2019,15 @@ function startOver() {
   // Reset results
   allResults = [];
 
-
-
-  // Clear file lists and inputs
-  ['followers', 'following'].forEach(type => {
-    const listEl = document.getElementById(type + '-files');
-    if (listEl) listEl.innerHTML = '';
-    const input = document.getElementById(type + '-input');
-    if (input) input.value = '';
-  });
+  // Clear ZIP upload state (this is the actual upload mechanism)
   followersData = [];
   followingData = [];
+  const zipInput = document.getElementById('zip-input');
+  if (zipInput) zipInput.value = '';
+  const zipFileList = document.getElementById('zip-file-list');
+  if (zipFileList) zipFileList.innerHTML = '';
+  const zipStatus = document.getElementById('zip-status');
+  if (zipStatus) { zipStatus.textContent = ''; zipStatus.style.color = ''; }
 
   // Reset analyze button
   const btn = document.getElementById('analyze-btn');
@@ -2694,14 +2692,12 @@ function analyze() {
       // Clear uploaded files so user can do a fresh upload
       followersData = [];
       followingData = [];
-      const fFiles = document.getElementById('followers-files');
-      if (fFiles) fFiles.innerHTML = '';
-      const gFiles = document.getElementById('following-files');
-      if (gFiles) gFiles.innerHTML = '';
-      const fInput = document.getElementById('followers-input');
-      if (fInput) fInput.value = '';
-      const gInput = document.getElementById('following-input');
-      if (gInput) gInput.value = '';
+      const zipInput = document.getElementById('zip-input');
+      if (zipInput) zipInput.value = '';
+      const zipFileList = document.getElementById('zip-file-list');
+      if (zipFileList) zipFileList.innerHTML = '';
+      const zipStatus = document.getElementById('zip-status');
+      if (zipStatus) { zipStatus.textContent = ''; zipStatus.style.color = ''; }
     }
   }, 80);
 }
