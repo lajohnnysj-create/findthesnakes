@@ -3801,6 +3801,12 @@ function showFollowerTool() {
 }
 
 function showTool(tool) {
+  // Clean up any pending PDF Sign palette selection when switching tools
+  if (typeof pdfsignTouchPending !== 'undefined') {
+    pdfsignTouchPending = null;
+    if (typeof clearPaletteSelection === 'function') clearPaletteSelection();
+    if (typeof hidePdfSignStatus === 'function') hidePdfSignStatus();
+  }
   // Hide all tools
   ['welcome','bio','mediakit','grid','follower','image','qr','invoice','pdfsign','tax','scripts'].forEach(t => {
     const el = document.getElementById('tool-' + t);
@@ -7220,6 +7226,9 @@ function onDropOnPage(e, pageIndex) {
   const y = (e.clientY - rect.top) / rect.height;
   addFieldAt(pageIndex, fieldType, x, y);
   pdfsignDragType = null;
+  pdfsignTouchPending = null;
+  clearPaletteSelection();
+  hidePdfSignStatus();
 }
 
 function addFieldAt(pageIndex, fieldType, normX, normY) {
