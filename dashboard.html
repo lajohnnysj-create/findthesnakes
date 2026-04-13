@@ -7413,8 +7413,11 @@ function renderField(field) {
       renderAllFields();
     } else if (field.type === 'signature') {
       openSigModal(field.id);
+    } else if (field.type === 'crossout') {
+      // No edit action — crossout is positioned/resized only
+      return;
     } else {
-      // text, date, other
+      // text, date
       openTextModal(field.id, field.type);
     }
   });
