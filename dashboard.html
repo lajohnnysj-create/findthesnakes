@@ -7408,6 +7408,8 @@ function renderField(field) {
   el.addEventListener('click', (e) => {
     if (e.target === delBtn || delBtn.contains(e.target)) return;
     if (e.target === resize) return;
+    // If a drag just happened, suppress the modal — drag, don't edit
+    if (el.__pdfsignJustDragged) return;
     if (field.type === 'checkbox') {
       field.value = !field.value;
       renderAllFields();
@@ -7514,6 +7516,13 @@ function startMove(e, fieldId, fieldEl) {
     ev.preventDefault();
   }
   function onEnd() {
+    // If the user actually dragged, flag the element so the click
+    // that immediately follows doesn't open the edit modal.
+    if (moved) {
+      fieldEl.__pdfsignJustDragged = true;
+      // Clear after a short delay (after the click event fires)
+      setTimeout(() => { fieldEl.__pdfsignJustDragged = false; }, 50);
+    }
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('mouseup', onEnd);
     document.removeEventListener('touchmove', onMove);
