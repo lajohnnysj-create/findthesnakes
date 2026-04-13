@@ -3494,6 +3494,12 @@
                   </div>
                   <div class="pdfsign-palette-name">Checkbox</div>
                 </div>
+                <div class="pdfsign-palette-item" data-ftype="crossout" draggable="true" ondragstart="onPaletteDragStart(event,'crossout')" onclick="onPaletteClick(event,'crossout')">
+                  <div class="pdfsign-palette-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="12" x2="20" y2="12"/></svg>
+                  </div>
+                  <div class="pdfsign-palette-name">Crossout</div>
+                </div>
               </div>
               <div class="pdfsign-palette-actions">
                 <button id="pdfsign-print-btn" onclick="printSignedPdf()" class="pdfsign-action-btn pdfsign-action-secondary" aria-label="Print signed PDF">
@@ -7324,6 +7330,7 @@ function addFieldAt(pageIndex, fieldType, normX, normY) {
     text:      { w: 0.25, h: 0.04 },
     date:      { w: 0.15, h: 0.04 },
     checkbox:  { w: 0.04, h: 0.04 },
+    crossout:  { w: 0.30, h: 0.025 },
   };
   const d = defaults[fieldType] || defaults.text;
   const field = {
@@ -7336,7 +7343,7 @@ function addFieldAt(pageIndex, fieldType, normX, normY) {
     h: d.h,
     value: (fieldType === 'date')
       ? new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
-      : (fieldType === 'checkbox' ? true : ''),
+      : (fieldType === 'checkbox' ? true : (fieldType === 'crossout' ? true : '')),
   };
   pdfsignFields.push(field);
   renderAllFields();
@@ -7439,6 +7446,13 @@ function renderFieldContent(field, container) {
     } else {
       container.textContent = '☐';
     }
+  } else if (field.type === 'crossout') {
+    // Solid black horizontal line spanning the full width, centered vertically
+    const line = document.createElement('div');
+    line.style.cssText = 'width:100%;height:2px;background:#000;align-self:center;margin:auto 0;';
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.appendChild(line);
   } else {
     // text / date
     const t = document.createElement('div');
@@ -7450,6 +7464,7 @@ function renderFieldContent(field, container) {
 
 function hasFieldValue(f) {
   if (f.type === 'checkbox') return f.value === true;
+  if (f.type === 'crossout') return true;
   return !!f.value;
 }
 
@@ -7632,21 +7647,32 @@ function setupSigCanvas() {
   // Ensure handlers attached (idempotent)
   if (!canvas.__pdfsignSetup) {
     canvas.__pdfsignSetup = true;
-    canvas.addEventListener('mousedown', sigStart);
-    canvas.addEventListener('mousemove', sigMove);
-    canvas.addEventListener('mouseup', sigEnd);
-    canvas.addEventListener('mouseleave', sigEnd);
-    canvas.addEventListener('touchstart', sigStart, { passive: false });
-    canvas.addEventListener('touchmove', sigMove, { passive: false });
-    canvas.addEventListener('touchend', sigEnd);
+    // Use pointer events with capture so drawing continues
+    // when the cursor leaves the canvas and re-enters while held.
+    canvas.addEventListener('pointerdown', (e) => {
+      // Only respond to primary button (left click / first touch / pen tip)
+      if (e.button !== undefined && e.button !== 0) return;
+      try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+      sigStart(e);
+    });
+    canvas.addEventListener('pointermove', sigMove);
+    canvas.addEventListener('pointerup', (e) => {
+      try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+      sigEnd();
+    });
+    canvas.addEventListener('pointercancel', (e) => {
+      try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+      sigEnd();
+    });
   }
 }
 
 function sigPoint(e) {
   const canvas = document.getElementById('pdfsign-sig-canvas');
   const rect = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  // PointerEvent always provides clientX/clientY (works for mouse, touch, pen)
+  const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+  const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
   return { x: clientX - rect.left, y: clientY - rect.top };
 }
 
@@ -7887,6 +7913,15 @@ async function buildSignedPdfBytes() {
         y: absY + (absH - size) / 2 + size * 0.1,
         size: size,
         font: helv,
+        color: rgb(0, 0, 0),
+      });
+    } else if (field.type === 'crossout') {
+      // Draw a solid black horizontal line centered vertically across the field width
+      const lineThickness = Math.max(1, Math.min(absH * 0.4, 2.5));
+      page.drawLine({
+        start: { x: absX, y: absY + absH / 2 },
+        end:   { x: absX + absW, y: absY + absH / 2 },
+        thickness: lineThickness,
         color: rgb(0, 0, 0),
       });
     } else {
