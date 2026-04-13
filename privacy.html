@@ -154,71 +154,141 @@
   <div style="margin-bottom:48px;">
     <span style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent2);font-weight:600;display:block;margin-bottom:12px;">Legal</span>
     <h1 style="font-family:'Syne',sans-serif;font-size:clamp(32px,5vw,48px);font-weight:800;letter-spacing:-2px;margin-bottom:12px;">Privacy Policy</h1>
-    <p style="color:var(--muted);font-size:14px;">Last updated: April 2026</p>
+    <p style="color:var(--muted);font-size:14px;">Last updated: April 12, 2026</p>
   </div>
 
   <div style="display:flex;flex-direction:column;gap:40px;font-size:15px;line-height:1.8;color:var(--muted);">
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">1. Overview</h2>
-      <p>FindTheSnakes ("we", "us", "our") operates findthesnakes.com and provides a suite of creator tools including a Follower Audit, Image Converter, QR Code Generator, and Invoice Generator. We are committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">1. Who we are</h2>
+      <p>FindTheSnakes is a product of <strong style="color:var(--text);">MRLA Media LLC</strong>, operating at findthesnakes.com. We provide creator tools including Link in Bio, Media Kit, Grid Planner, Follow-Back Audit, Script Builder, Invoice Generator, Tax Tracker, PDF Signer, QR Generator, and Image Converter.</p>
+      <p style="margin-top:12px;">This policy explains what data we collect, why, and what rights you have. We try to be honest and straightforward — no dense legalese.</p>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">2. Data We Collect</h2>
-      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Account data:</strong> When you create an account, we collect your email address and store it securely via Supabase.</p>
-      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Subscription data:</strong> If you upgrade to Pro, we store your subscription status and tier. Payment information is handled entirely by Stripe, we never see or store your credit card details.</p>
-      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Tool data:</strong> For Pro users, we store feature data you create, such as your whitelist, snake list, audit history, unfollower log, and uploaded invoice logo. This data is associated with your account and stored securely.</p>
-      <p><strong style="color:var(--text);">Usage limits:</strong> Daily and monthly usage limits for tools (Image Converter, QR Generator, Invoice Generator) are tracked in your browser's local storage, not on our servers.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">2. Data we collect</h2>
+
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Account information:</strong> Your email address and a hashed password, handled by Supabase Auth. We never see your plaintext password.</p>
+
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Profile:</strong> Your chosen username, used to form your public URLs (findthesnakes.com/username).</p>
+
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Billing:</strong> Your subscription status (Free, Pro, Creator Max), tier, and Stripe customer ID. All payment information (card numbers, billing address) is handled entirely by Stripe. We never see or store your card details.</p>
+
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Content you create:</strong></p>
+      <ul style="padding-left:22px;margin-bottom:12px;">
+        <li><strong>Link in Bio:</strong> Display name, bio, avatar photo, links, hero images, theme, social handles</li>
+        <li><strong>Media Kit:</strong> Display name, headshot, audience stats, rate card, past collaborations, contact details</li>
+        <li><strong>Script Builder (Max only):</strong> Script titles, hooks, content blocks, section headers</li>
+        <li><strong>Tax Tracker (Pro only):</strong> Income entries you log, including amounts, sources, and dates</li>
+        <li><strong>Grid Planner (Pro only):</strong> Photos you upload for grid planning</li>
+        <li><strong>Follower Audit:</strong> Lists you mark as "whitelist" or "snake list", audit history (Pro)</li>
+        <li><strong>Invoice Generator:</strong> Uploaded logo (Pro), invoice details are generated client-side and not stored</li>
+      </ul>
+
+      <p><strong style="color:var(--text);">Usage limits:</strong> For free-tier tools, daily/monthly usage counts are stored in your browser's local storage, not on our servers.</p>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">3. Data We Do NOT Collect</h2>
-      <p style="margin-bottom:12px;">We do not store the raw files you use with our tools. The Follower Audit processes your Instagram export files in your browser, the file contents are not stored on our servers. The Image Converter converts images in your browser, your images are not stored on our servers. Your invoice logo is stored in Supabase if you choose to upload it as a Pro user.</p>
-      <p>We do not collect your Instagram password, login credentials, or any information from your Instagram account. We do not use cookies for advertising or tracking purposes.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">3. What we do NOT collect</h2>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">PDF Signer is fully client-side.</strong> PDF files you sign are processed entirely in your browser. They never touch our servers. Once you close the tab, the file is gone.</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Image Converter is fully client-side.</strong> Images you convert are processed in your browser. Nothing is uploaded.</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Follower Audit processes locally.</strong> When you upload Instagram's export files, the data is parsed in your browser. The raw files never leave your device.</p>
+      <p>We do not collect Instagram passwords, login credentials, or any data from your Instagram account beyond what you explicitly upload via official Instagram data exports.</p>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">4. How We Use Your Data</h2>
-      <p>We use your data solely to provide and improve the FindTheSnakes service. This includes authenticating your account, managing your subscription, storing your Pro feature data, and sending important account-related emails (such as password resets and billing receipts). We do not use your data for advertising and we never sell your data to third parties.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">4. What's public vs private</h2>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Public</strong> — intended to be publicly visible when you publish:</p>
+      <ul style="padding-left:22px;margin-bottom:12px;">
+        <li>Your Link in Bio page (if published): username, bio text, avatar, links, photos, theme</li>
+        <li>Your Media Kit page (if published): display name, headshot, bio, rate card, stats, collaborations</li>
+        <li>When someone shares your public URL, the page's avatar/headshot appears as a preview image in messaging apps</li>
+      </ul>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Private</strong> — only visible to you:</p>
+      <ul style="padding-left:22px;">
+        <li>Scripts, tax entries, grid plans, whitelist/snake list, audit history, unpublished drafts</li>
+        <li>Email address, subscription details, uploaded invoice logos</li>
+      </ul>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">5. Third-Party Services</h2>
-      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Supabase:</strong> We use Supabase for authentication and database storage. Your account data is stored on Supabase servers.</p>
-      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Stripe:</strong> We use Stripe to process payments. Stripe handles all payment data securely and in compliance with PCI-DSS standards.</p>
-      <p><strong style="color:var(--text);">Vercel:</strong> Our website is hosted on Vercel. Standard server access logs may be collected by Vercel as part of hosting.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">5. How we use your data</h2>
+      <p style="margin-bottom:12px;">We use your data to:</p>
+      <ul style="padding-left:22px;">
+        <li>Authenticate your account and keep you signed in</li>
+        <li>Process payments via Stripe and manage your subscription</li>
+        <li>Store and display your content on your dashboard</li>
+        <li>Render your published pages (Link in Bio, Media Kit) to visitors</li>
+        <li>Send important account emails (password resets, billing receipts, service notices)</li>
+        <li>Diagnose and fix bugs when they occur</li>
+      </ul>
+      <p style="margin-top:12px;"><strong style="color:var(--text);">We do not:</strong> sell your data, share it with advertisers, use it to train AI models, or use it for any purpose unrelated to operating this service.</p>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">6. Data Retention</h2>
-      <p>We retain your account data for as long as your account is active. If you cancel your Pro subscription, your Pro-specific data (audit history, snake list, whitelist, unfollower log) is retained for 30 days before being cleared. Your account remains active on the Free plan. If you request account deletion, we will delete all your data within 30 days.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">6. Cookies</h2>
+      <p style="margin-bottom:12px;">We use a minimal set of cookies, strictly for the service to function:</p>
+      <ul style="padding-left:22px;margin-bottom:12px;">
+        <li><strong>Authentication cookies</strong> (Supabase) — keep you signed in</li>
+        <li><strong>Session cookies</strong> — remember your preferences during a visit</li>
+        <li><strong>Local storage</strong> — track daily/monthly tool usage limits for free users, and cache preferences</li>
+      </ul>
+      <p>We do not use tracking cookies, advertising cookies, or third-party analytics cookies that identify you. We do not embed Facebook Pixel, Google Analytics (currently), or similar trackers on this site.</p>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">7. Your Rights</h2>
-      <p>You have the right to access, correct, or delete your personal data at any time. To request data deletion or a copy of your data, email us at hello@findthesnakes.com. We will respond within 30 days.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">7. Subprocessors</h2>
+      <p style="margin-bottom:12px;">We use these trusted third-party services to operate FindTheSnakes:</p>
+      <ul style="padding-left:22px;">
+        <li><strong style="color:var(--text);">Supabase</strong> — authentication, database, file storage. Primary data stored in AWS us-east-2 (Ohio, USA). <a href="https://supabase.com/privacy" target="_blank" rel="noopener" style="color:var(--accent2);">Privacy policy</a></li>
+        <li><strong style="color:var(--text);">Vercel</strong> — web hosting and serverless functions. USA-based. <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener" style="color:var(--accent2);">Privacy policy</a></li>
+        <li><strong style="color:var(--text);">Stripe</strong> — payment processing. PCI-DSS compliant. <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent2);">Privacy policy</a></li>
+        <li><strong style="color:var(--text);">Resend</strong> — transactional email delivery (password resets, receipts). <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener" style="color:var(--accent2);">Privacy policy</a></li>
+      </ul>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">8. Children's Privacy</h2>
-      <p>FindTheSnakes is not directed at children under 13. We do not knowingly collect personal information from children. If you believe a child has provided us with personal information, please contact us and we will delete it.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">8. Where your data is stored</h2>
+      <p>Your data is stored primarily in the United States (AWS us-east-2, Ohio). If you are accessing the service from outside the US, by using FindTheSnakes you consent to your data being transferred to and processed in the United States.</p>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">9. Changes to This Policy</h2>
-      <p>We may update this policy from time to time. We will notify you of significant changes by posting the new policy on this page with an updated date. Continued use of the service after changes constitutes acceptance of the new policy.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">9. Data retention</h2>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Active accounts:</strong> We retain your data as long as your account is active.</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Cancelled Pro/Max subscriptions:</strong> Pro or Max feature data (tax entries, grid plans, scripts, custom themes, media kit, audit history) is retained for 30 days after downgrade in case you resubscribe. After 30 days, this data is cleared.</p>
+      <p><strong style="color:var(--text);">Account deletion:</strong> If you request account deletion, all your data will be permanently removed within 30 days.</p>
     </div>
 
     <div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">10. Contact</h2>
-      <p>If you have any questions about this Privacy Policy, please email us at <a href="mailto:hello@findthesnakes.com" style="color:var(--accent2);"><span class="__cf_email__" data-cfemail="9af2fff6f6f5dafcf3f4feeef2ffe9f4fbf1ffe9b4f9f5f7">hello@findthesnakes.com</span></a>.</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">10. Your rights</h2>
+      <p style="margin-bottom:12px;">Regardless of where you live, you have the right to:</p>
+      <ul style="padding-left:22px;margin-bottom:12px;">
+        <li><strong>Access</strong> your data — request a copy of what we store</li>
+        <li><strong>Correct</strong> inaccurate data — most fields can be edited directly in your dashboard</li>
+        <li><strong>Delete</strong> your account and all associated data</li>
+        <li><strong>Export</strong> your data in a common format</li>
+        <li><strong>Object</strong> to how your data is processed</li>
+      </ul>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">California residents (CCPA):</strong> You have additional rights to know what personal information we collect, to request deletion, and to opt out of any "sale" of personal information. We do not sell personal information.</p>
+      <p><strong style="color:var(--text);">EU/UK residents (GDPR):</strong> We process your data under the legal bases of contract (providing the service you signed up for) and legitimate interest (operating and improving the service).</p>
+      <p style="margin-top:12px;">To exercise any of these rights, email <a href="/cdn-cgi/l/email-protection#7c14191010133c1a1512180814190f121d17190f521f1311" style="color:var(--accent2);"><span class="__cf_email__" data-cfemail="b7dfd2dbdbd8f7d1ded9d3c3dfd2c4d9d6dcd2c499d4d8da">[email&#160;protected]</span></a>. We'll respond within 30 days.</p>
     </div>
 
-  </div>
-</div>
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">11. Security</h2>
+      <p>We take reasonable measures to protect your data, including encrypted connections (HTTPS everywhere), industry-standard authentication practices, row-level security policies on all database tables, and limited access to production data. No online service is 100% secure, but we work to minimize risk. If we ever experience a data breach that affects you, we will notify you promptly as required by law.</p>
+    </div>
 
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">12. Children's privacy</h2>
+      <p>FindTheSnakes is not directed at children under 13. We do not knowingly collect personal information from anyone under 13. If you are a parent and believe your child has signed up, please contact us at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="721a171e1e1d32141b1c16061a17011c131917015c111d1f">[email&#160;protected]</a> and we will delete the account.</p>
+    </div>
 
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">13. Changes to this policy</h2>
+      <p>We may update this policy as the service evolves. We will update the "Last updated" date at the top. For material changes, we will notify you by email or via an in-app notice. Continued use of the service after updates constitutes acceptance of the updated policy.</p>
+    </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-document.querySelectorAll('.copy-year').forEach(el => el.textContent = ne
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">14. Contact</h2>
+      <p>Questions about privacy? Email <a href="/cdn-cgi/l/email-protection#ee868b828281ae8887808a9a868b9d808f858b9dc08d8183" style="color:var(--accent2);"><span class="__cf_email__

@@ -5514,7 +5514,8 @@ function buildPreviewHTML() {
     ${linksHtml ? `<div class="links">${linksHtml}</div>` : ''}
     ${videosHtml}
     ${bioState.show_branding ? '<div class="banner">Get your free link-in-bio at <strong>FindTheSnakes</strong></div>' : ''}
-  </div></body></html>`;
+  </div><script src="/cookie-banner.js"></script>
+</body></html>`;
 }
 
 function buildPreviewSocials(t) {
@@ -6548,7 +6549,8 @@ function buildMKPreviewHTML() {
     ${ratesHtml}
     ${contactHtml}
     ${bannerHtml}
-  </div></body></html>`;
+  </div><script src="/cookie-banner.js"></script>
+</body></html>`;
 }
 
 // =====================================================
@@ -8736,13 +8738,15 @@ function downloadInvoicePDF() {
 </div>
 ${notes ? `<div class="notes"><strong>Notes:</strong><br>${notes.replace(/\n/g,'<br>')}</div>` : ''}
 <div class="footer">Generated with FindTheSnakes Creator Tools &bull; findthesnakes.com</div>
-` + '</body></html>';
+` + '<script src="/cookie-banner.js"></script>
+</body></html>';
 
   // Combine html head + body content
   const fullHtml = html + htmlBody;
 
   // Add print CSS and save button to the invoice HTML before opening
-  const printHtml = fullHtml.replace('</body></html>', `
+  const printHtml = fullHtml.replace('<script src="/cookie-banner.js"></script>
+</body></html>', `
 <div id="save-bar" style="position:fixed;top:0;left:0;right:0;background:#7c3aed;color:#fff;padding:10px 16px;display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px;z-index:9999;font-family:Arial,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
   <span style="font-size:13px;font-weight:500;flex:1;min-width:200px;line-height:1.5;">&#x1F4BE; <strong>Desktop:</strong> Press Ctrl+P (or Cmd+P) &rarr; Save as PDF. &nbsp;&#x1F4F1; <strong>Mobile:</strong> Tap the Share button and choose Save to Files.</span>
   <button onclick="window.print()" style="background:#fff;color:#7c3aed;border:none;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">Print / Save PDF</button>
@@ -9747,6 +9751,7 @@ function buildScriptPrintHTML() {
   ${itemsHtml || '<div style="color:#999;font-style:italic;">No content yet.</div>'}
   ${brandFooter}
 </div>
+<script src="/cookie-banner.js"></script>
 </body></html>`;
 }
 
@@ -10290,5 +10295,6 @@ document.getElementById('tax-edit-modal').addEventListener('click', function(e) 
 });
 </script>
 
+<script src="/cookie-banner.js"></script>
 </body>
 </html>
