@@ -1267,6 +1267,46 @@
   .sidebar-signout { width: 100%; padding: 9px 12px; background: transparent; border: 1px solid var(--border-hover); color: var(--muted); border-radius: 8px; font-size: 13px; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 8px; }
   .sidebar-signout:hover { border-color: rgba(239,68,68,0.4); color: #fca5a5; background: rgba(239,68,68,0.05); }
 
+  /* === CREATOR MAX styling === */
+  .sidebar-bottom.max-mode {
+    background: linear-gradient(180deg, rgba(167,139,250,0.06) 0%, rgba(232,121,249,0.04) 100%);
+    border-top: 1px solid rgba(232,121,249,0.25);
+  }
+  .sidebar-bottom.max-mode .sidebar-user {
+    background: linear-gradient(135deg, rgba(167,139,250,0.18), rgba(232,121,249,0.18));
+    border: 1px solid rgba(232,121,249,0.35);
+    box-shadow: 0 0 16px rgba(232,121,249,0.15);
+  }
+  .sidebar-bottom.max-mode .sidebar-user-tier {
+    background: linear-gradient(135deg, #c4b5fd, #f0abfc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+  .sidebar-bottom.max-mode .sidebar-avatar {
+    background: linear-gradient(135deg, #a78bfa, #e879f9);
+    box-shadow: 0 0 12px rgba(232,121,249,0.4);
+  }
+  .sidebar-bottom.max-mode .sidebar-settings {
+    border-color: rgba(232,121,249,0.3);
+    color: #e9d5ff;
+  }
+  .sidebar-bottom.max-mode .sidebar-settings:hover {
+    border-color: rgba(232,121,249,0.55);
+    color: #fff;
+    background: rgba(232,121,249,0.1);
+  }
+  .sidebar-bottom.max-mode .sidebar-signout {
+    border-color: rgba(232,121,249,0.2);
+    color: #cdb4e6;
+  }
+  .sidebar-bottom.max-mode .sidebar-signout:hover {
+    border-color: rgba(239,68,68,0.4);
+    color: #fca5a5;
+    background: rgba(239,68,68,0.05);
+  }
+
   /* ── MAIN ── */
   .main { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
   .topbar { height: var(--topbar-height); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
@@ -3735,8 +3775,8 @@ function updateTierUI() {
   const upgradeBanner = document.getElementById('upgrade-banner');
 
   const badgeText = isCancelling
-    ? (max ? 'Max (Cancelling)' : 'Pro (Cancelling)')
-    : max ? 'Max' : pro ? 'Pro' : 'Free';
+    ? (max ? 'Creator Max (Cancelling)' : 'Pro (Cancelling)')
+    : max ? 'Creator Max' : pro ? 'Pro' : 'Free';
   const planText = isCancelling
     ? (max ? 'Max (Cancelling)' : 'Pro (Cancelling)')
     : max ? 'Creator Max' : pro ? 'Pro Plan' : 'Free Plan';
@@ -3746,6 +3786,9 @@ function updateTierUI() {
     tierBadge.className = 'tier-badge ' + (max ? 'max' : pro ? 'pro' : 'free');
   }
   if (sidebarTier) sidebarTier.textContent = planText;
+  // Toggle Creator Max styling on sidebar bottom
+  const sidebarBottom = document.querySelector('.sidebar-bottom');
+  if (sidebarBottom) sidebarBottom.classList.toggle('max-mode', max);
   if (upgradeBtn) upgradeBtn.style.display = pro ? 'none' : 'block';
   if (upgradeBanner) upgradeBanner.style.display = pro ? 'none' : 'flex';
 
