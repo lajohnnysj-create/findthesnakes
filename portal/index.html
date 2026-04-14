@@ -620,8 +620,16 @@ function showFullError(title, message) {
 // INIT
 // ============================================================
 function getTokenFromUrl() {
+  // Try query param first (e.g., /portal/?t=abc123 or direct /brand-portal.html?t=abc123)
   const params = new URLSearchParams(window.location.search);
-  return params.get('t');
+  const queryToken = params.get('t');
+  if (queryToken) return queryToken;
+
+  // Otherwise, parse from path (e.g., /deal/abc123 — Vercel rewrites preserve user-facing URL)
+  const pathMatch = window.location.pathname.match(/^\/deal\/([a-zA-Z0-9_-]+)/);
+  if (pathMatch) return pathMatch[1];
+
+  return null;
 }
 
 async function init() {
