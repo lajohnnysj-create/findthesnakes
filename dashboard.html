@@ -1370,6 +1370,92 @@
     stroke: #f0abfc;
   }
 
+  /* === PRO PLAN: sidebar bottom === */
+  .sidebar-bottom.pro-mode {
+    background: linear-gradient(180deg, rgba(167,139,250,0.05) 0%, rgba(124,58,237,0.04) 100%);
+    border-top: 1px solid rgba(167,139,250,0.22);
+  }
+  .sidebar-bottom.pro-mode .sidebar-user {
+    background: rgba(167,139,250,0.12);
+    border: 1px solid rgba(167,139,250,0.3);
+    box-shadow: 0 0 14px rgba(167,139,250,0.12);
+  }
+  .sidebar-bottom.pro-mode .sidebar-user-tier {
+    color: #c4b5fd;
+    font-weight: 700;
+  }
+  .sidebar-bottom.pro-mode .sidebar-avatar {
+    background: linear-gradient(135deg, #8b6ed8, #a78bfa);
+    box-shadow: 0 0 10px rgba(167,139,250,0.35);
+  }
+  .sidebar-bottom.pro-mode .sidebar-settings {
+    border-color: rgba(167,139,250,0.28);
+    color: #ddd6fe;
+  }
+  .sidebar-bottom.pro-mode .sidebar-settings:hover {
+    border-color: rgba(167,139,250,0.5);
+    color: #fff;
+    background: rgba(167,139,250,0.08);
+  }
+  .sidebar-bottom.pro-mode .sidebar-signout {
+    border-color: rgba(167,139,250,0.18);
+    color: #c4b5fd;
+  }
+  .sidebar-bottom.pro-mode .sidebar-signout:hover {
+    border-color: rgba(239,68,68,0.4);
+    color: #fca5a5;
+    background: rgba(239,68,68,0.05);
+  }
+
+  /* === PRO PLAN: sidebar nav hover & active === */
+  body.pro-user .sidebar-item:hover {
+    background: rgba(167,139,250,0.1);
+    color: #fff;
+  }
+  body.pro-user .sidebar-item:hover .sidebar-item-icon {
+    background: rgba(167,139,250,0.18);
+  }
+  body.pro-user .sidebar-item.active {
+    background: rgba(167,139,250,0.15);
+    color: #fff;
+    border: 1px solid rgba(167,139,250,0.3);
+  }
+  body.pro-user .sidebar-item.active .sidebar-item-icon {
+    background: rgba(167,139,250,0.22);
+  }
+
+  /* === PRO PLAN: welcome card === */
+  body.pro-user .welcome-badge {
+    background: rgba(167,139,250,0.12);
+    border: 1px solid rgba(167,139,250,0.32);
+    color: #c4b5fd;
+    box-shadow: 0 0 16px rgba(167,139,250,0.12);
+  }
+  body.pro-user .welcome-tool-card {
+    border-color: rgba(167,139,250,0.13);
+    background: rgba(167,139,250,0.025);
+  }
+  body.pro-user .welcome-tool-icon {
+    background: rgba(167,139,250,0.13);
+    border-color: rgba(167,139,250,0.22);
+  }
+  body.pro-user .welcome-tool-icon svg {
+    stroke: #c4b5fd;
+  }
+  body.pro-user .welcome-tool-card:hover {
+    border-color: rgba(167,139,250,0.4);
+    background: rgba(167,139,250,0.08);
+    box-shadow: 0 8px 24px rgba(167,139,250,0.14);
+    transform: translateY(-2px);
+  }
+  body.pro-user .welcome-tool-card:hover .welcome-tool-icon {
+    background: rgba(167,139,250,0.24);
+    border-color: rgba(167,139,250,0.4);
+  }
+  body.pro-user .welcome-tool-card:hover .welcome-tool-icon svg {
+    stroke: #ddd6fe;
+  }
+
   /* ── MAIN ── */
   .main { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
   .topbar { height: var(--topbar-height); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
@@ -2556,7 +2642,7 @@
     <!-- WELCOME SCREEN -->
     <div id="tool-welcome" style="display:block;">
       <div class="welcome-screen">
-        <div class="welcome-badge" id="welcome-badge">&#x1F40D; Creator Tools</div>
+        <div class="welcome-badge" id="welcome-badge">Creator Tools</div>
         <h1>Welcome back, creator. <span>Let's get to work.</span></h1>
         <p>Your creator toolkit is ready. Choose a tool from the sidebar or pick one below to get started.</p>
         <div class="welcome-tools-grid">
@@ -3974,12 +4060,20 @@ function updateTierUI() {
   if (sidebarTier) sidebarTier.textContent = planText;
   // Toggle Creator Max styling on sidebar bottom and body
   const sidebarBottom = document.querySelector('.sidebar-bottom');
-  if (sidebarBottom) sidebarBottom.classList.toggle('max-mode', max);
+  if (sidebarBottom) {
+    sidebarBottom.classList.toggle('max-mode', max);
+    sidebarBottom.classList.toggle('pro-mode', pro && !max);
+  }
   document.body.classList.toggle('max-user', max);
+  document.body.classList.toggle('pro-user', pro && !max);
   // Welcome badge text adapts to tier
   const welcomeBadge = document.getElementById('welcome-badge');
   if (welcomeBadge) {
-    welcomeBadge.innerHTML = max ? '&#x2728; You\'re in Control' : '&#x1F40D; Creator Tools';
+    welcomeBadge.innerHTML = max
+      ? '&#x2728; You\'re in Control'
+      : pro
+        ? '&#x2728; Pro Creator'
+        : 'Creator Tools';
   }
   if (upgradeBtn) upgradeBtn.style.display = pro ? 'none' : 'block';
   if (upgradeBanner) upgradeBanner.style.display = pro ? 'none' : 'flex';
