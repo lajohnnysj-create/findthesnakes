@@ -152,21 +152,7 @@
     <a href="about.html" onclick="closeMobileMenu()">About</a>
   </div>
   <div class="mobile-menu-bottom">
-    <button class="mobile-cta" onclick="openAuthModal()">Get started free</button>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="auth-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeAuthModal()" aria-label="Close">&#x2715;</button>
-    <h2 id="auth-title">Welcome back</h2>
-    <p id="auth-sub">Sign in to access your creator tools.</p>
-    <div class="modal-msg" id="auth-msg"></div>
-    <input class="modal-input" id="auth-email" type="email" aria-label="Email address" placeholder="Email address">
-    <input class="modal-input" id="auth-password" type="password" aria-label="Password" placeholder="Password">
-    <a class="forgot-link" id="forgot-password-link" onclick="handleForgotPassword()">Forgot password?</a>
-    <button class="modal-btn" id="auth-submit-btn" onclick="handleAuth()">Sign in</button>
-    <div class="modal-switch" id="auth-switch">No account? <a onclick="toggleAuthMode()">Create one free</a></div>
+    <button class="mobile-cta" onclick="window.location.href='index.html?action=signup'">Get started free</button>
   </div>
 </div>
 
@@ -200,7 +186,7 @@
     <a href="about.html">About</a>
   </div>
   <div class="nav-right">
-    <button class="btn-nav-cta" onclick="openAuthModal()">Get started free</button>
+    <button class="btn-nav-cta" onclick="window.location.href='index.html?action=signup'">Get started free</button>
   </div>
   <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -221,7 +207,7 @@
       <div class="plan-name">Free</div>
       <div class="plan-price">$0 <span>/ forever</span></div>
       <div class="plan-desc">The essentials to get started. No credit card required.</div>
-      <button class="plan-btn free" onclick="openAuthModal()">Get started free</button>
+      <button class="plan-btn free" onclick="window.location.href='index.html?action=signup'">Get started free</button>
       <div class="plan-features">
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Link in Bio</strong>, 10 links, 1 featured, 5 YouTube videos, 3 themes</span></div>
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Grid Planner</strong>. Plan your feed (session only, no save)</span></div>
@@ -249,7 +235,7 @@
       <div class="plan-name">Pro</div>
       <div class="plan-price">$10 <span>/ month</span></div>
       <div class="plan-desc">Everything in Free, plus full access to all tools and features.</div>
-      <button class="plan-btn pro" onclick="openAuthModal('monthly')">Get started with Pro</button>
+      <button class="plan-btn pro" onclick="window.location.href='index.html?action=signup'">Get started with Pro</button>
       <div class="plan-features">
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Link in Bio</strong>, 50 links, 3 featured, 20 YouTube videos, remove branding</span></div>
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Media Kit</strong>. Professional brand pitch page with rate card, downloadable PDF</span></div>
@@ -275,7 +261,7 @@
       <div class="plan-name">Creator Max</div>
       <div class="plan-price">$20 <span>/ month</span></div>
       <div class="plan-desc">Everything in Pro, plus full branding control to make your pages truly yours.</div>
-      <button class="plan-btn max" onclick="openAuthModal('max')">Get Creator Max</button>
+      <button class="plan-btn max" onclick="window.location.href='index.html?action=signup'">Get Creator Max</button>
       <div class="plan-features">
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Script Builder</strong>. Write, storyboard, and play back scripts cinematically. Teleprompter and PDF export included</span></div>
         <div class="plan-feature"><span class="plan-feature-check">&#x2713;</span><span><strong>Custom backgrounds</strong>. Upload your own image for Link in Bio and Media Kit</span></div>
@@ -310,65 +296,15 @@ const SUPABASE_URL = 'https://kjytapcgxukalwsyputk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMTcxMzEsImV4cCI6MjA5MDg5MzEzMX0.VC8mcU5lUeA56kG2gHssvl88EVWr018XttA86jpfEn0';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-let authMode = 'signin';
-let intendedPlan = null; // 'monthly' or 'max', remembered across signup for post-signup checkout
-let isLoggedIn = false;
 document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
 
+// If user is already logged in, send them to the dashboard
 sb.auth.getSession().then(({ data: { session } }) => {
   if (session?.user) {
-    isLoggedIn = true;
     window.location.href = 'dashboard.html';
   }
 });
 
-function openAuthModal(plan) {
-  // If already logged in, skip intent — just send to dashboard
-  // (user can manage their plan from Settings there)
-  if (isLoggedIn) {
-    window.location.href = 'dashboard.html';
-    return;
-  }
-  authMode = 'signup';
-  intendedPlan = plan || null;
-  if (intendedPlan) {
-    try { localStorage.setItem('fts_intended_plan', intendedPlan); } catch (e) {}
-  }
-  syncAuthModal();
-  document.getElementById('auth-modal').classList.add('open');
-}
-function closeAuthModal() { document.getElementById('auth-modal').classList.remove('open'); }
-function syncAuthModal() {
-  const isSignIn = authMode === 'signin';
-  document.getElementById('auth-title').textContent = isSignIn ? 'Welcome back' : 'Create your account';
-  document.getElementById('auth-sub').textContent = isSignIn ? 'Sign in to access your creator tools.' : 'Free to start. No credit card required.';
-  document.getElementById('auth-submit-btn').textContent = isSignIn ? 'Sign in' : 'Create account';
-  document.getElementById('auth-switch').innerHTML = isSignIn ? 'No account? <a onclick="toggleAuthMode()">Create one free</a>' : 'Already have one? <a onclick="toggleAuthMode()">Sign in</a>';
-  document.getElementById('auth-msg').style.display = 'none';
-  const fl = document.getElementById('forgot-password-link'); if (fl) fl.style.display = isSignIn ? 'block' : 'none';
-}
-function toggleAuthMode() { authMode = authMode === 'signin' ? 'signup' : 'signin'; syncAuthModal(); }
-function showAuthMsg(type, msg) { const el = document.getElementById('auth-msg'); if (!el) return; el.style.display = 'block'; el.className = 'modal-msg ' + type; el.textContent = msg; }
-async function handleAuth() {
-  const email = document.getElementById('auth-email').value.trim();
-  const password = document.getElementById('auth-password').value;
-  const btn = document.getElementById('auth-submit-btn');
-  if (!email || !password) { showAuthMsg('error', 'Please enter your email and password.'); return; }
-  btn.disabled = true; btn.innerHTML = '<span class="auth-spinner"></span>' + (authMode === 'signin' ? 'Signing in...' : 'Creating account...');
-  const result = authMode === 'signin' ? await sb.auth.signInWithPassword({ email, password }) : await sb.auth.signUp({ email, password });
-  btn.disabled = false; btn.textContent = authMode === 'signin' ? 'Sign in' : 'Create account';
-  if (result.error) showAuthMsg('error', result.error.message);
-  else if (authMode === 'signup') showAuthMsg('success', 'Check your email to confirm your account!');
-  else { closeAuthModal(); window.location.href = 'dashboard.html'; }
-}
-async function handleForgotPassword() {
-  const email = document.getElementById('auth-email').value.trim();
-  if (!email) { showAuthMsg('error', 'Enter your email above first.'); return; }
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://ryxa.io/reset-password.html' });
-  if (error) showAuthMsg('error', error.message); else showAuthMsg('success', 'Password reset email sent!');
-}
-document.getElementById('auth-modal').addEventListener('click', function(e) { if (e.target === this) closeAuthModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
 function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); document.getElementById('hamburger-btn').classList.toggle('open'); }
 function closeMobileMenu() { document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('hamburger-btn').classList.remove('open'); }
 </script>
