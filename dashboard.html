@@ -1522,6 +1522,31 @@
     .inv-grid-3 { grid-template-columns: 1fr !important; }
     .inv-meta-grid { grid-template-columns: 1fr !important; }
     .inv-download-row { flex-direction: column; }
+    #deal-modal > div { max-width: 100% !important; }
+    .deal-grid-2 { grid-template-columns: 1fr !important; }
+  }
+  /* Brand Deal CRM — shared styles */
+  .deal-label { display: block; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; }
+  .deal-input { width: 100%; background: var(--surface2); border: 1px solid var(--border-hover); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; box-sizing: border-box; transition: border-color 0.15s; }
+  .deal-input:focus { border-color: var(--accent); }
+  .deal-input:disabled { opacity: 0.55; cursor: not-allowed; }
+  select.deal-input { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a788f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  .deal-status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+  .deal-status-draft { background: rgba(122,120,143,0.15); color: #a8a6ba; border: 1px solid rgba(122,120,143,0.3); }
+  .deal-status-pending_contract { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+  .deal-status-active { background: rgba(124,58,237,0.15); color: #c4b5fd; border: 1px solid rgba(124,58,237,0.35); }
+  .deal-status-completed { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+  .deal-status-cancelled { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+  .deal-row { display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 1.2fr; gap: 14px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+  .deal-row:last-child { border-bottom: none; }
+  .deal-row:hover { background: var(--surface); }
+  .deal-row-header { display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 1.2fr; gap: 14px; padding: 10px 18px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 500; background: var(--surface); }
+  @media (max-width: 720px) {
+    .deal-row, .deal-row-header { grid-template-columns: 1fr; gap: 4px; }
+    .deal-row-header { display: none; }
+    .deal-row { padding: 16px; }
+    .deal-row-mobile-label { display: block !important; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px; }
+    .deal-row > div:first-child { margin-top: 0 !important; }
   }
   @media (max-width: 1100px) {
     .bio-grid { grid-template-columns: 1fr !important; min-width: 0 !important; }
@@ -2537,7 +2562,7 @@
     </button>
     <button class="sidebar-item" id="nav-deals" onclick="showTool('deals')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 12h18"/></svg></div>
-      <span class="sidebar-item-label">Brand Deal CRM</span>
+      <span class="sidebar-item-label">Brand Deals <span style="font-size:9px;font-weight:600;letter-spacing:0.08em;color:var(--muted);vertical-align:middle;margin-left:2px;">CRM</span></span>
       <span class="sidebar-item-badge max">MAX</span>
     </button>
     <button class="sidebar-item" id="nav-scripts" onclick="showTool('scripts')">
@@ -3877,18 +3902,22 @@
               <h2 style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px;">Brand Deal CRM</h2>
               <p style="color:var(--muted);font-size:14px;">Track your brand partnerships, deliverables, contracts, and revenue.</p>
             </div>
-            <button id="deals-new-btn" style="padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 24px var(--accent-glow);">+ New deal</button>
+            <button id="deals-new-btn" onclick="openDealModal()" style="padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 24px var(--accent-glow);">+ New deal</button>
           </div>
 
-          <!-- Empty state / deals list will render here -->
-          <div id="deals-content" style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
-            <div style="padding:60px 24px;text-align:center;">
+          <!-- Deals list container (populated by loadDealsList) -->
+          <div id="deals-content">
+            <!-- Empty state shown by default; loadDealsList() replaces with table -->
+            <div id="deals-empty" style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:60px 24px;text-align:center;">
               <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:16px;">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted);"><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 12h18"/></svg>
               </div>
               <div style="font-size:15px;color:var(--text);margin-bottom:4px;font-weight:500;">No brand deals yet</div>
-              <div style="font-size:13px;color:var(--muted);">Deal creation coming in the next update.</div>
+              <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">Track your brand partnerships, contracts, and revenue all in one place.</div>
+              <button onclick="openDealModal()" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 24px var(--accent-glow);">Create your first deal</button>
             </div>
+            <!-- Deals table rendered here when deals exist -->
+            <div id="deals-table" style="display:none;"></div>
           </div>
         </div>
       </div>
@@ -9638,7 +9667,652 @@ function initDealsCrm() {
   }
   if (upsell) upsell.style.display = 'none';
   if (main) main.style.display = 'block';
-  // TODO Phase 2.2: loadDealsList()
+  loadDealsList();
+}
+
+// =====================================================
+// BRAND DEAL CRM — State & Constants
+// =====================================================
+const DEAL_STATUS_LABELS = {
+  draft: 'Draft',
+  pending_contract: 'Pending Contract',
+  active: 'Active',
+  completed: 'Completed',
+  cancelled: 'Cancelled'
+};
+const DEAL_PAYMENT_LABELS = {
+  waiting: 'Waiting for Payment',
+  paid: 'Paid'
+};
+
+let dealsList = [];              // Cache of all user deals
+let currentDealId = null;        // Deal being edited in modal (null = new)
+let currentDealDeliverables = []; // Working list of deliverables in modal
+
+// =====================================================
+// BRAND DEAL CRM — List & Load
+// =====================================================
+async function loadDealsList() {
+  if (!currentUser || !isMax()) return;
+  const { data, error } = await sb
+    .from('brand_deals')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Failed to load deals:', error);
+    return;
+  }
+  dealsList = data || [];
+  renderDealsList();
+}
+
+function renderDealsList() {
+  const emptyEl = document.getElementById('deals-empty');
+  const tableEl = document.getElementById('deals-table');
+  if (!emptyEl || !tableEl) return;
+
+  if (dealsList.length === 0) {
+    emptyEl.style.display = 'block';
+    tableEl.style.display = 'none';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  tableEl.style.display = 'block';
+
+  const header = `
+    <div class="deal-row-header">
+      <div>Deal</div>
+      <div>Brand</div>
+      <div>Amount</div>
+      <div>Status</div>
+      <div>Payment</div>
+    </div>
+  `;
+
+  const rows = dealsList.map(d => {
+    const amount = formatUSD(d.deal_amount_cents);
+    const statusLabel = DEAL_STATUS_LABELS[d.status] || d.status;
+    const paymentLabel = DEAL_PAYMENT_LABELS[d.payment_status] || d.payment_status;
+    const paymentBadgeStyle = d.payment_status === 'paid'
+      ? 'background:rgba(74,222,128,0.12);color:#4ade80;border:1px solid rgba(74,222,128,0.3);'
+      : 'background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);';
+    return `
+      <div class="deal-row" onclick="openDealModal('${d.id}')">
+        <div>
+          <div style="font-weight:500;color:var(--text);font-size:14px;margin-bottom:2px;">${escapeHtml(d.deal_title)}</div>
+          ${d.campaign_end_date ? `<div style="font-size:11px;color:var(--muted);">Ends ${formatDateShort(d.campaign_end_date)}</div>` : ''}
+        </div>
+        <div style="font-size:13px;color:var(--text);">
+          <span class="deal-row-mobile-label" style="display:none;">Brand</span>
+          ${escapeHtml(d.brand_name)}
+        </div>
+        <div style="font-size:13px;color:var(--text);font-weight:500;">
+          <span class="deal-row-mobile-label" style="display:none;">Amount</span>
+          ${amount}
+        </div>
+        <div>
+          <span class="deal-row-mobile-label" style="display:none;">Status</span>
+          <span class="deal-status-badge deal-status-${d.status}">${statusLabel}</span>
+        </div>
+        <div>
+          <span class="deal-row-mobile-label" style="display:none;">Payment</span>
+          <span class="deal-status-badge" style="${paymentBadgeStyle}">${paymentLabel}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  tableEl.innerHTML = `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;overflow:hidden;">${header}${rows}</div>`;
+}
+
+function formatUSD(cents) {
+  if (!cents) return '$0';
+  const dollars = cents / 100;
+  return '$' + dollars.toLocaleString('en-US', { minimumFractionDigits: dollars % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 });
+}
+
+function formatDateShort(isoDate) {
+  if (!isoDate) return '';
+  const d = new Date(isoDate + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// =====================================================
+// BRAND DEAL CRM — Modal Open / Close
+// =====================================================
+function openDealModal(dealId) {
+  currentDealId = dealId || null;
+  currentDealDeliverables = [];
+
+  // Reset form
+  document.getElementById('deal-id').value = '';
+  document.getElementById('deal-title').value = '';
+  document.getElementById('deal-brand-name').value = '';
+  document.getElementById('deal-brand-contact-name').value = '';
+  document.getElementById('deal-brand-contact-email').value = '';
+  document.getElementById('deal-amount').value = '';
+  document.getElementById('deal-campaign-start').value = '';
+  document.getElementById('deal-campaign-end').value = '';
+  document.getElementById('deal-status').value = 'draft';
+  document.getElementById('deal-payment-status').value = 'waiting';
+  document.getElementById('deal-private-notes').value = '';
+  document.getElementById('deal-modal-msg').style.display = 'none';
+
+  if (dealId) {
+    // Edit mode — populate from cache
+    const deal = dealsList.find(d => d.id === dealId);
+    if (!deal) return;
+    document.getElementById('deal-modal-title').textContent = 'Edit Brand Deal';
+    document.getElementById('deal-id').value = deal.id;
+    document.getElementById('deal-title').value = deal.deal_title || '';
+    document.getElementById('deal-brand-name').value = deal.brand_name || '';
+    document.getElementById('deal-brand-contact-name').value = deal.brand_contact_name || '';
+    document.getElementById('deal-brand-contact-email').value = deal.brand_contact_email || '';
+    document.getElementById('deal-amount').value = deal.deal_amount_cents ? (deal.deal_amount_cents / 100).toString() : '';
+    document.getElementById('deal-campaign-start').value = deal.campaign_start_date || '';
+    document.getElementById('deal-campaign-end').value = deal.campaign_end_date || '';
+    document.getElementById('deal-status').value = deal.status || 'draft';
+    document.getElementById('deal-payment-status').value = deal.payment_status || 'waiting';
+    document.getElementById('deal-private-notes').value = deal.private_notes || '';
+    document.getElementById('deal-delete-btn').style.display = 'inline-block';
+    // Load deliverables for this deal
+    loadDealDeliverables(deal.id);
+    // Render contract state
+    renderContractUI(deal);
+  } else {
+    // New deal mode
+    document.getElementById('deal-modal-title').textContent = 'New Brand Deal';
+    document.getElementById('deal-delete-btn').style.display = 'none';
+    renderDeliverables();
+    renderContractUI(null);
+  }
+
+  // Apply lock state based on status
+  applyDealLockState();
+
+  document.getElementById('deal-modal').style.display = 'flex';
+}
+
+function closeDealModal() {
+  document.getElementById('deal-modal').style.display = 'none';
+  currentDealId = null;
+  currentDealDeliverables = [];
+}
+
+function handleDealStatusChange() {
+  applyDealLockState();
+}
+
+function applyDealLockState() {
+  const status = document.getElementById('deal-status').value;
+  const locked = status === 'completed' || status === 'cancelled';
+  const lockBanner = document.getElementById('deal-locked-banner');
+  const saveBtn = document.getElementById('deal-save-btn');
+
+  // Inputs that should be disabled when locked (everything except the status itself, so they can change to a lockable state)
+  const inputIds = [
+    'deal-title','deal-brand-name','deal-brand-contact-name','deal-brand-contact-email',
+    'deal-amount','deal-campaign-start','deal-campaign-end','deal-payment-status','deal-private-notes'
+  ];
+
+  if (locked && currentDealId) {
+    // Only show lock banner for EXISTING saved locked deals, not during new-deal creation
+    const savedDeal = dealsList.find(d => d.id === currentDealId);
+    const wasLockedWhenOpened = savedDeal && (savedDeal.status === 'completed' || savedDeal.status === 'cancelled');
+    if (wasLockedWhenOpened) {
+      lockBanner.style.display = 'block';
+      document.getElementById('deal-locked-title').textContent = savedDeal.status === 'completed' ? 'Deal Completed' : 'Deal Cancelled';
+      inputIds.forEach(id => { const el = document.getElementById(id); if (el) el.disabled = true; });
+      document.getElementById('deal-status').disabled = true;
+      if (saveBtn) saveBtn.style.display = 'none';
+      // Lock contract actions (View still works for reading)
+      ['deal-contract-choose-btn','deal-contract-replace-btn','deal-contract-remove-btn'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.disabled = true;
+      });
+      // Hide deliverable remove buttons
+      document.querySelectorAll('#deal-deliverables-list button[aria-label="Remove deliverable"]').forEach(b => b.style.display = 'none');
+      document.querySelectorAll('#deal-deliverables-list input, #deal-deliverables-list textarea').forEach(el => el.disabled = true);
+      const addDelivBtn = document.querySelector('button[onclick="addDeliverableRow()"]');
+      if (addDelivBtn) addDelivBtn.style.display = 'none';
+      return;
+    }
+  }
+
+  // Not locked (or new deal being set to completed) — allow editing
+  lockBanner.style.display = 'none';
+  inputIds.forEach(id => { const el = document.getElementById(id); if (el) el.disabled = false; });
+  document.getElementById('deal-status').disabled = false;
+  if (saveBtn) saveBtn.style.display = '';
+  ['deal-contract-choose-btn','deal-contract-replace-btn','deal-contract-remove-btn'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.disabled = false;
+  });
+  document.querySelectorAll('#deal-deliverables-list button[aria-label="Remove deliverable"]').forEach(b => b.style.display = '');
+  document.querySelectorAll('#deal-deliverables-list input, #deal-deliverables-list textarea').forEach(el => el.disabled = false);
+  const addDelivBtn = document.querySelector('button[onclick="addDeliverableRow()"]');
+  if (addDelivBtn) addDelivBtn.style.display = '';
+}
+
+async function revertDealToActive() {
+  if (!currentDealId) return;
+  const { error } = await sb.from('brand_deals').update({ status: 'active' }).eq('id', currentDealId);
+  if (error) {
+    showDealModalMsg('error', 'Failed to revert: ' + error.message);
+    return;
+  }
+  // Refresh and re-open
+  await loadDealsList();
+  openDealModal(currentDealId);
+}
+
+// =====================================================
+// BRAND DEAL CRM — Deliverables in modal
+// =====================================================
+async function loadDealDeliverables(dealId) {
+  const { data, error } = await sb
+    .from('deal_deliverables')
+    .select('*')
+    .eq('deal_id', dealId)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (error) {
+    console.error('Failed to load deliverables:', error);
+    currentDealDeliverables = [];
+  } else {
+    currentDealDeliverables = (data || []).map(d => ({
+      id: d.id,
+      title: d.title,
+      notes: d.notes || '',
+      submitted_url: d.submitted_url || '',
+      _existing: true
+    }));
+  }
+  renderDeliverables();
+}
+
+function addDeliverableRow() {
+  currentDealDeliverables.push({ id: null, title: '', notes: '', submitted_url: '', _existing: false });
+  renderDeliverables();
+  // Focus the new title input
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#deal-deliverables-list input[data-field="title"]');
+    if (inputs.length > 0) inputs[inputs.length - 1].focus();
+  }, 50);
+}
+
+function removeDeliverableRow(index) {
+  currentDealDeliverables.splice(index, 1);
+  renderDeliverables();
+}
+
+function updateDeliverableField(index, field, value) {
+  if (currentDealDeliverables[index]) {
+    currentDealDeliverables[index][field] = value;
+  }
+}
+
+function renderDeliverables() {
+  const listEl = document.getElementById('deal-deliverables-list');
+  const emptyEl = document.getElementById('deal-deliverables-empty');
+  if (!listEl || !emptyEl) return;
+
+  if (currentDealDeliverables.length === 0) {
+    listEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  listEl.innerHTML = currentDealDeliverables.map((d, i) => `
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;">
+        <input type="text" data-field="title" placeholder="e.g., 1 Instagram Reel" maxlength="200" value="${escapeHtml(d.title)}"
+          oninput="updateDeliverableField(${i}, 'title', this.value)"
+          class="deal-input" style="flex:1;">
+        <button type="button" onclick="removeDeliverableRow(${i})" aria-label="Remove deliverable" style="background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;padding:10px;cursor:pointer;flex-shrink:0;line-height:1;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </div>
+      <textarea data-field="notes" rows="2" placeholder="Notes (optional) — tone, length, dates, hashtags..." maxlength="1000"
+        oninput="updateDeliverableField(${i}, 'notes', this.value)"
+        class="deal-input" style="resize:vertical;min-height:50px;margin-bottom:8px;">${escapeHtml(d.notes)}</textarea>
+      <input type="url" data-field="submitted_url" placeholder="Submitted link (e.g., Instagram post URL)" maxlength="500" value="${escapeHtml(d.submitted_url)}"
+        oninput="updateDeliverableField(${i}, 'submitted_url', this.value)"
+        class="deal-input">
+    </div>
+  `).join('');
+}
+
+// =====================================================
+// BRAND DEAL CRM — Contract upload/view/remove
+// =====================================================
+const DEAL_CONTRACT_MAX_BYTES = 10 * 1024 * 1024; // 10 MB
+
+function renderContractUI(deal) {
+  const emptyEl = document.getElementById('deal-contract-empty');
+  const existingEl = document.getElementById('deal-contract-existing');
+  const saveFirstEl = document.getElementById('deal-contract-save-first');
+  const uploaderEl = document.getElementById('deal-contract-uploader');
+  const fileInput = document.getElementById('deal-contract-input');
+  if (fileInput) fileInput.value = ''; // reset so same file can be re-selected
+  document.getElementById('deal-contract-progress').style.display = 'none';
+
+  if (deal && deal.contract_file_path) {
+    emptyEl.style.display = 'none';
+    existingEl.style.display = 'flex';
+    document.getElementById('deal-contract-filename').textContent = deal.contract_file_name || 'contract.pdf';
+  } else {
+    existingEl.style.display = 'none';
+    emptyEl.style.display = 'block';
+    if (!currentDealId) {
+      // New unsaved deal — tell user to save first
+      saveFirstEl.style.display = 'block';
+      uploaderEl.style.display = 'none';
+    } else {
+      saveFirstEl.style.display = 'none';
+      uploaderEl.style.display = 'block';
+    }
+  }
+}
+
+async function handleContractFileSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Validate type
+  if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+    showDealModalMsg('error', 'Please upload a PDF file.');
+    event.target.value = '';
+    return;
+  }
+  // Validate size
+  if (file.size > DEAL_CONTRACT_MAX_BYTES) {
+    showDealModalMsg('error', 'File is too large. Maximum size is 10MB.');
+    event.target.value = '';
+    return;
+  }
+  if (!currentDealId) {
+    showDealModalMsg('error', 'Please save the deal before uploading a contract.');
+    event.target.value = '';
+    return;
+  }
+
+  const progressEl = document.getElementById('deal-contract-progress');
+  progressEl.style.display = 'block';
+  progressEl.textContent = 'Uploading...';
+
+  const storagePath = `${currentUser.id}/${currentDealId}.pdf`;
+
+  // Upload (upsert = overwrite if exists)
+  const { error: uploadError } = await sb.storage
+    .from('deal-contracts')
+    .upload(storagePath, file, {
+      contentType: 'application/pdf',
+      upsert: true
+    });
+
+  if (uploadError) {
+    progressEl.style.display = 'none';
+    showDealModalMsg('error', 'Upload failed: ' + uploadError.message);
+    event.target.value = '';
+    return;
+  }
+
+  // Update the deal record with the file path + name
+  const { error: updateError } = await sb
+    .from('brand_deals')
+    .update({ contract_file_path: storagePath, contract_file_name: file.name })
+    .eq('id', currentDealId);
+
+  if (updateError) {
+    progressEl.style.display = 'none';
+    showDealModalMsg('error', 'Upload succeeded but saving failed: ' + updateError.message);
+    return;
+  }
+
+  // Update local cache + UI
+  const dealIdx = dealsList.findIndex(d => d.id === currentDealId);
+  if (dealIdx >= 0) {
+    dealsList[dealIdx].contract_file_path = storagePath;
+    dealsList[dealIdx].contract_file_name = file.name;
+  }
+  renderContractUI(dealsList[dealIdx]);
+  showDealModalMsg('success', 'Contract uploaded.');
+  setTimeout(() => {
+    document.getElementById('deal-modal-msg').style.display = 'none';
+  }, 2500);
+  event.target.value = '';
+}
+
+async function viewContract() {
+  if (!currentDealId) return;
+  const deal = dealsList.find(d => d.id === currentDealId);
+  if (!deal || !deal.contract_file_path) return;
+
+  // Create a signed URL good for 1 hour
+  const { data, error } = await sb.storage
+    .from('deal-contracts')
+    .createSignedUrl(deal.contract_file_path, 3600);
+
+  if (error || !data?.signedUrl) {
+    showDealModalMsg('error', 'Failed to open contract: ' + (error?.message || 'unknown error'));
+    return;
+  }
+  window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
+}
+
+async function removeContract() {
+  if (!currentDealId) return;
+  const deal = dealsList.find(d => d.id === currentDealId);
+  if (!deal || !deal.contract_file_path) return;
+
+  if (!confirm('Remove the uploaded contract? This cannot be undone.')) return;
+
+  const path = deal.contract_file_path;
+
+  // Delete from storage (best effort — even if this fails we still clear the DB ref)
+  const { error: storageErr } = await sb.storage.from('deal-contracts').remove([path]);
+  if (storageErr) console.warn('Storage delete warning:', storageErr);
+
+  // Clear DB fields
+  const { error } = await sb
+    .from('brand_deals')
+    .update({ contract_file_path: null, contract_file_name: null })
+    .eq('id', currentDealId);
+
+  if (error) {
+    showDealModalMsg('error', 'Failed to remove: ' + error.message);
+    return;
+  }
+
+  // Update cache + UI
+  const dealIdx = dealsList.findIndex(d => d.id === currentDealId);
+  if (dealIdx >= 0) {
+    dealsList[dealIdx].contract_file_path = null;
+    dealsList[dealIdx].contract_file_name = null;
+  }
+  renderContractUI(dealsList[dealIdx]);
+}
+
+// =====================================================
+// BRAND DEAL CRM — Save
+// =====================================================
+async function saveDeal() {
+  const title = document.getElementById('deal-title').value.trim();
+  const brandName = document.getElementById('deal-brand-name').value.trim();
+  const brandContactName = document.getElementById('deal-brand-contact-name').value.trim();
+  const brandContactEmail = document.getElementById('deal-brand-contact-email').value.trim();
+  const amountRaw = document.getElementById('deal-amount').value;
+  const campaignStart = document.getElementById('deal-campaign-start').value || null;
+  const campaignEnd = document.getElementById('deal-campaign-end').value || null;
+  const status = document.getElementById('deal-status').value;
+  const paymentStatus = document.getElementById('deal-payment-status').value;
+  const privateNotes = document.getElementById('deal-private-notes').value.trim();
+
+  // Validation
+  if (!title) return showDealModalMsg('error', 'Deal title is required.');
+  if (!brandName) return showDealModalMsg('error', 'Brand name is required.');
+  if (brandContactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(brandContactEmail)) {
+    return showDealModalMsg('error', 'Please enter a valid brand contact email.');
+  }
+  const amountCents = amountRaw ? Math.round(parseFloat(amountRaw) * 100) : 0;
+  if (amountRaw && (isNaN(amountCents) || amountCents < 0)) {
+    return showDealModalMsg('error', 'Please enter a valid amount.');
+  }
+  if (campaignStart && campaignEnd && campaignEnd < campaignStart) {
+    return showDealModalMsg('error', 'Campaign end date cannot be before start date.');
+  }
+
+  const saveBtn = document.getElementById('deal-save-btn');
+  const origBtnText = saveBtn.textContent;
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving...';
+
+  const payload = {
+    user_id: currentUser.id,
+    deal_title: title,
+    brand_name: brandName,
+    brand_contact_name: brandContactName || null,
+    brand_contact_email: brandContactEmail || null,
+    deal_amount_cents: amountCents,
+    campaign_start_date: campaignStart,
+    campaign_end_date: campaignEnd,
+    status,
+    payment_status: paymentStatus,
+    private_notes: privateNotes || null
+  };
+
+  let dealId = currentDealId;
+  const wasNewDeal = !dealId;
+  if (dealId) {
+    // Update
+    const { error } = await sb.from('brand_deals').update(payload).eq('id', dealId);
+    if (error) {
+      saveBtn.disabled = false; saveBtn.textContent = origBtnText;
+      return showDealModalMsg('error', 'Failed to save: ' + error.message);
+    }
+  } else {
+    // Insert
+    const { data, error } = await sb.from('brand_deals').insert(payload).select().single();
+    if (error) {
+      saveBtn.disabled = false; saveBtn.textContent = origBtnText;
+      return showDealModalMsg('error', 'Failed to create: ' + error.message);
+    }
+    dealId = data.id;
+    currentDealId = dealId;
+  }
+
+  // Save deliverables: simplest approach — delete all existing, insert current
+  // (safe because deliverables are always small and always loaded fresh)
+  if (dealId) {
+    await sb.from('deal_deliverables').delete().eq('deal_id', dealId);
+    const deliverablesToInsert = currentDealDeliverables
+      .filter(d => (d.title || '').trim().length > 0)
+      .map((d, i) => ({
+        deal_id: dealId,
+        user_id: currentUser.id,
+        title: d.title.trim(),
+        notes: (d.notes || '').trim() || null,
+        submitted_url: (d.submitted_url || '').trim() || null,
+        sort_order: i
+      }));
+    if (deliverablesToInsert.length > 0) {
+      const { error: delivErr } = await sb.from('deal_deliverables').insert(deliverablesToInsert);
+      if (delivErr) {
+        console.error('Deliverables save failed:', delivErr);
+        // Non-fatal — deal saved successfully
+      }
+    }
+  }
+
+  saveBtn.disabled = false;
+  saveBtn.textContent = origBtnText;
+
+  if (wasNewDeal) {
+    // Keep modal open so user can upload contract. Refresh the modal title
+    // and switch from "new" mode to "edit" mode (shows delete button, enables upload).
+    await loadDealsList();
+    const savedDeal = dealsList.find(d => d.id === dealId);
+    if (savedDeal) {
+      document.getElementById('deal-modal-title').textContent = 'Edit Brand Deal';
+      document.getElementById('deal-delete-btn').style.display = 'inline-block';
+      renderContractUI(savedDeal);
+      showDealModalMsg('success', 'Deal saved. You can now upload a contract.');
+      setTimeout(() => {
+        const msg = document.getElementById('deal-modal-msg');
+        if (msg) msg.style.display = 'none';
+      }, 3000);
+    }
+  } else {
+    closeDealModal();
+    await loadDealsList();
+  }
+}
+
+function showDealModalMsg(type, text) {
+  const el = document.getElementById('deal-modal-msg');
+  el.style.display = 'block';
+  if (type === 'error') {
+    el.style.background = 'rgba(239,68,68,0.1)';
+    el.style.border = '1px solid rgba(239,68,68,0.2)';
+    el.style.color = '#fca5a5';
+  } else {
+    el.style.background = 'rgba(74,222,128,0.1)';
+    el.style.border = '1px solid rgba(74,222,128,0.2)';
+    el.style.color = '#86efac';
+  }
+  el.textContent = text;
+  // Scroll into view
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// =====================================================
+// BRAND DEAL CRM — Delete
+// =====================================================
+function promptDeleteDeal() {
+  if (!currentDealId) return;
+  document.getElementById('deal-delete-confirm-input').value = '';
+  document.getElementById('deal-delete-confirm-btn').disabled = true;
+  document.getElementById('deal-delete-confirm-btn').style.cursor = 'not-allowed';
+  document.getElementById('deal-delete-confirm-btn').style.color = 'rgba(252,165,165,0.5)';
+  document.getElementById('deal-delete-modal').style.display = 'flex';
+}
+
+function closeDealDeleteModal() {
+  document.getElementById('deal-delete-modal').style.display = 'none';
+}
+
+function updateDealDeleteButton() {
+  const input = document.getElementById('deal-delete-confirm-input').value;
+  const btn = document.getElementById('deal-delete-confirm-btn');
+  if (input === 'DELETE') {
+    btn.disabled = false;
+    btn.style.cursor = 'pointer';
+    btn.style.color = '#fca5a5';
+    btn.style.background = 'rgba(239,68,68,0.15)';
+  } else {
+    btn.disabled = true;
+    btn.style.cursor = 'not-allowed';
+    btn.style.color = 'rgba(252,165,165,0.5)';
+  }
+}
+
+async function confirmDeleteDeal() {
+  if (!currentDealId) return;
+  const btn = document.getElementById('deal-delete-confirm-btn');
+  btn.disabled = true;
+  btn.textContent = 'Deleting...';
+  const { error } = await sb.from('brand_deals').delete().eq('id', currentDealId);
+  btn.textContent = 'Delete forever';
+  if (error) {
+    alert('Failed to delete: ' + error.message);
+    return;
+  }
+  closeDealDeleteModal();
+  closeDealModal();
+  await loadDealsList();
 }
 
 function initScriptsTool() {
@@ -11067,9 +11741,16 @@ initAuth();
 document.getElementById('signout-modal').addEventListener('click', function(e) {
   if (e.target === this) closeSignoutModal();
 });
+
+// Brand Deal CRM — click-outside-to-close
+document.getElementById('deal-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeDealModal();
+});
+document.getElementById('deal-delete-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeDealDeleteModal();
+});
 </script>
 
-<!-- TAX ENTRY EDIT MODAL -->
 <!-- BIO CROPPER MODAL -->
 <div id="bio-cropper-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;pointer-events:all;">
   <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:20px;width:100%;max-width:540px;margin:20px;pointer-events:all;">
@@ -11084,6 +11765,168 @@ document.getElementById('signout-modal').addEventListener('click', function(e) {
     <div style="display:flex;gap:10px;margin-top:14px;">
       <button onclick="closeCropper()" style="flex:1;padding:11px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:10px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
       <button id="bio-cropper-confirm" onclick="confirmCrop()" style="flex:2;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);">Use photo</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- =============================================== -->
+<!-- BRAND DEAL CRM — Deal Create/Edit Modal         -->
+<!-- =============================================== -->
+<div id="deal-modal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.7);align-items:flex-start;justify-content:center;pointer-events:all;overflow-y:auto;padding:40px 20px;">
+  <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:720px;pointer-events:all;position:relative;margin:auto;">
+    <button onclick="closeDealModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#7a788f;font-size:20px;cursor:pointer;z-index:2;" aria-label="Close">&#x2715;</button>
+
+    <!-- Locked banner (shown when deal is Completed or Cancelled) -->
+    <div id="deal-locked-banner" style="display:none;padding:14px 24px;background:rgba(74,222,128,0.08);border-bottom:1px solid rgba(74,222,128,0.2);border-radius:20px 20px 0 0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#4ade80;flex-shrink:0;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div>
+            <div id="deal-locked-title" style="font-size:13px;font-weight:600;color:#4ade80;">Deal Completed</div>
+            <div style="font-size:11px;color:var(--muted);">This deal is locked. Revert to Active to make changes.</div>
+          </div>
+        </div>
+        <button onclick="revertDealToActive()" style="padding:7px 14px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.35);color:#c4b5fd;border-radius:7px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Revert to Active</button>
+      </div>
+    </div>
+
+    <div style="padding:28px 30px 32px;">
+      <h2 id="deal-modal-title" style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:4px;letter-spacing:-0.3px;">New Brand Deal</h2>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:22px;">Fill in the deal details. You can share with the brand once saved.</p>
+
+      <input type="hidden" id="deal-id">
+
+      <!-- BASIC INFO -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+        <div style="grid-column:1 / -1;">
+          <label class="deal-label">Deal Title *</label>
+          <input type="text" id="deal-title" placeholder="e.g., Spring Collection Reel" maxlength="120" class="deal-input">
+        </div>
+        <div>
+          <label class="deal-label">Brand Name *</label>
+          <input type="text" id="deal-brand-name" placeholder="e.g., Nike" maxlength="120" class="deal-input">
+        </div>
+        <div>
+          <label class="deal-label">Brand Contact Name</label>
+          <input type="text" id="deal-brand-contact-name" placeholder="e.g., Sarah Johnson" maxlength="120" class="deal-input">
+        </div>
+        <div>
+          <label class="deal-label">Brand Contact Email</label>
+          <input type="email" id="deal-brand-contact-email" placeholder="contact@brand.com" maxlength="240" class="deal-input">
+        </div>
+        <div>
+          <label class="deal-label">Deal Amount (USD)</label>
+          <input type="number" id="deal-amount" placeholder="0" min="0" step="0.01" class="deal-input">
+        </div>
+      </div>
+
+      <!-- DATES -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+        <div>
+          <label class="deal-label">Campaign Start Date</label>
+          <input type="date" id="deal-campaign-start" class="deal-input">
+        </div>
+        <div>
+          <label class="deal-label">Campaign End Date</label>
+          <input type="date" id="deal-campaign-end" class="deal-input">
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">We'll remind you 3 days before.</div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+        <div>
+          <label class="deal-label">Deal Status</label>
+          <select id="deal-status" class="deal-input" onchange="handleDealStatusChange()">
+            <option value="draft">Draft</option>
+            <option value="pending_contract">Pending Contract</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div>
+          <label class="deal-label">Payment Status</label>
+          <select id="deal-payment-status" class="deal-input">
+            <option value="waiting">Waiting for Payment</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- DELIVERABLES -->
+      <div style="margin-bottom:18px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <label class="deal-label" style="margin-bottom:0;">Deliverables</label>
+          <button type="button" onclick="addDeliverableRow()" style="padding:5px 10px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">+ Add deliverable</button>
+        </div>
+        <div id="deal-deliverables-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <div id="deal-deliverables-empty" style="padding:20px;background:var(--surface2);border:1px dashed var(--border);border-radius:10px;text-align:center;font-size:12px;color:var(--muted);">No deliverables yet. Click "+ Add deliverable" to start.</div>
+      </div>
+
+      <!-- CONTRACT UPLOAD -->
+      <div style="margin-bottom:18px;">
+        <label class="deal-label">Signed Contract <span style="font-weight:400;color:var(--muted);font-size:11px;text-transform:none;letter-spacing:0;">(PDF, max 10MB)</span></label>
+        <!-- Empty state: no contract uploaded -->
+        <div id="deal-contract-empty" style="padding:16px;background:var(--surface2);border:1px dashed var(--border);border-radius:10px;text-align:center;">
+          <div id="deal-contract-save-first" style="display:none;font-size:12px;color:var(--muted);">Save the deal first, then upload the contract here.</div>
+          <div id="deal-contract-uploader" style="display:none;">
+            <input type="file" id="deal-contract-input" accept="application/pdf" style="display:none;" onchange="handleContractFileSelected(event)">
+            <button type="button" id="deal-contract-choose-btn" onclick="document.getElementById('deal-contract-input').click()" style="padding:9px 16px;background:transparent;border:1px solid var(--border-hover);color:var(--text);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Choose PDF</button>
+            <div style="font-size:11px;color:var(--muted);margin-top:8px;">Drag and drop coming soon</div>
+          </div>
+        </div>
+        <!-- Populated state: contract exists -->
+        <div id="deal-contract-existing" style="display:none;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;display:none;align-items:center;gap:12px;">
+          <div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#c4b5fd;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div id="deal-contract-filename" style="font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">contract.pdf</div>
+            <div style="font-size:11px;color:var(--muted);">PDF uploaded</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <button type="button" id="deal-contract-view-btn" onclick="viewContract()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">View</button>
+            <button type="button" id="deal-contract-replace-btn" onclick="document.getElementById('deal-contract-input').click()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Replace</button>
+            <button type="button" id="deal-contract-remove-btn" onclick="removeContract()" style="padding:7px 12px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Remove</button>
+          </div>
+        </div>
+        <!-- Upload progress indicator -->
+        <div id="deal-contract-progress" style="display:none;margin-top:8px;font-size:12px;color:var(--muted);">Uploading...</div>
+      </div>
+
+      <!-- PRIVATE NOTES -->
+      <div style="margin-bottom:18px;">
+        <label class="deal-label">Private Notes <span style="font-weight:400;color:var(--muted);font-size:11px;text-transform:none;letter-spacing:0;">(only visible to you)</span></label>
+        <textarea id="deal-private-notes" rows="3" placeholder="Internal notes, reminders, talking points..." class="deal-input" style="resize:vertical;min-height:70px;"></textarea>
+      </div>
+
+      <!-- Error/success message -->
+      <div id="deal-modal-msg" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;"></div>
+
+      <!-- ACTIONS -->
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button id="deal-save-btn" onclick="saveDeal()" style="flex:1;min-width:140px;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);">Save deal</button>
+        <button onclick="closeDealModal()" style="padding:12px 20px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
+        <button id="deal-delete-btn" onclick="promptDeleteDeal()" style="display:none;padding:12px 16px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================== -->
+<!-- BRAND DEAL CRM — Delete Confirmation Modal      -->
+<!-- =============================================== -->
+<div id="deal-delete-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;pointer-events:all;">
+  <div style="background:#0f0f1a;border:1px solid rgba(239,68,68,0.3);border-radius:16px;padding:28px;position:relative;width:100%;max-width:420px;pointer-events:all;margin:20px;">
+    <h3 style="font-family:Syne,sans-serif;font-size:18px;font-weight:700;margin-bottom:6px;color:#fca5a5;">Delete this deal?</h3>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:8px;line-height:1.5;">This permanently removes the deal, all deliverables, messages, and the uploaded contract. This cannot be undone.</p>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5;">Type <strong style="color:#fca5a5;">DELETE</strong> to confirm.</p>
+    <input type="text" id="deal-delete-confirm-input" placeholder="DELETE" class="deal-input" style="margin-bottom:14px;" oninput="updateDealDeleteButton()">
+    <div style="display:flex;gap:10px;">
+      <button id="deal-delete-confirm-btn" onclick="confirmDeleteDeal()" disabled style="flex:1;padding:11px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:rgba(252,165,165,0.5);border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:not-allowed;">Delete forever</button>
+      <button onclick="closeDealDeleteModal()" style="padding:11px 18px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
     </div>
   </div>
 </div>
