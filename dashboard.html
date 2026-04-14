@@ -3275,6 +3275,53 @@
           </div>
         </div>
 
+        <!-- Adjust section (brightness/contrast/saturation + rotate/flip) -->
+        <div id="img-adjust-area" style="display:none;margin-bottom:16px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <label style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Adjust</label>
+            <button type="button" onclick="resetAllAdjustments()" style="background:none;border:1px solid var(--border-hover);color:var(--muted);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">Reset all</button>
+          </div>
+          <!-- Sliders -->
+          <div style="display:grid;grid-template-columns:1fr;gap:12px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <label for="img-brightness" style="font-size:12px;color:var(--muted);">Brightness</label>
+                <span id="img-brightness-val" style="font-size:11px;color:var(--muted);">0</span>
+              </div>
+              <input type="range" id="img-brightness" min="-100" max="100" value="0" step="1" style="width:100%;accent-color:var(--accent);" aria-label="Brightness">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <label for="img-contrast" style="font-size:12px;color:var(--muted);">Contrast</label>
+                <span id="img-contrast-val" style="font-size:11px;color:var(--muted);">0</span>
+              </div>
+              <input type="range" id="img-contrast" min="-100" max="100" value="0" step="1" style="width:100%;accent-color:var(--accent);" aria-label="Contrast">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <label for="img-saturation" style="font-size:12px;color:var(--muted);">Saturation</label>
+                <span id="img-saturation-val" style="font-size:11px;color:var(--muted);">0</span>
+              </div>
+              <input type="range" id="img-saturation" min="-100" max="100" value="0" step="1" style="width:100%;accent-color:var(--accent);" aria-label="Saturation">
+            </div>
+          </div>
+          <!-- Rotate + Flip buttons -->
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
+            <button type="button" onclick="rotateImage90()" style="flex:1;min-width:100px;background:var(--surface);border:1px solid var(--border-hover);color:var(--text);font-size:12px;padding:9px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Rotate 90°
+            </button>
+            <button type="button" onclick="flipImageH()" style="flex:1;min-width:100px;background:var(--surface);border:1px solid var(--border-hover);color:var(--text);font-size:12px;padding:9px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+              Flip H
+            </button>
+            <button type="button" onclick="flipImageV()" style="flex:1;min-width:100px;background:var(--surface);border:1px solid var(--border-hover);color:var(--text);font-size:12px;padding:9px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(90deg);"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+              Flip V
+            </button>
+          </div>
+        </div>
+
         <!-- Options -->
         <div id="img-options" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
           <!-- Format + Quality row -->
@@ -3561,16 +3608,6 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <span>Private · in-browser</span>
               </div>
-            </div>
-          </div>
-
-          <!-- Tip row -->
-          <div class="pdfsign-tip-row">
-            <div class="pdfsign-tip">
-              <strong>Tip:</strong> Drag a field onto the PDF. Click a placed field to edit. Drag its corner to resize, or the body to move.
-            </div>
-            <div class="pdfsign-tip" style="margin-top:8px;font-size:11px;color:var(--muted2);opacity:0.75;">
-              Files are processed in your browser only — never uploaded or stored. Note: not designed for HIPAA, legal chain-of-custody, or other regulated workflows.
             </div>
           </div>
 
@@ -8531,6 +8568,21 @@ function initImageConverter() {
     stage.addEventListener('touchstart', startStagePan, { passive: false });
   }
 
+  // Adjust sliders (brightness / contrast / saturation)
+  ['brightness', 'contrast', 'saturation'].forEach(kind => {
+    const el = document.getElementById('img-' + kind);
+    if (!el || el.__wired) return;
+    el.__wired = true;
+    el.addEventListener('input', function() {
+      const v = parseInt(this.value) || 0;
+      if (kind === 'brightness') imgBrightness = v;
+      if (kind === 'contrast')   imgContrast   = v;
+      if (kind === 'saturation') imgSaturation = v;
+      updateAdjustLabels();
+      applyImageVisualEffects();
+    });
+  });
+
   // Crop box drag (move + resize handles)
   const cropBoxEl = document.getElementById('img-crop-box');
   if (cropBoxEl && !cropBoxEl.__wired) {
@@ -8592,6 +8644,8 @@ function clearImage() {
   imgFile = null;
   document.getElementById('img-preview-area').style.display = 'none';
   document.getElementById('img-crop-area').style.display = 'none';
+  const adjustArea = document.getElementById('img-adjust-area');
+  if (adjustArea) adjustArea.style.display = 'none';
   document.getElementById('img-options').style.display = 'none';
   document.getElementById('img-convert-btn').style.display = 'none';
   document.getElementById('img-result').style.display = 'none';
@@ -8606,6 +8660,11 @@ function clearImage() {
   if (inner) inner.style.transform = 'translate(0px,0px) scale(1)';
   imgCropZoom = 1;
   imgCropPan = { x: 0, y: 0 };
+  // Reset adjustments
+  imgBrightness = 0; imgContrast = 0; imgSaturation = 0;
+  imgRotation = 0; imgFlipH = false; imgFlipV = false;
+  const imgEl = document.getElementById('img-crop-src');
+  if (imgEl) { imgEl.style.filter = ''; imgEl.style.transform = ''; }
 }
 
 // ───── Crop box state ─────
@@ -8617,6 +8676,12 @@ let imgCropMode = 'original';       // 'free' | '1:1' | '4:5' | '9:16' | '16:9' 
 let imgCropLocked = false;          // true = crop committed; box can't move or resize
 let imgCropZoom = 1;                // 1 = 100%, scales the image + crop box together
 let imgCropPan = { x: 0, y: 0 };    // Translation offset in CSS pixels (screen space)
+let imgBrightness = 0;              // -100 to +100
+let imgContrast = 0;                // -100 to +100
+let imgSaturation = 0;              // -100 to +100
+let imgRotation = 0;                // 0, 90, 180, 270 degrees
+let imgFlipH = false;
+let imgFlipV = false;
 
 function setupCropStage(dataUrl) {
   const stageImg = document.getElementById('img-crop-src');
@@ -8640,11 +8705,17 @@ function setupCropStage(dataUrl) {
           h: Math.round(imgNatural.h * scale)
         };
       }
+      // Initialize crop box (will be overwritten by applyAspectPreset below)
       imgCropBox = { x: 0, y: 0, w: imgDisplaySize.w, h: imgDisplaySize.h };
+      // Reset all adjustments for new image
+      resetAllAdjustments();
       // Reset zoom to 100% for new image
       resetCropZoom();
       // Default new images to "Original" (full image, no crop applied by default)
       applyAspectPreset('original');
+      // Show adjust panel
+      const adjustArea = document.getElementById('img-adjust-area');
+      if (adjustArea) adjustArea.style.display = 'block';
     });
   };
   stageImg.src = dataUrl;
@@ -8810,18 +8881,20 @@ function renderCropBox() {
 }
 
 // Compute what region of the ORIGINAL image lies inside the stage-fixed crop box,
-// accounting for current zoom and pan of the image.
-// Returns {x, y, w, h} in natural-pixel coordinates of the original image.
+// accounting for current zoom and pan of the image (and rotation).
+// Returns {x, y, w, h} in natural-pixel coordinates of the original image AFTER rotation/flip.
 function computeCropRegionInNaturalPixels() {
   const stage = document.getElementById('img-crop-stage');
   const stageW = stage.clientWidth;
   const stageH = stage.clientHeight;
+  const effDisp = getEffectiveImageDisplaySize();
+  const effNat = getEffectiveNaturalSize();
   // Image center in stage CSS pixels (image is flex-centered, then translated)
   const imgCenterX = stageW / 2 + imgCropPan.x;
   const imgCenterY = stageH / 2 + imgCropPan.y;
-  // Scaled image dimensions in stage space
-  const scaledImgW = imgDisplaySize.w * imgCropZoom;
-  const scaledImgH = imgDisplaySize.h * imgCropZoom;
+  // Scaled image dimensions in stage space (using effective dims due to rotation)
+  const scaledImgW = effDisp.w * imgCropZoom;
+  const scaledImgH = effDisp.h * imgCropZoom;
   // Top-left of image in stage space
   const imgLeft = imgCenterX - scaledImgW / 2;
   const imgTop  = imgCenterY - scaledImgH / 2;
@@ -8830,18 +8903,18 @@ function computeCropRegionInNaturalPixels() {
   const cropTop  = imgCropBox.y;
   const cropRight = imgCropBox.x + imgCropBox.w;
   const cropBottom = imgCropBox.y + imgCropBox.h;
-  // Convert to DISPLAYED-image space (0 to imgDisplaySize.w/h)
+  // Convert to EFFECTIVE displayed-image space
   const dispX1 = (cropLeft   - imgLeft) / imgCropZoom;
   const dispY1 = (cropTop    - imgTop)  / imgCropZoom;
   const dispX2 = (cropRight  - imgLeft) / imgCropZoom;
   const dispY2 = (cropBottom - imgTop)  / imgCropZoom;
-  // Clip to displayed image bounds (so user can't include areas outside image)
-  const clipX1 = Math.max(0, Math.min(imgDisplaySize.w, dispX1));
-  const clipY1 = Math.max(0, Math.min(imgDisplaySize.h, dispY1));
-  const clipX2 = Math.max(0, Math.min(imgDisplaySize.w, dispX2));
-  const clipY2 = Math.max(0, Math.min(imgDisplaySize.h, dispY2));
-  // Map to natural image pixels
-  const scale = imgNatural.w / imgDisplaySize.w;
+  // Clip to effective displayed image bounds
+  const clipX1 = Math.max(0, Math.min(effDisp.w, dispX1));
+  const clipY1 = Math.max(0, Math.min(effDisp.h, dispY1));
+  const clipX2 = Math.max(0, Math.min(effDisp.w, dispX2));
+  const clipY2 = Math.max(0, Math.min(effDisp.h, dispY2));
+  // Map to effective natural image pixels (post-rotation)
+  const scale = effNat.w / effDisp.w;
   return {
     x: Math.round(clipX1 * scale),
     y: Math.round(clipY1 * scale),
@@ -8850,12 +8923,102 @@ function computeCropRegionInNaturalPixels() {
   };
 }
 
+// Returns the effective on-screen dimensions of the image, accounting for rotation.
+// When rotated 90° or 270°, width and height are visually swapped.
+function getEffectiveImageDisplaySize() {
+  if (imgRotation === 90 || imgRotation === 270) {
+    return { w: imgDisplaySize.h, h: imgDisplaySize.w };
+  }
+  return { w: imgDisplaySize.w, h: imgDisplaySize.h };
+}
+
+// Returns effective natural dimensions after rotation
+function getEffectiveNaturalSize() {
+  if (imgRotation === 90 || imgRotation === 270) {
+    return { w: imgNatural.h, h: imgNatural.w };
+  }
+  return { w: imgNatural.w, h: imgNatural.h };
+}
+
 function applyInnerTransform() {
   const inner = document.getElementById('img-crop-inner');
   if (!inner) return;
+  // Translate + zoom
   inner.style.transform = `translate(${imgCropPan.x}px, ${imgCropPan.y}px) scale(${imgCropZoom})`;
   // Re-render crop box so dimensions readout reflects current image position
   if (imgCropBox) renderCropBox();
+  // Apply image-level transforms (rotation, flip) and filters (brightness/contrast/saturation)
+  applyImageVisualEffects();
+}
+
+// Build a CSS filter string from current brightness/contrast/saturation values
+function buildImageFilterString() {
+  // Slider range -100..+100 maps to CSS:
+  //   brightness: 0..2 (1 = unchanged)
+  //   contrast:   0..2 (1 = unchanged)
+  //   saturate:   0..2 (1 = unchanged)
+  const b = 1 + (imgBrightness / 100);
+  const c = 1 + (imgContrast / 100);
+  const s = 1 + (imgSaturation / 100);
+  return `brightness(${b}) contrast(${c}) saturate(${s})`;
+}
+
+// Apply filter + rotation/flip to the image element for live preview
+function applyImageVisualEffects() {
+  const imgEl = document.getElementById('img-crop-src');
+  if (!imgEl) return;
+  imgEl.style.filter = buildImageFilterString();
+  // Apply rotation/flip via a separate transform on the IMAGE itself.
+  // Zoom/pan lives on #img-crop-inner; this keeps them independent.
+  const sx = imgFlipH ? -1 : 1;
+  const sy = imgFlipV ? -1 : 1;
+  imgEl.style.transform = `rotate(${imgRotation}deg) scale(${sx}, ${sy})`;
+  imgEl.style.transformOrigin = 'center center';
+}
+
+function updateAdjustLabels() {
+  const b = document.getElementById('img-brightness-val');
+  const c = document.getElementById('img-contrast-val');
+  const s = document.getElementById('img-saturation-val');
+  if (b) b.textContent = imgBrightness > 0 ? `+${imgBrightness}` : `${imgBrightness}`;
+  if (c) c.textContent = imgContrast > 0 ? `+${imgContrast}` : `${imgContrast}`;
+  if (s) s.textContent = imgSaturation > 0 ? `+${imgSaturation}` : `${imgSaturation}`;
+}
+
+function resetAllAdjustments() {
+  imgBrightness = 0;
+  imgContrast = 0;
+  imgSaturation = 0;
+  imgRotation = 0;
+  imgFlipH = false;
+  imgFlipV = false;
+  const b = document.getElementById('img-brightness');
+  const c = document.getElementById('img-contrast');
+  const s = document.getElementById('img-saturation');
+  if (b) b.value = '0';
+  if (c) c.value = '0';
+  if (s) s.value = '0';
+  updateAdjustLabels();
+  applyImageVisualEffects();
+  // Rotation changed the effective image dimensions, so re-center the crop
+  if (imgCropBox) applyAspectPreset(imgCropMode);
+}
+
+function rotateImage90() {
+  imgRotation = (imgRotation + 90) % 360;
+  applyImageVisualEffects();
+  // Rotating 90° swaps width and height effectively. Reset crop to fit new orientation.
+  if (imgCropBox) applyAspectPreset(imgCropMode);
+}
+
+function flipImageH() {
+  imgFlipH = !imgFlipH;
+  applyImageVisualEffects();
+}
+
+function flipImageV() {
+  imgFlipV = !imgFlipV;
+  applyImageVisualEffects();
 }
 
 function clampPan() {
@@ -9030,8 +9193,31 @@ async function convertImage() {
   const quality = parseInt(document.getElementById('img-quality').value) / 100;
   const img = new Image();
   img.onload = () => {
-    // Step 1: Figure out crop rect in NATURAL pixel coordinates
-    let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
+    // Pre-stage: if rotation or flip is applied, render them to an intermediate canvas first.
+    // This gives us a "transformed source" that the crop math can work from normally.
+    let sourceCanvas;
+    if (imgRotation !== 0 || imgFlipH || imgFlipV) {
+      sourceCanvas = document.createElement('canvas');
+      // Rotated canvas dimensions
+      const isSideways = (imgRotation === 90 || imgRotation === 270);
+      sourceCanvas.width  = isSideways ? img.height : img.width;
+      sourceCanvas.height = isSideways ? img.width  : img.height;
+      const srcCtx = sourceCanvas.getContext('2d');
+      srcCtx.imageSmoothingEnabled = true;
+      srcCtx.imageSmoothingQuality = 'high';
+      // Move to center of output canvas, rotate, flip, draw
+      srcCtx.translate(sourceCanvas.width / 2, sourceCanvas.height / 2);
+      srcCtx.rotate((imgRotation * Math.PI) / 180);
+      srcCtx.scale(imgFlipH ? -1 : 1, imgFlipV ? -1 : 1);
+      srcCtx.drawImage(img, -img.width / 2, -img.height / 2);
+    } else {
+      sourceCanvas = img; // Use original image directly
+    }
+    const sourceW = sourceCanvas.width;
+    const sourceH = sourceCanvas.height;
+
+    // Step 1: Figure out crop rect in NATURAL (post-transform) pixel coordinates
+    let cropX = 0, cropY = 0, cropW = sourceW, cropH = sourceH;
     if (imgCropBox && imgDisplaySize.w > 0) {
       const region = computeCropRegionInNaturalPixels();
       if (region.w > 0 && region.h > 0) {
@@ -9058,7 +9244,7 @@ async function convertImage() {
     }
     outW = Math.max(1, outW); outH = Math.max(1, outH);
 
-    // Step 3: Draw cropped-and-resized image onto canvas
+    // Step 3: Draw cropped-and-resized image onto final canvas WITH filters applied
     const canvas = document.createElement('canvas');
     canvas.width = outW; canvas.height = outH;
     const ctx = canvas.getContext('2d');
@@ -9069,7 +9255,12 @@ async function convertImage() {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, outW, outH);
     }
-    ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, outW, outH);
+    // Apply brightness/contrast/saturation filter during drawImage
+    if (imgBrightness !== 0 || imgContrast !== 0 || imgSaturation !== 0) {
+      ctx.filter = buildImageFilterString();
+    }
+    ctx.drawImage(sourceCanvas, cropX, cropY, cropW, cropH, 0, 0, outW, outH);
+    ctx.filter = 'none';
 
     // Step 4: Export
     const extMap = {
