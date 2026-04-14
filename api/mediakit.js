@@ -1,5 +1,7 @@
 // Vercel serverless function
 // Injects dynamic OG tags into mediakit.html
+// Deploy to: /api/mediakit.js
+// Routed via vercel.json rewrite: /mediakit/:username -> /api/mediakit?u=:username
 
 const fs = require('fs');
 const path = require('path');
@@ -14,6 +16,35 @@ function esc(s) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+async function fetchMediaKit(username) {
+  const profileRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/profiles?username=eq.${encodeURIComponent(username)}&select=user_id,username,tier`,
+    {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+    }
+  );
+  if (!profileRes.ok) return null;
+  const profiles = await profileRes.json();
+  if (!profiles || profiles.length === 0) return null;
+  const profile = profiles[0];
+
+  const mkRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/media_kit?user_id=eq.${profile.user_id}&select=display_name,headshot_url,bio,published`,
+    {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+    }
+  );
+  if (!mkRes.ok) return { profile, kit: null };
+  const kits = await mkRes.json();
+  return { profile, kit: kits[0] || null };
 }
 
 module.exports = async (req, res) => {
@@ -32,41 +63,23 @@ module.exports = async (req, res) => {
     return;
   }
 
-  let title = `@${username}. Media Kit | FindTheSnakes`;
-  let description = `A creator's media kit on FindTheSnakes.`;
-  let image = 'https://www.findthesnakes.com/og-image.png';
-  const url = `https://www.findthesnakes.com/mediakit/${encodeURIComponent(username)}`;
+  let title = `@${username}. Media Kit | Ryxa`;
+  let description = `A creator's media kit on Ryxa.`;
+  let image = 'https://www.ryxa.io/og-image.png';
+  const url = `https://www.ryxa.io/mediakit/${encodeURIComponent(username)}`;
 
   try {
-    const profileRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/profiles?username=eq.${encodeURIComponent(username)}&select=user_id,username`,
-      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
-    );
-    const profiles = await profileRes.json();
-
-    if (profiles && profiles.length > 0) {
-      const profile = profiles[0];
-
-      const mkRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/media_kit?user_id=eq.${profile.user_id}&select=display_name,headshot_url,bio,published`,
-        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
-      );
-      const kits = await mkRes.json();
-
-      if (kits && kits.length > 0) {
-        const kit = kits[0];
-        if (kit.published) {
-          const name = kit.display_name || profile.username;
-          title = `${name}. Media Kit | FindTheSnakes`;
-          description = kit.bio
-            ? kit.bio
-            : `${name}'s creator media kit — collaborations, audience stats, and rates.`;
-          if (kit.headshot_url) image = kit.headshot_url;
-        }
-      }
+    const result = await fetchMediaKit(username);
+    if (result && result.kit && result.kit.published !== false) {
+      const name = result.kit.display_name || result.profile.username;
+      title = `${name}. Media Kit | Ryxa`;
+      description = result.kit.bio
+        ? result.kit.bio
+        : `${name}'s creator media kit — collaborations, audience stats, and rates.`;
+      if (result.kit.headshot_url) image = result.kit.headshot_url;
     }
   } catch (e) {
-    console.error('mediakit OG error', e);
+    console.error('mediakit OG fetch error', e);
   }
 
   const ogBlock = `

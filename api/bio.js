@@ -1,5 +1,7 @@
 // Vercel serverless function
 // Injects dynamic OG tags into bio.html for username URLs
+// Deploy to: /api/bio.js
+// Routed via vercel.json rewrite: /:username -> /api/bio?u=:username
 
 const fs = require('fs');
 const path = require('path');
@@ -17,6 +19,7 @@ function esc(s) {
 }
 
 async function fetchProfile(username) {
+  // Look up user by username
   const profileRes = await fetch(
     `${SUPABASE_URL}/rest/v1/profiles?username=eq.${encodeURIComponent(username)}&select=user_id,username`,
     {
@@ -31,8 +34,9 @@ async function fetchProfile(username) {
   if (!profiles || profiles.length === 0) return null;
   const profile = profiles[0];
 
+  // Fetch the bio data for that user
   const bioRes = await fetch(
-    `${SUPABASE_URL}/rest/v1/link_in_bio?user_id=eq.${profile.user_id}&select=display_name,avatar_url,bio,published`,
+    `${SUPABASE_URL}/rest/v1/bio?user_id=eq.${profile.user_id}&select=display_name,avatar_url,bio,published`,
     {
       headers: {
         apikey: SUPABASE_ANON_KEY,
@@ -52,6 +56,7 @@ module.exports = async (req, res) => {
     return res.status(400).send('Missing username');
   }
 
+  // Read the source HTML file from project root
   const htmlPath = path.join(process.cwd(), 'bio.html');
   let html;
   try {
@@ -61,11 +66,13 @@ module.exports = async (req, res) => {
     return;
   }
 
-  let title = `@${username} | FindTheSnakes`;
-  let description = `A creator's link-in-bio page on FindTheSnakes.`;
-  let image = 'https://www.findthesnakes.com/og-image.png';
-  const url = `https://www.findthesnakes.com/${encodeURIComponent(username)}`;
+  // Default OG values (for unknown user)
+  let title = `@${username} | Ryxa`;
+  let description = `A creator's link-in-bio page on Ryxa.`;
+  let image = 'https://www.ryxa.io/og-image.png';
+  const url = `https://www.ryxa.io/${encodeURIComponent(username)}`;
 
+  // Fetch real data
   try {
     const result = await fetchProfile(username);
     if (result && result.bio && result.bio.published !== false) {
@@ -73,13 +80,15 @@ module.exports = async (req, res) => {
       title = `all of @${result.profile.username}'s links`;
       description = result.bio.bio
         ? result.bio.bio
-        : `Find all of @${result.profile.username}'s links in one place on FindTheSnakes.`;
+        : `Find all of @${result.profile.username}'s links in one place on Ryxa.`;
       if (result.bio.avatar_url) image = result.bio.avatar_url;
     }
   } catch (e) {
+    // If anything goes wrong, fall through with defaults
     console.error('bio OG fetch error', e);
   }
 
+  // Inject OG tags
   const ogBlock = `
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
@@ -96,12 +105,15 @@ module.exports = async (req, res) => {
 <meta name="twitter:image" content="${esc(image)}">
 `;
 
+  // Replace original title + description + og tags with our dynamic ones
+  // Remove existing static ones first
   html = html
     .replace(/<title>[^<]*<\/title>/i, '')
     .replace(/<meta\s+name="description"[^>]*>/gi, '')
     .replace(/<meta\s+property="og:[^"]*"[^>]*>/gi, '')
     .replace(/<meta\s+name="twitter:[^"]*"[^>]*>/gi, '');
 
+  // Inject new block right after <head>
   html = html.replace(/<head>/i, `<head>${ogBlock}`);
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
