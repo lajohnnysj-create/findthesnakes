@@ -8430,10 +8430,44 @@ function initImageConverter() {
   imgDailyCount = parseInt(localStorage.getItem(key) || '0');
   const limit = pro ? IMG_LIMIT_PRO : IMG_LIMIT_FREE;
   const remaining = Math.max(0, limit - imgDailyCount);
+
+  // Detect which output formats this browser actually supports via canvas.toDataURL
+  // and remove unsupported options from the dropdown so users only see what works.
+  (function pruneUnsupportedFormats() {
+    const formatSelect = document.getElementById('img-format');
+    if (!formatSelect || formatSelect.__pdfsignFormatsPruned) return;
+    formatSelect.__pdfsignFormatsPruned = true;
+    const testCanvas = document.createElement('canvas');
+    testCanvas.width = testCanvas.height = 2;
+    // JPEG and PNG are universally supported — never remove them.
+    const skip = new Set(['image/jpeg', 'image/png']);
+    Array.from(formatSelect.options).forEach(opt => {
+      const mime = opt.value;
+      if (skip.has(mime)) return;
+      let supported = false;
+      try {
+        const dataUrl = testCanvas.toDataURL(mime);
+        // If browser doesn't support it, toDataURL silently returns a PNG instead.
+        supported = dataUrl.startsWith(`data:${mime}`);
+      } catch (_) { supported = false; }
+      if (!supported) opt.remove();
+    });
+    // Update the format-change handler to handle remaining options correctly
+    // (already correct — it uses .value lookup, no list dependency)
+  })();
+
   document.getElementById('img-limit-note').textContent = pro
     ? `Pro: ${remaining} of ${limit} conversions remaining today`
     : `Free: ${remaining} of ${limit} conversions remaining today. Upgrade to Pro for 10/day and 50MB files.`;
-  const sizeNote = document.getElementById('img-size-note'); if(sizeNote) sizeNote.textContent = `Supports JPEG, PNG, WebP, GIF, BMP, TIFF, AVIF, ICO, SVG (max ${pro ? '50MB' : '5MB'})`;
+  // Build the supported-formats note dynamically based on the pruned dropdown
+  const supportedNote = (function() {
+    const sel = document.getElementById('img-format');
+    if (!sel) return 'JPEG, PNG, WebP';
+    const labels = Array.from(sel.options).map(o => o.textContent.replace(/\s*\(.*\)/, '').trim());
+    return labels.join(', ');
+  })();
+  const sizeNote = document.getElementById('img-size-note');
+  if (sizeNote) sizeNote.textContent = `Supports ${supportedNote} (max ${pro ? '50MB' : '5MB'})`;
   document.getElementById('img-usage').textContent = '';
   if (pro) { document.getElementById('pro-resize').style.display = 'grid'; }
   document.getElementById('img-format').addEventListener('change', function() {
@@ -8525,7 +8559,7 @@ async function convertImage() {
         throw new Error('Format not supported');
       }
     } catch(e) {
-      alert(`Your browser does not support converting to ${ext.toUpperCase()}. Try JPEG, PNG or WebP instead.`);
+      alert(`Unable to convert to ${ext.toUpperCase()} on this device. Try JPEG, PNG, or WebP.`);
       btn.textContent = 'Convert Image'; btn.disabled = false;
       return;
     }
