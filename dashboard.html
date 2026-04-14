@@ -3252,13 +3252,13 @@
           </div>
           <!-- Aspect ratio buttons -->
           <div id="img-aspect-buttons" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;">
-            <button type="button" data-aspect="free" onclick="applyAspectPreset('free')" class="img-aspect-btn img-aspect-active" style="background:var(--accent);color:#fff;border:1px solid var(--accent);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Free</button>
+            <button type="button" data-aspect="original" onclick="applyAspectPreset('original')" class="img-aspect-btn img-aspect-active" style="background:var(--accent);color:#fff;border:1px solid var(--accent);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Original</button>
+            <button type="button" data-aspect="free" onclick="applyAspectPreset('free')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Free</button>
             <button type="button" data-aspect="1:1" onclick="applyAspectPreset('1:1')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Square 1:1</button>
             <button type="button" data-aspect="4:5" onclick="applyAspectPreset('4:5')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Portrait 4:5</button>
-            <button type="button" data-aspect="9:16" onclick="applyAspectPreset('9:16')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Story 9:16</button>
-            <button type="button" data-aspect="16:9" onclick="applyAspectPreset('16:9')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Landscape 16:9</button>
+            <button type="button" data-aspect="9:16" onclick="applyAspectPreset('9:16')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Reel/Story 9:16</button>
+            <button type="button" data-aspect="16:9" onclick="applyAspectPreset('16:9')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">YouTube/Landscape 16:9</button>
             <button type="button" data-aspect="3:1" onclick="applyAspectPreset('3:1')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Wide 3:1</button>
-            <button type="button" data-aspect="original" onclick="applyAspectPreset('original')" class="img-aspect-btn" style="background:var(--surface);color:var(--muted);border:1px solid var(--border-hover);font-size:12px;padding:7px 12px;border-radius:7px;cursor:pointer;font-family:DM Sans,sans-serif;font-weight:500;transition:all 0.15s;">Original</button>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:12px;color:var(--muted);gap:10px;flex-wrap:wrap;">
             <span id="img-crop-dims">—</span>
@@ -8595,7 +8595,7 @@ let imgNatural = { w: 0, h: 0 };    // Original image dimensions
 let imgCropBox = null;              // { x, y, w, h } in pixels relative to the DISPLAYED (scaled) image
 let imgDisplaySize = { w: 0, h: 0 };// Displayed image size in CSS pixels
 let imgAspectLock = null;           // e.g. 1 for 1:1, 9/16 for 9:16, null for free
-let imgCropMode = 'free';           // 'free' | '1:1' | '4:5' | '9:16' | '16:9' | '3:1' | 'original'
+let imgCropMode = 'original';       // 'free' | '1:1' | '4:5' | '9:16' | '16:9' | '3:1' | 'original'
 let imgCropLocked = false;          // true = crop committed; box can't move or resize
 
 function setupCropStage(dataUrl) {
@@ -8621,7 +8621,8 @@ function setupCropStage(dataUrl) {
         };
       }
       imgCropBox = { x: 0, y: 0, w: imgDisplaySize.w, h: imgDisplaySize.h };
-      resetCropBox();
+      // Default new images to "Original" (full image, no crop applied by default)
+      applyAspectPreset('original');
     });
   };
   stageImg.src = dataUrl;
@@ -8710,7 +8711,7 @@ function updateLockButtonUI() {
   const btn = document.getElementById('img-crop-lock-btn');
   if (!btn) return;
   if (imgCropLocked) {
-    btn.textContent = 'Reset crop';
+    btn.textContent = 'Unlock crop';
     btn.style.background = 'rgba(124,58,237,0.12)';
     btn.style.color = 'var(--accent2)';
     btn.style.borderColor = 'rgba(124,58,237,0.4)';
@@ -8723,15 +8724,11 @@ function updateLockButtonUI() {
 }
 
 function toggleCropLock() {
-  if (imgCropLocked) {
-    // Currently locked → "Reset crop" action
-    resetCropBox();
-  } else {
-    // Currently unlocked → lock it
-    imgCropLocked = true;
-    updateLockButtonUI();
-    renderCropBox();
-  }
+  // Simply toggle — preserve the current crop box either way.
+  // User can keep refining the crop after unlocking without losing position.
+  imgCropLocked = !imgCropLocked;
+  updateLockButtonUI();
+  renderCropBox();
 }
 
 function renderCropBox() {
