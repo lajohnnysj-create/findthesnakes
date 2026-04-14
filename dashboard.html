@@ -3264,10 +3264,19 @@
           </div>
 
           <!-- Tab Bar -->
-          <div id="img-tabs" style="display:flex;gap:0;margin-top:14px;border-bottom:1px solid var(--border);">
-            <button type="button" data-tab="crop" onclick="switchImgTab(&apos;crop&apos;)" class="img-tab img-tab-active" style="flex:1;background:transparent;border:none;border-bottom:2px solid var(--accent);color:var(--text);font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;padding:10px 8px;cursor:pointer;transition:all 0.15s;">Crop</button>
-            <button type="button" data-tab="adjust" onclick="switchImgTab(&apos;adjust&apos;)" class="img-tab" style="flex:1;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;padding:10px 8px;cursor:pointer;transition:all 0.15s;">Adjust</button>
-            <button type="button" data-tab="output" onclick="switchImgTab(&apos;output&apos;)" class="img-tab" style="flex:1;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;padding:10px 8px;cursor:pointer;transition:all 0.15s;">Output</button>
+          <div id="img-tabs" style="display:flex;gap:6px;margin-top:14px;padding:5px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
+            <button type="button" data-tab="crop" onclick="switchImgTab(&apos;crop&apos;)" class="img-tab img-tab-active" style="flex:1;background:var(--accent);border:none;color:#fff;font-size:13px;font-weight:600;font-family:DM Sans,sans-serif;padding:10px 8px;cursor:pointer;border-radius:7px;transition:all 0.15s;box-shadow:0 2px 8px rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>
+              Crop
+            </button>
+            <button type="button" data-tab="adjust" onclick="switchImgTab(&apos;adjust&apos;)" class="img-tab" style="flex:1;background:transparent;border:none;color:var(--muted);font-size:13px;font-weight:600;font-family:DM Sans,sans-serif;padding:10px 8px;cursor:pointer;border-radius:7px;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              Adjust
+            </button>
+            <button type="button" data-tab="output" onclick="switchImgTab(&apos;output&apos;)" class="img-tab" style="flex:1;background:transparent;border:none;color:var(--muted);font-size:13px;font-weight:600;font-family:DM Sans,sans-serif;padding:10px 8px;cursor:pointer;border-radius:7px;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Output
+            </button>
           </div>
 
           <!-- Tab Panels -->
@@ -8709,12 +8718,14 @@ function switchImgTab(tabName) {
     const isActive = btn.getAttribute('data-tab') === tabName;
     if (isActive) {
       btn.classList.add('img-tab-active');
-      btn.style.color = 'var(--text)';
-      btn.style.borderBottomColor = 'var(--accent)';
+      btn.style.background = 'var(--accent)';
+      btn.style.color = '#fff';
+      btn.style.boxShadow = '0 2px 8px rgba(124,58,237,0.3)';
     } else {
       btn.classList.remove('img-tab-active');
+      btn.style.background = 'transparent';
       btn.style.color = 'var(--muted)';
-      btn.style.borderBottomColor = 'transparent';
+      btn.style.boxShadow = 'none';
     }
   });
 }
