@@ -4014,6 +4014,10 @@
                 <h2 id="deal-detail-title" style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px;">New Brand Deal</h2>
                 <p style="color:var(--muted);font-size:14px;">Fill in the deal details below. You can share with the brand once saved.</p>
               </div>
+              <button id="deal-share-btn" onclick="openShareModal()" style="display:none;padding:10px 16px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(167,139,250,0.25);align-items:center;gap:8px;white-space:nowrap;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                <span>Share with brand</span>
+              </button>
             </div>
 
             <!-- Locked banner (shown when deal is Completed or Cancelled) -->
@@ -10318,6 +10322,7 @@ function showDealDetail(dealId) {
 
   applyDealLockState();
   updateDealDetailBadges();
+  updateShareButtonVisibility();
 
   // Switch views
   document.getElementById('deals-list-view').style.display = 'none';
@@ -10331,6 +10336,7 @@ function showDealDetail(dealId) {
 function handleDealStatusChange() {
   applyDealLockState();
   updateDealDetailBadges();
+  updateShareButtonVisibility();
 }
 
 // Update the status + payment badges at the top of the detail page to reflect current form values
@@ -10954,6 +10960,156 @@ async function confirmDeleteDeal() {
   closeDealDeleteModal();
   await loadDealsList();
   showDealsList();
+}
+
+// =====================================================
+// BRAND DEAL CRM — Share with Brand
+// =====================================================
+
+// Show or hide the "Share with brand" button based on whether deal is saved + has brand contact
+function updateShareButtonVisibility() {
+  const btn = document.getElementById('deal-share-btn');
+  if (!btn) return;
+  // Hide during new-deal creation
+  if (!currentDealId) {
+    btn.style.display = 'none';
+    return;
+  }
+  const deal = dealsList.find(d => d.id === currentDealId);
+  if (!deal) { btn.style.display = 'none'; return; }
+  // Hide on cancelled deals (sharing is auto-revoked)
+  if (deal.status === 'cancelled') { btn.style.display = 'none'; return; }
+  // Show
+  btn.style.display = 'inline-flex';
+}
+
+async function openShareModal() {
+  if (!currentDealId) return;
+  const deal = dealsList.find(d => d.id === currentDealId);
+  if (!deal) return;
+
+  // Validate — must have brand contact email
+  if (!deal.brand_contact_email) {
+    showDealModalMsg('error', 'Please add a brand contact email to the deal before sharing.');
+    document.getElementById('deal-brand-contact-email').focus();
+    return;
+  }
+
+  // Set up modal
+  document.getElementById('deal-share-brand-name').textContent = deal.brand_name || 'the brand';
+  document.getElementById('deal-share-generating').style.display = 'block';
+  document.getElementById('deal-share-content').style.display = 'none';
+  document.getElementById('deal-share-error').style.display = 'none';
+  document.getElementById('deal-share-modal').style.display = 'flex';
+
+  // If deal already has an active, non-revoked share — reuse it
+  let token = deal.share_token;
+  let pin = deal.share_pin;
+  const needsNewToken = !token || !pin || deal.share_revoked_at;
+
+  if (needsNewToken) {
+    // Call RPC to generate a new token+PIN
+    const { data, error } = await sb.rpc('generate_deal_share_token', { p_deal_id: currentDealId });
+    if (error || !data || data.error) {
+      document.getElementById('deal-share-generating').style.display = 'none';
+      const errEl = document.getElementById('deal-share-error');
+      errEl.style.display = 'block';
+      errEl.textContent = (data && data.error) || (error && error.message) || 'Failed to generate share link';
+      return;
+    }
+    token = data.token;
+    pin = data.pin;
+    // Update local cache
+    const idx = dealsList.findIndex(d => d.id === currentDealId);
+    if (idx >= 0) {
+      dealsList[idx].share_token = token;
+      dealsList[idx].share_pin = pin;
+      dealsList[idx].share_revoked_at = null;
+    }
+  }
+
+  // Populate fields
+  const link = `${window.location.origin}/deal/${token}`;
+  document.getElementById('deal-share-link').value = link;
+  document.getElementById('deal-share-pin').value = pin;
+
+  const message = `Hi, I've created a secure portal for our brand deal on Ryxa. You can view the deal details and communicate with me through it. ${link} (PIN: ${pin})`;
+  document.getElementById('deal-share-message').value = message;
+
+  // Reset copy button labels
+  document.getElementById('deal-share-link-copy').textContent = 'Copy';
+  document.getElementById('deal-share-pin-copy').textContent = 'Copy';
+  document.getElementById('deal-share-copy-all-btn').textContent = 'Copy link + message';
+
+  document.getElementById('deal-share-generating').style.display = 'none';
+  document.getElementById('deal-share-content').style.display = 'block';
+}
+
+function closeShareModal() {
+  document.getElementById('deal-share-modal').style.display = 'none';
+}
+
+// Generic clipboard copy with button feedback
+async function _copyToClipboardWithFeedback(text, buttonId, originalLabel) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (e) {
+    // Fallback: old-school select-and-copy
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try { document.execCommand('copy'); } catch (_) {}
+    document.body.removeChild(textarea);
+  }
+  const btn = document.getElementById(buttonId);
+  if (btn) {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = originalLabel; }, 1800);
+  }
+}
+
+function copyShareLink() {
+  const link = document.getElementById('deal-share-link').value;
+  _copyToClipboardWithFeedback(link, 'deal-share-link-copy', 'Copy');
+}
+
+function copySharePin() {
+  const pin = document.getElementById('deal-share-pin').value;
+  _copyToClipboardWithFeedback(pin, 'deal-share-pin-copy', 'Copy');
+}
+
+function copyShareMessage() {
+  const msg = document.getElementById('deal-share-message').value;
+  _copyToClipboardWithFeedback(msg, 'deal-share-copy-all-btn', 'Copy link + message');
+}
+
+async function revokeShareAccess() {
+  if (!currentDealId) return;
+  if (!confirm('Revoke access to this deal? The brand will no longer be able to view it. You can share again later by clicking "Share with brand" again.')) return;
+
+  const { data, error } = await sb.rpc('revoke_deal_share_token', { p_deal_id: currentDealId });
+  if (error || (data && data.error)) {
+    const errEl = document.getElementById('deal-share-error');
+    errEl.style.display = 'block';
+    errEl.textContent = (data && data.error) || (error && error.message) || 'Failed to revoke access';
+    return;
+  }
+
+  // Update local cache
+  const idx = dealsList.findIndex(d => d.id === currentDealId);
+  if (idx >= 0) {
+    dealsList[idx].share_revoked_at = new Date().toISOString();
+  }
+
+  closeShareModal();
+  showDealModalMsg('success', 'Access revoked. The brand can no longer view this deal.');
+  setTimeout(() => {
+    const msg = document.getElementById('deal-detail-msg');
+    if (msg) msg.style.display = 'none';
+  }, 3000);
 }
 
 function initScriptsTool() {
@@ -12387,6 +12543,8 @@ document.getElementById('signout-modal').addEventListener('click', function(e) {
 window.addEventListener('DOMContentLoaded', () => {
   const ddm = document.getElementById('deal-delete-modal');
   if (ddm) ddm.addEventListener('click', function(e) { if (e.target === this) closeDealDeleteModal(); });
+  const dsm = document.getElementById('deal-share-modal');
+  if (dsm) dsm.addEventListener('click', function(e) { if (e.target === this) closeShareModal(); });
 });
 </script>
 
@@ -12408,6 +12566,56 @@ window.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
+
+
+<!-- =============================================== -->
+<!-- BRAND DEAL CRM — Share with Brand Modal         -->
+<!-- =============================================== -->
+<div id="deal-share-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;pointer-events:all;">
+  <div style="background:#0f0f1a;border:1px solid rgba(124,58,237,0.35);border-radius:16px;padding:28px;position:relative;width:100%;max-width:520px;pointer-events:all;margin:20px;max-height:92vh;overflow-y:auto;">
+    <button onclick="closeShareModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;color:#7a788f;font-size:18px;cursor:pointer;" aria-label="Close">&#x2715;</button>
+    <h3 style="font-family:Syne,sans-serif;font-size:18px;font-weight:700;margin-bottom:4px;color:var(--text);">Share deal with <span id="deal-share-brand-name">the brand</span></h3>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.5;">Send this link and PIN to your brand contact. They'll see deal details, contracts, and can message you through a secure portal.</p>
+
+    <div id="deal-share-generating" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Generating secure link...</div>
+
+    <div id="deal-share-content" style="display:none;">
+      <!-- Link -->
+      <div style="margin-bottom:14px;">
+        <label class="deal-label">Portal Link</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="deal-share-link" readonly class="deal-input" style="flex:1;font-size:12px;" onclick="this.select()">
+          <button onclick="copyShareLink()" id="deal-share-link-copy" style="padding:10px 14px;background:transparent;border:1px solid var(--border-hover);color:var(--text);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;white-space:nowrap;">Copy</button>
+        </div>
+      </div>
+      <!-- PIN -->
+      <div style="margin-bottom:18px;">
+        <label class="deal-label">PIN</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="deal-share-pin" readonly class="deal-input" style="flex:1;font-family:monospace;font-size:16px;letter-spacing:0.2em;" onclick="this.select()">
+          <button onclick="copySharePin()" id="deal-share-pin-copy" style="padding:10px 14px;background:transparent;border:1px solid var(--border-hover);color:var(--text);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;white-space:nowrap;">Copy</button>
+        </div>
+      </div>
+
+      <!-- Message preview -->
+      <div style="margin-bottom:14px;">
+        <label class="deal-label">Message to send <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(edit if you'd like)</span></label>
+        <textarea id="deal-share-message" rows="4" class="deal-input" style="resize:vertical;min-height:90px;font-size:13px;line-height:1.5;"></textarea>
+      </div>
+
+      <!-- Copy-all button -->
+      <button onclick="copyShareMessage()" id="deal-share-copy-all-btn" style="width:100%;padding:12px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 4px 16px rgba(167,139,250,0.2);margin-bottom:14px;">Copy link + message</button>
+
+      <!-- Revoke -->
+      <div style="padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+        <div style="font-size:12px;color:var(--muted);flex:1;min-width:180px;">Accidentally shared? You can revoke access at any time.</div>
+        <button onclick="revokeShareAccess()" id="deal-share-revoke-btn" style="padding:8px 14px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Revoke access</button>
+      </div>
+    </div>
+
+    <div id="deal-share-error" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#fca5a5;"></div>
+  </div>
+</div>
 
 
 <!-- =============================================== -->
