@@ -121,6 +121,60 @@
   .mockup-nav-item.active { background: rgba(124,58,237,0.15); color: #c4b5fd; border: 1px solid rgba(124,58,237,0.2); }
   .mockup-nav-icon { width: 15px; height: 15px; stroke: #fff; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
   .mockup-nav-item.active .mockup-nav-icon { stroke: #c4b5fd; }
+
+  /* Max user sidebar styling (mirrors real dashboard body.max-user) */
+  .mockup-sidebar-max { background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(167,139,250,0.05) 70%, rgba(232,121,249,0.08) 100%); }
+  .mockup-sidebar-max .mockup-nav-item.active {
+    background: linear-gradient(135deg, rgba(167,139,250,0.18), rgba(232,121,249,0.18));
+    border: 1px solid rgba(232,121,249,0.35);
+    color: #f0abfc;
+    box-shadow: 0 0 12px rgba(232,121,249,0.15);
+  }
+  .mockup-sidebar-max .mockup-nav-item.active .mockup-nav-icon { stroke: #f0abfc; }
+
+  /* Sidebar bottom user card */
+  .mockup-sidebar-bottom {
+    margin-top: auto;
+    padding: 10px 8px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mockup-sidebar-max .mockup-sidebar-bottom {
+    background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(232,121,249,0.1));
+    border-top-color: rgba(232,121,249,0.25);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 12px;
+    box-shadow: 0 0 14px rgba(232,121,249,0.1);
+  }
+  .mockup-sidebar-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a78bfa, #e879f9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Syne", sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .mockup-sidebar-user { flex: 1; min-width: 0; }
+  .mockup-sidebar-name { font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mockup-sidebar-tier {
+    font-size: 10px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #a78bfa, #e879f9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.02em;
+  }
+
   .mockup-pro-badge { margin-left: auto; font-size: 10px; background: rgba(124,58,237,0.2); color: #c4b5fd; border-radius: 100px; padding: 1px 6px; font-weight: 700; letter-spacing: 0.05em; }
   .mockup-max-badge { margin-left: auto; font-size: 10px; background: linear-gradient(135deg,#a78bfa,#e879f9); color: #fff; border-radius: 100px; padding: 1px 6px; font-weight: 700; letter-spacing: 0.05em; }
   .mockup-content { flex: 1; padding: 28px 24px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
@@ -330,7 +384,7 @@
           <div class="mockup-url">findthesnakes.com/dashboard</div>
         </div>
         <div class="mockup-body">
-          <div class="mockup-sidebar">
+          <div class="mockup-sidebar mockup-sidebar-max">
             <div class="mockup-logo">
               <div class="mockup-logo-text">FindTheSnakes</div>
             </div>
@@ -347,6 +401,11 @@
               <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="16" y1="17" x2="16" y2="15"/></svg>
               Media Kit
               <span class="mockup-pro-badge">PRO</span>
+            </div>
+            <div class="mockup-nav-item">
+              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/><path d="M6 21l-2-2 2-2M18 21l2-2-2-2"/></svg>
+              Script Builder
+              <span class="mockup-max-badge">MAX</span>
             </div>
             <div class="mockup-nav-item">
               <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -373,14 +432,16 @@
               Sign PDF
             </div>
             <div class="mockup-nav-item">
-              <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/><path d="M6 21l-2-2 2-2M18 21l2-2-2-2"/></svg>
-              Script Builder
-              <span class="mockup-max-badge">MAX</span>
-            </div>
-            <div class="mockup-nav-item">
               <svg viewBox="0 0 24 24" class="mockup-nav-icon" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               Tax Tracker
               <span class="mockup-pro-badge">PRO</span>
+            </div>
+            <div class="mockup-sidebar-bottom">
+              <div class="mockup-sidebar-avatar">M</div>
+              <div class="mockup-sidebar-user">
+                <div class="mockup-sidebar-name">miapark</div>
+                <div class="mockup-sidebar-tier">Creator Max</div>
+              </div>
             </div>
           </div>
           <div class="mockup-content mockup-bio-content">
