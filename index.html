@@ -777,10 +777,16 @@ function openSignupModal() {
   renderTurnstileWidget();
 }
 
-// Open signup modal if URL has #signup (from external page links)
+// Open signup modal if URL has #signup OR ?action=signup (from external page links)
+// Also supports ?action=signin
 window.addEventListener('load', () => {
-  if (window.location.hash === '#signup' && !currentUser) {
+  if (currentUser) return;
+  const params = new URLSearchParams(window.location.search);
+  const action = params.get('action');
+  if (window.location.hash === '#signup' || action === 'signup') {
     setTimeout(openSignupModal, 300);
+  } else if (action === 'signin') {
+    setTimeout(openAuthModal, 300);
   }
 });
 
