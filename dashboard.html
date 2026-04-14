@@ -2441,7 +2441,7 @@
     </button>
     <button class="sidebar-item" id="nav-image" onclick="showTool('image')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div>
-      <span class="sidebar-item-label">Image Converter</span>
+      <span class="sidebar-item-label">Image Studio</span>
     </button>
     <button class="sidebar-item" id="nav-qr" onclick="showTool('qr')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20v1"/></svg></div>
@@ -2566,8 +2566,8 @@
           <div class="welcome-tool-card" onclick="showTool('image')">
             <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div>
             <div>
-              <div class="welcome-tool-name">Image Converter</div>
-              <div class="welcome-tool-desc">Convert images between formats instantly</div>
+              <div class="welcome-tool-name">Image Studio</div>
+              <div class="welcome-tool-desc">Crop, resize, and convert images with creator-ready aspect ratios</div>
             </div>
           </div>
           <div class="welcome-tool-card" onclick="showTool('qr')">
@@ -3212,35 +3212,86 @@
     <!-- IMAGE CONVERTER -->
     <div id="tool-image" style="display:none;">
       <div style="max-width:680px;">
-        <h2 style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:6px;letter-spacing:-0.5px;">Image Converter</h2>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:8px;">Convert images between formats instantly. Everything happens in your browser.</p>
+        <h2 style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:6px;letter-spacing:-0.5px;">Image Studio</h2>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:8px;">Crop, resize, and convert images. Everything happens in your browser — nothing is uploaded.</p>
         <p id="img-limit-note" style="font-size:13px;color:#a78bfa;margin-bottom:24px;"></p>
 
         <!-- Drop Zone -->
         <div id="img-dropzone" style="border:2px dashed rgba(124,58,237,0.4);border-radius:16px;padding:48px 24px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(124,58,237,0.03);margin-bottom:20px;position:relative;">
-          <input type="file" id="img-input" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,image/avif,image/svg+xml,image/x-icon,image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" aria-label="Select image to convert">
+          <input type="file" id="img-input" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,image/avif,image/svg+xml,image/x-icon,image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" aria-label="Select image">
           <div style="font-size:36px;margin-bottom:12px;">&#x1F5BC;</div>
           <div style="font-size:16px;font-weight:500;margin-bottom:6px;">Drop your image here</div>
           <div style="font-size:13px;color:var(--muted);" id="img-size-note">or click to browse</div>
         </div>
 
-        <!-- Preview -->
-        <div id="img-preview-area" style="display:none;margin-bottom:20px;">
-          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px;">
-            <img id="img-preview" alt="Image preview" style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
-            <div style="flex:1;">
-              <div id="img-filename" style="font-size:14px;font-weight:500;margin-bottom:2px;"></div>
-              <div id="img-filesize" style="font-size:12px;color:var(--muted);"></div>
+        <!-- Preview + File Info -->
+        <div id="img-preview-area" style="display:none;margin-bottom:16px;">
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;">
+            <img id="img-preview" alt="Image thumbnail" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">
+            <div style="flex:1;min-width:0;">
+              <div id="img-filename" style="font-size:13px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+              <div id="img-filesize" style="font-size:11px;color:var(--muted);"></div>
             </div>
-            <button onclick="clearImage()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">&#x2715;</button>
+            <button onclick="clearImage()" aria-label="Remove image" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;">&#x2715;</button>
+          </div>
+        </div>
+
+        <!-- Interactive Crop Canvas -->
+        <div id="img-crop-area" style="display:none;margin-bottom:16px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+            <label style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Crop &amp; Aspect Ratio</label>
+            <select id="img-aspect" aria-label="Aspect ratio preset" style="background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;">
+              <option value="free" selected>Free</option>
+              <option value="1:1">Square 1:1 (IG Post)</option>
+              <option value="4:5">Portrait 4:5 (IG Post Tall)</option>
+              <option value="9:16">Story/Reel 9:16</option>
+              <option value="16:9">Landscape 16:9 (YouTube)</option>
+              <option value="3:1">Wide 3:1 (X Header)</option>
+              <option value="original">Original</option>
+            </select>
+          </div>
+          <div id="img-crop-stage" style="position:relative;width:100%;background:#000;border-radius:8px;overflow:hidden;user-select:none;touch-action:none;display:flex;align-items:center;justify-content:center;min-height:240px;">
+            <img id="img-crop-src" alt="Image to crop" style="display:block;max-width:100%;max-height:540px;pointer-events:none;">
+            <div id="img-crop-box" style="position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,0.55);cursor:move;display:none;">
+              <div class="img-crop-handle" data-handle="nw" style="position:absolute;top:-8px;left:-8px;width:16px;height:16px;background:#fff;border:2px solid #7c3aed;border-radius:50%;cursor:nwse-resize;"></div>
+              <div class="img-crop-handle" data-handle="ne" style="position:absolute;top:-8px;right:-8px;width:16px;height:16px;background:#fff;border:2px solid #7c3aed;border-radius:50%;cursor:nesw-resize;"></div>
+              <div class="img-crop-handle" data-handle="sw" style="position:absolute;bottom:-8px;left:-8px;width:16px;height:16px;background:#fff;border:2px solid #7c3aed;border-radius:50%;cursor:nesw-resize;"></div>
+              <div class="img-crop-handle" data-handle="se" style="position:absolute;bottom:-8px;right:-8px;width:16px;height:16px;background:#fff;border:2px solid #7c3aed;border-radius:50%;cursor:nwse-resize;"></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12px;color:var(--muted);">
+            <span id="img-crop-dims">—</span>
+            <button type="button" onclick="resetCropBox()" style="background:none;border:1px solid var(--border-hover);color:var(--muted);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">Reset crop</button>
           </div>
         </div>
 
         <!-- Options -->
         <div id="img-options" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <!-- Resize row (everyone) -->
+          <div style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Resize (optional)</label>
+              <label style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer;">
+                <input type="checkbox" id="img-resize-lock" checked style="accent-color:var(--accent);"> Lock ratio
+              </label>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <input type="number" id="img-width" placeholder="Width (auto)" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;" aria-label="Output width in pixels">
+              <input type="number" id="img-height" placeholder="Height (auto)" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;" aria-label="Output height in pixels">
+            </div>
+            <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+              <button type="button" onclick="setResizePreset(720)" class="img-size-preset" style="background:var(--surface);border:1px solid var(--border-hover);color:var(--muted);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">720px</button>
+              <button type="button" onclick="setResizePreset(1080)" class="img-size-preset" style="background:var(--surface);border:1px solid var(--border-hover);color:var(--muted);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">1080px</button>
+              <button type="button" onclick="setResizePreset(1920)" class="img-size-preset" style="background:var(--surface);border:1px solid var(--border-hover);color:var(--muted);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">1920px</button>
+              <button type="button" onclick="setResizePreset(2560)" class="img-size-preset" style="background:var(--surface);border:1px solid var(--border-hover);color:var(--muted);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">2560px</button>
+              <button type="button" onclick="clearResize()" class="img-size-preset" style="background:transparent;border:1px solid var(--border-hover);color:var(--muted);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">Clear</button>
+            </div>
+          </div>
+
+          <!-- Format + Quality row -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
             <div>
-              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Convert to</label>
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Format</label>
               <select id="img-format" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;" aria-label="Output format">
                 <option value="image/jpeg" selected>JPEG</option>
                 <option value="image/png">PNG</option>
@@ -3248,28 +3299,20 @@
                 <option value="image/gif">GIF</option>
                 <option value="image/bmp">BMP</option>
                 <option value="image/tiff">TIFF</option>
-                <option value="image/avif">AVIF (Chrome/Firefox)</option>
+                <option value="image/avif">AVIF</option>
                 <option value="image/x-icon">ICO</option>
               </select>
             </div>
             <div id="quality-group">
-              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Quality <span id="quality-val">90</span>%</label>
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Quality <span id="quality-val">90</span>%</label>
               <input type="range" id="img-quality" min="10" max="100" value="90" style="width:100%;accent-color:var(--accent);" oninput="document.getElementById('quality-val').textContent=this.value" aria-label="Compression quality">
             </div>
           </div>
-          <div id="pro-resize" style="display:none;grid-template-columns:1fr 1fr;gap:16px;">
-            <div>
-              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Width (px)</label>
-              <input type="number" id="img-width" placeholder="Auto" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;" aria-label="Output width in pixels">
-            </div>
-            <div>
-              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Height (px)</label>
-              <input type="number" id="img-height" placeholder="Auto" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;" aria-label="Output height in pixels">
-            </div>
-          </div>
+          <!-- Hidden legacy grid — kept so existing JS referencing pro-resize still runs without errors -->
+          <div id="pro-resize" style="display:none;"></div>
         </div>
 
-        <button id="img-convert-btn" onclick="convertImage()" style="display:none;width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px var(--accent-glow);">Convert Image</button>
+        <button id="img-convert-btn" onclick="convertImage()" style="display:none;width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px var(--accent-glow);">Download Image</button>
         <div id="img-result" style="display:none;margin-top:16px;"></div>
         <div id="img-usage" style="margin-top:16px;font-size:13px;color:var(--muted);text-align:center;"></div>
       </div>
@@ -3768,7 +3811,7 @@ const toolTitles = {
   mediakit: 'Media Kit',
   grid: 'Grid Planner',
   follower: 'Follow-Back Audit',
-  image: 'Image Converter',
+  image: 'Image Studio',
   qr: 'QR Generator',
   invoice: 'Invoice Generator',
   pdfsign: 'Sign PDF',
@@ -8457,8 +8500,8 @@ function initImageConverter() {
   })();
 
   document.getElementById('img-limit-note').textContent = pro
-    ? `Pro: ${remaining} of ${limit} conversions remaining today`
-    : `Free: ${remaining} of ${limit} conversions remaining today. Upgrade to Pro for 10/day and 50MB files.`;
+    ? `Pro: ${remaining} of ${limit} edits remaining today`
+    : `Free: ${remaining} of ${limit} edits remaining today. Upgrade to Pro for 10/day and 50MB files.`;
   // Build the supported-formats note dynamically based on the pruned dropdown
   const supportedNote = (function() {
     const sel = document.getElementById('img-format');
@@ -8473,6 +8516,39 @@ function initImageConverter() {
   document.getElementById('img-format').addEventListener('change', function() {
     const noQuality = ['image/png','image/gif','image/bmp','image/x-icon','image/tiff']; document.getElementById('quality-group').style.display = noQuality.includes(this.value) ? 'none' : 'block';
   });
+
+  // Aspect ratio preset
+  const aspectSel = document.getElementById('img-aspect');
+  if (aspectSel && !aspectSel.__wired) {
+    aspectSel.__wired = true;
+    aspectSel.addEventListener('change', function() { applyAspectPreset(this.value); });
+  }
+
+  // Crop box drag (move + resize handles)
+  const cropBoxEl = document.getElementById('img-crop-box');
+  if (cropBoxEl && !cropBoxEl.__wired) {
+    cropBoxEl.__wired = true;
+    cropBoxEl.addEventListener('mousedown', function(e) {
+      if (e.target.classList.contains('img-crop-handle')) {
+        startCropInteraction(e, 'resize', e.target.getAttribute('data-handle'));
+      } else {
+        startCropInteraction(e, 'move');
+      }
+    });
+    cropBoxEl.addEventListener('touchstart', function(e) {
+      if (e.target.classList.contains('img-crop-handle')) {
+        startCropInteraction(e, 'resize', e.target.getAttribute('data-handle'));
+      } else {
+        startCropInteraction(e, 'move');
+      }
+    }, { passive: false });
+  }
+
+  // Re-render crop box on window resize (layout could change)
+  if (!window.__imgStudioResize) {
+    window.__imgStudioResize = true;
+    window.addEventListener('resize', () => { if (imgCropBox) renderCropBox(); });
+  }
   document.getElementById('img-input').addEventListener('change', function(e) {
     if (e.target.files[0]) handleImageFile(e.target.files[0]);
   });
@@ -8499,6 +8575,8 @@ function handleImageFile(file) {
     document.getElementById('img-result').style.display = 'none';
     document.getElementById('img-filename').textContent = file.name;
     document.getElementById('img-filesize').textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+    // Set up crop stage with full-size image
+    setupCropStage(e.target.result);
   };
   reader.readAsDataURL(file);
 }
@@ -8506,10 +8584,181 @@ function handleImageFile(file) {
 function clearImage() {
   imgFile = null;
   document.getElementById('img-preview-area').style.display = 'none';
+  document.getElementById('img-crop-area').style.display = 'none';
   document.getElementById('img-options').style.display = 'none';
   document.getElementById('img-convert-btn').style.display = 'none';
   document.getElementById('img-result').style.display = 'none';
   document.getElementById('img-input').value = '';
+  document.getElementById('img-width').value = '';
+  document.getElementById('img-height').value = '';
+  imgNatural = { w: 0, h: 0 };
+}
+
+// ───── Crop box state ─────
+let imgNatural = { w: 0, h: 0 };    // Original image dimensions
+let imgCropBox = null;              // { x, y, w, h } in pixels relative to the DISPLAYED (scaled) image
+let imgDisplaySize = { w: 0, h: 0 };// Displayed image size in CSS pixels
+let imgAspectLock = null;           // e.g. 1 for 1:1, 9/16 for 9:16, null for free
+
+function setupCropStage(dataUrl) {
+  const stageImg = document.getElementById('img-crop-src');
+  const stage = document.getElementById('img-crop-stage');
+  const cropArea = document.getElementById('img-crop-area');
+
+  stageImg.onload = () => {
+    imgNatural = { w: stageImg.naturalWidth, h: stageImg.naturalHeight };
+    // Read back the displayed size after CSS max-width/max-height constraints
+    imgDisplaySize = { w: stageImg.clientWidth, h: stageImg.clientHeight };
+    cropArea.style.display = 'block';
+    // Start with full-image (no real crop) box
+    imgCropBox = { x: 0, y: 0, w: imgDisplaySize.w, h: imgDisplaySize.h };
+    resetCropBox();
+  };
+  stageImg.src = dataUrl;
+}
+
+function resetCropBox() {
+  if (!imgDisplaySize.w) return;
+  imgAspectLock = null;
+  const sel = document.getElementById('img-aspect');
+  if (sel) sel.value = 'free';
+  // Default: a centered 80% box
+  const w = imgDisplaySize.w * 0.8;
+  const h = imgDisplaySize.h * 0.8;
+  imgCropBox = {
+    x: (imgDisplaySize.w - w) / 2,
+    y: (imgDisplaySize.h - h) / 2,
+    w, h
+  };
+  renderCropBox();
+}
+
+function applyAspectPreset(preset) {
+  if (!imgDisplaySize.w) return;
+  if (preset === 'free') {
+    imgAspectLock = null;
+    renderCropBox();
+    return;
+  }
+  if (preset === 'original') {
+    imgAspectLock = null;
+    imgCropBox = { x: 0, y: 0, w: imgDisplaySize.w, h: imgDisplaySize.h };
+    renderCropBox();
+    return;
+  }
+  const [a, b] = preset.split(':').map(Number);
+  imgAspectLock = a / b;
+  // Center a box of that ratio that fits inside the image
+  let cw = imgDisplaySize.w;
+  let ch = cw / imgAspectLock;
+  if (ch > imgDisplaySize.h) {
+    ch = imgDisplaySize.h;
+    cw = ch * imgAspectLock;
+  }
+  // Shrink to 95% so it has breathing room
+  cw *= 0.95; ch *= 0.95;
+  imgCropBox = {
+    x: (imgDisplaySize.w - cw) / 2,
+    y: (imgDisplaySize.h - ch) / 2,
+    w: cw, h: ch
+  };
+  renderCropBox();
+}
+
+function renderCropBox() {
+  if (!imgCropBox) return;
+  const stage = document.getElementById('img-crop-stage');
+  const stageImg = document.getElementById('img-crop-src');
+  const box = document.getElementById('img-crop-box');
+  // Refresh display size in case of resize
+  imgDisplaySize = { w: stageImg.clientWidth, h: stageImg.clientHeight };
+  // Offset image within stage (for letterboxing)
+  const stageRect = stage.getBoundingClientRect();
+  const imgRect = stageImg.getBoundingClientRect();
+  const offsetX = imgRect.left - stageRect.left;
+  const offsetY = imgRect.top - stageRect.top;
+  // Clamp crop box to image bounds
+  imgCropBox.x = Math.max(0, Math.min(imgDisplaySize.w - imgCropBox.w, imgCropBox.x));
+  imgCropBox.y = Math.max(0, Math.min(imgDisplaySize.h - imgCropBox.h, imgCropBox.y));
+  box.style.display = 'block';
+  box.style.left = (offsetX + imgCropBox.x) + 'px';
+  box.style.top = (offsetY + imgCropBox.y) + 'px';
+  box.style.width = imgCropBox.w + 'px';
+  box.style.height = imgCropBox.h + 'px';
+  // Update dimensions readout (in natural-pixel coordinates)
+  const scale = imgNatural.w / imgDisplaySize.w;
+  const pixelW = Math.round(imgCropBox.w * scale);
+  const pixelH = Math.round(imgCropBox.h * scale);
+  const dims = document.getElementById('img-crop-dims');
+  if (dims) dims.textContent = `Crop: ${pixelW} × ${pixelH} px`;
+}
+
+function startCropInteraction(e, mode, handle) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (!imgCropBox) return;
+  const startX = e.touches ? e.touches[0].clientX : e.clientX;
+  const startY = e.touches ? e.touches[0].clientY : e.clientY;
+  const origBox = { ...imgCropBox };
+
+  function onMove(ev) {
+    const cx = ev.touches ? ev.touches[0].clientX : ev.clientX;
+    const cy = ev.touches ? ev.touches[0].clientY : ev.clientY;
+    const dx = cx - startX;
+    const dy = cy - startY;
+
+    if (mode === 'move') {
+      imgCropBox.x = origBox.x + dx;
+      imgCropBox.y = origBox.y + dy;
+    } else if (mode === 'resize') {
+      let newX = origBox.x, newY = origBox.y, newW = origBox.w, newH = origBox.h;
+      if (handle.includes('e')) newW = Math.max(20, origBox.w + dx);
+      if (handle.includes('w')) { newW = Math.max(20, origBox.w - dx); newX = origBox.x + (origBox.w - newW); }
+      if (handle.includes('s')) newH = Math.max(20, origBox.h + dy);
+      if (handle.includes('n')) { newH = Math.max(20, origBox.h - dy); newY = origBox.y + (origBox.h - newH); }
+
+      // If aspect locked, adjust H from W (or W from H based on which edge was primary)
+      if (imgAspectLock) {
+        if (handle === 'e' || handle === 'w' || handle === 'ne' || handle === 'se' || handle === 'nw' || handle === 'sw') {
+          newH = newW / imgAspectLock;
+          if (handle.includes('n')) newY = origBox.y + (origBox.h - newH);
+        }
+      }
+      imgCropBox = { x: newX, y: newY, w: newW, h: newH };
+    }
+    renderCropBox();
+    ev.preventDefault();
+  }
+  function onEnd() {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onEnd);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('touchend', onEnd);
+  }
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onEnd);
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('touchend', onEnd);
+}
+
+function setResizePreset(pixels) {
+  const wInput = document.getElementById('img-width');
+  const hInput = document.getElementById('img-height');
+  const lock = document.getElementById('img-resize-lock').checked;
+  wInput.value = pixels;
+  if (lock && imgNatural.w && imgCropBox) {
+    // If a crop is active, use the CROPPED aspect ratio
+    const scale = imgNatural.w / imgDisplaySize.w;
+    const cropNatW = imgCropBox.w * scale;
+    const cropNatH = imgCropBox.h * scale;
+    hInput.value = Math.round(pixels * (cropNatH / cropNatW));
+  } else if (lock && imgNatural.w) {
+    hInput.value = Math.round(pixels * (imgNatural.h / imgNatural.w));
+  }
+}
+function clearResize() {
+  document.getElementById('img-width').value = '';
+  document.getElementById('img-height').value = '';
 }
 
 async function convertImage() {
@@ -8523,56 +8772,78 @@ async function convertImage() {
     return;
   }
   const btn = document.getElementById('img-convert-btn');
-  btn.textContent = 'Converting...'; btn.disabled = true;
+  btn.textContent = 'Processing...'; btn.disabled = true;
   const format = document.getElementById('img-format').value;
   const quality = parseInt(document.getElementById('img-quality').value) / 100;
   const img = new Image();
   img.onload = () => {
-    const canvas = document.createElement('canvas');
-    let w = img.width, h = img.height;
-    if (pro) {
-      const wInput = document.getElementById('img-width').value;
-      const hInput = document.getElementById('img-height').value;
-      if (wInput) { w = parseInt(wInput); h = Math.round(img.height * (w / img.width)); }
-      if (hInput) { h = parseInt(hInput); if (!document.getElementById('img-width').value) w = Math.round(img.width * (h / img.height)); }
+    // Step 1: Figure out crop rect in NATURAL pixel coordinates
+    let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
+    if (imgCropBox && imgDisplaySize.w > 0) {
+      const scale = img.width / imgDisplaySize.w;
+      cropX = Math.round(imgCropBox.x * scale);
+      cropY = Math.round(imgCropBox.y * scale);
+      cropW = Math.round(imgCropBox.w * scale);
+      cropH = Math.round(imgCropBox.h * scale);
     }
-    canvas.width = w; canvas.height = h;
+
+    // Step 2: Figure out final output size (resize)
+    let outW = cropW, outH = cropH;
+    const wInput = document.getElementById('img-width').value;
+    const hInput = document.getElementById('img-height').value;
+    const lock = document.getElementById('img-resize-lock').checked;
+    if (wInput && hInput) {
+      outW = parseInt(wInput); outH = parseInt(hInput);
+    } else if (wInput) {
+      outW = parseInt(wInput);
+      outH = lock ? Math.round(cropH * (outW / cropW)) : cropH;
+    } else if (hInput) {
+      outH = parseInt(hInput);
+      outW = lock ? Math.round(cropW * (outH / cropH)) : cropW;
+    }
+    outW = Math.max(1, outW); outH = Math.max(1, outH);
+
+    // Step 3: Draw cropped-and-resized image onto canvas
+    const canvas = document.createElement('canvas');
+    canvas.width = outW; canvas.height = outH;
     const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     // Fill white background for formats that don't support transparency
     if (['image/jpeg', 'image/bmp', 'image/tiff', 'image/x-icon'].includes(format)) {
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, w, h);
+      ctx.fillRect(0, 0, outW, outH);
     }
-    ctx.drawImage(img, 0, 0, w, h);
+    ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, outW, outH);
+
+    // Step 4: Export
     const extMap = {
       'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp',
       'image/gif': 'gif', 'image/bmp': 'bmp', 'image/tiff': 'tiff',
       'image/avif': 'avif', 'image/x-icon': 'ico'
     };
     const ext = extMap[format] || 'jpg';
-    // Try canvas toDataURL — fallback to jpeg if format not supported
     let dataUrl;
     try {
       dataUrl = canvas.toDataURL(format, quality);
-      // Check if browser actually supports this format
-      if (dataUrl === 'data:,' || dataUrl.startsWith('data:image/png') && format !== 'image/png') {
+      if (dataUrl === 'data:,' || (dataUrl.startsWith('data:image/png') && format !== 'image/png')) {
         throw new Error('Format not supported');
       }
     } catch(e) {
       alert(`Unable to convert to ${ext.toUpperCase()} on this device. Try JPEG, PNG, or WebP.`);
-      btn.textContent = 'Convert Image'; btn.disabled = false;
+      btn.textContent = 'Download Image'; btn.disabled = false;
       return;
     }
     const a = document.createElement('a');
     a.href = dataUrl;
-    a.download = imgFile.name.replace(/\.[^/.]+$/, '') + '_converted.' + ext;
+    a.download = imgFile.name.replace(/\.[^/.]+$/, '') + '_edited.' + ext;
     a.click();
     imgDailyCount++;
     localStorage.setItem(key, imgDailyCount.toString());
     const remaining = Math.max(0, limit - imgDailyCount);
-    document.getElementById('img-usage').textContent = pro ? `Unlimited conversions` : `${remaining} conversion${remaining !== 1 ? 's' : ''} remaining today`;
-    document.getElementById('img-limit-note').textContent = `${pro ? 'Pro' : 'Free'}: ${remaining} of ${limit} conversions remaining today`;
-    btn.textContent = 'Convert Image'; btn.disabled = false;
+    document.getElementById('img-usage').textContent = pro ? `Unlimited edits` : `${remaining} edit${remaining !== 1 ? 's' : ''} remaining today`;
+    document.getElementById('img-limit-note').textContent = `${pro ? 'Pro' : 'Free'}: ${remaining} of ${limit} edits remaining today`;
+    btn.textContent = 'Download Image'; btn.disabled = false;
   };
   img.src = URL.createObjectURL(imgFile);
 }
