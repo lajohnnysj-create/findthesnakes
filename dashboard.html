@@ -7054,28 +7054,31 @@ function renderGrid() {
         gridPhotos = order.map(id => gridPhotos.find(p => p.id === id)).filter(Boolean);
         gridDirty = true;
         renderPhonePreview();
+        updateGridSaveButton();
       }
     });
   }
 
-  // Update save button state
-  if (saveBtn) {
-    if (gridDirty && gridPhotos.length > 0) {
-      saveBtn.textContent = 'Save';
-      saveBtn.disabled = false;
-      saveBtn.style.opacity = '1';
-    } else if (gridLoaded && !gridDirty) {
-      saveBtn.textContent = 'Saved ✓';
-      saveBtn.disabled = true;
-      saveBtn.style.opacity = '0.6';
-    } else {
-      saveBtn.textContent = 'Save';
-      saveBtn.disabled = gridPhotos.length === 0;
-      saveBtn.style.opacity = gridPhotos.length === 0 ? '0.5' : '1';
-    }
-  }
-
+  updateGridSaveButton();
   renderPhonePreview();
+}
+
+function updateGridSaveButton() {
+  const saveBtn = document.getElementById('grid-save-btn');
+  if (!saveBtn) return;
+  if (gridDirty && gridPhotos.length > 0) {
+    saveBtn.textContent = 'Save';
+    saveBtn.disabled = false;
+    saveBtn.style.opacity = '1';
+  } else if (gridLoaded && !gridDirty) {
+    saveBtn.textContent = 'Saved ✓';
+    saveBtn.disabled = true;
+    saveBtn.style.opacity = '0.6';
+  } else {
+    saveBtn.textContent = 'Save';
+    saveBtn.disabled = gridPhotos.length === 0;
+    saveBtn.style.opacity = gridPhotos.length === 0 ? '0.5' : '1';
+  }
 }
 
 function renderPhonePreview() {
