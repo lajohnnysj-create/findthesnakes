@@ -4167,6 +4167,46 @@
                 <button id="deal-delete-btn" onclick="promptDeleteDeal()" style="display:none;padding:12px 16px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Delete</button>
               </div>
             </div>
+
+            <!-- ========== MESSAGES CARD ========== -->
+            <div id="deal-messages-card" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-top:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+                <div>
+                  <div style="font-family:Syne,sans-serif;font-size:16px;font-weight:700;letter-spacing:-0.2px;color:var(--text);margin-bottom:2px;">Messages</div>
+                  <div style="font-size:12px;color:var(--muted);">Communicate with the brand about this deal.</div>
+                </div>
+                <button type="button" onclick="loadDealMessages()" title="Refresh" style="padding:8px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                  Refresh
+                </button>
+              </div>
+
+              <!-- Messages thread (newest at bottom) -->
+              <div id="deal-messages-thread" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;max-height:500px;overflow-y:auto;padding-right:4px;">
+                <!-- populated dynamically -->
+              </div>
+
+              <!-- Empty state -->
+              <div id="deal-messages-empty" style="padding:30px 20px;background:var(--surface);border:1px dashed var(--border);border-radius:10px;text-align:center;margin-bottom:16px;">
+                <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">No messages yet</div>
+                <div style="font-size:12px;color:var(--muted);">Start the conversation below. The brand will see your messages in their portal.</div>
+              </div>
+
+              <!-- Composer -->
+              <div id="deal-message-composer" style="display:flex;flex-direction:column;gap:8px;">
+                <textarea id="deal-message-input" rows="3" placeholder="Write a message to the brand..." maxlength="5000" class="deal-input" style="resize:vertical;min-height:70px;" oninput="updateMessageCharCount()"></textarea>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+                  <div id="deal-message-char-count" style="font-size:11px;color:var(--muted);">0 / 5000</div>
+                  <button onclick="postCreatorMessage()" id="deal-message-send-btn" style="padding:9px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 16px var(--accent-glow);">Send</button>
+                </div>
+              </div>
+
+              <!-- Share-not-enabled state -->
+              <div id="deal-messages-no-share" style="display:none;padding:16px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:10px;margin-top:4px;">
+                <div style="font-size:12px;color:var(--muted);line-height:1.5;">Messages will be visible to the brand once you share this deal with them. Click <strong style="color:var(--text);">Share with brand</strong> above to generate the portal link.</div>
+              </div>
+            </div>
+
           </div>
 
         </div>
@@ -10323,6 +10363,17 @@ function showDealDetail(dealId) {
   applyDealLockState();
   updateDealDetailBadges();
   updateShareButtonVisibility();
+  updateMessagesCardVisibility();
+  // Load messages thread if deal is saved
+  if (currentDealId) {
+    dealMessagesCache = [];
+    renderDealMessages();
+    loadDealMessages();
+  }
+  // Reset composer
+  const msgInput = document.getElementById('deal-message-input');
+  if (msgInput) msgInput.value = '';
+  updateMessageCharCount();
 
   // Switch views
   document.getElementById('deals-list-view').style.display = 'none';
@@ -10337,6 +10388,7 @@ function handleDealStatusChange() {
   applyDealLockState();
   updateDealDetailBadges();
   updateShareButtonVisibility();
+  updateMessagesCardVisibility();
 }
 
 // Update the status + payment badges at the top of the detail page to reflect current form values
@@ -10428,6 +10480,169 @@ async function revertDealToActive() {
   // Refresh and re-open
   await loadDealsList();
   showDealDetail(currentDealId);
+}
+
+// =====================================================
+// BRAND DEAL CRM — Messages Thread (Creator side)
+// =====================================================
+let dealMessagesCache = [];
+
+// Decide whether to show the messages card. Only for saved deals.
+function updateMessagesCardVisibility() {
+  const card = document.getElementById('deal-messages-card');
+  if (!card) return;
+  const deal = currentDealId ? dealsList.find(d => d.id === currentDealId) : null;
+  if (!deal) {
+    card.style.display = 'none';
+    return;
+  }
+  // Hide on cancelled deals (share is auto-revoked, no point messaging)
+  if (deal.status === 'cancelled') {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  // Decide: show "share not enabled" notice if no active share token
+  const noShareEl = document.getElementById('deal-messages-no-share');
+  const composer = document.getElementById('deal-message-composer');
+  const isShared = deal.share_token && !deal.share_revoked_at;
+  if (!isShared) {
+    if (noShareEl) noShareEl.style.display = 'block';
+    if (composer) composer.style.display = 'none';
+  } else {
+    if (noShareEl) noShareEl.style.display = 'none';
+    if (composer) composer.style.display = 'flex';
+  }
+}
+
+async function loadDealMessages() {
+  if (!currentDealId) return;
+  const { data, error } = await sb
+    .from('deal_messages')
+    .select('*')
+    .eq('deal_id', currentDealId)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Failed to load messages:', error);
+    return;
+  }
+  dealMessagesCache = data || [];
+  renderDealMessages();
+
+  // Mark any unread brand messages as read by creator (since they're viewing now)
+  const unreadBrandMessages = dealMessagesCache.filter(m => m.author_type === 'brand' && !m.read_by_other_party);
+  if (unreadBrandMessages.length > 0) {
+    const ids = unreadBrandMessages.map(m => m.id);
+    await sb.from('deal_messages').update({ read_by_other_party: true }).in('id', ids);
+  }
+}
+
+function renderDealMessages() {
+  const threadEl = document.getElementById('deal-messages-thread');
+  const emptyEl = document.getElementById('deal-messages-empty');
+  if (!threadEl || !emptyEl) return;
+
+  if (dealMessagesCache.length === 0) {
+    threadEl.innerHTML = '';
+    threadEl.style.display = 'none';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  threadEl.style.display = 'flex';
+
+  threadEl.innerHTML = dealMessagesCache.map(m => {
+    const isCreator = m.author_type === 'creator';
+    const bg = isCreator ? 'rgba(124,58,237,0.08)' : 'var(--surface)';
+    const border = isCreator ? '1px solid rgba(124,58,237,0.25)' : '1px solid var(--border)';
+    const align = isCreator ? 'flex-end' : 'flex-start';
+    const nameColor = isCreator ? '#c4b5fd' : '#fbbf24';
+    const roleLabel = isCreator ? 'You' : escapeHtml(m.author_name || 'Brand');
+    const dt = new Date(m.created_at);
+    const timeStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    // Simple text rendering with newlines preserved
+    const content = escapeHtml(m.content).replace(/\n/g, '<br>');
+    return `
+      <div style="display:flex;justify-content:${align};">
+        <div style="max-width:75%;background:${bg};border:${border};border-radius:12px;padding:10px 14px;">
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
+            <div style="font-size:12px;font-weight:600;color:${nameColor};">${roleLabel}</div>
+            <div style="font-size:10px;color:var(--muted);">${timeStr}</div>
+          </div>
+          <div style="font-size:13px;color:var(--text);line-height:1.5;word-break:break-word;">${content}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Scroll to bottom (newest messages)
+  setTimeout(() => { threadEl.scrollTop = threadEl.scrollHeight; }, 50);
+}
+
+async function postCreatorMessage() {
+  if (!currentDealId) return;
+  const input = document.getElementById('deal-message-input');
+  const content = (input.value || '').trim();
+  if (!content) {
+    input.focus();
+    return;
+  }
+  if (content.length > 5000) {
+    showDealModalMsg('error', 'Message is too long (max 5000 characters).');
+    return;
+  }
+
+  const deal = dealsList.find(d => d.id === currentDealId);
+  if (!deal) return;
+
+  // Get creator display name — prefer profiles.username, fall back to email prefix
+  let authorName = 'Creator';
+  try {
+    const { data: profile } = await sb.from('profiles').select('username').eq('user_id', currentUser.id).maybeSingle();
+    if (profile && profile.username) {
+      authorName = '@' + profile.username;
+    } else if (currentUser.email) {
+      authorName = currentUser.email.split('@')[0];
+    }
+  } catch (e) {
+    // Non-fatal
+  }
+
+  const btn = document.getElementById('deal-message-send-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  const { error } = await sb.from('deal_messages').insert({
+    deal_id: currentDealId,
+    user_id: currentUser.id,
+    author_type: 'creator',
+    author_name: authorName,
+    content: content
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'Send';
+
+  if (error) {
+    showDealModalMsg('error', 'Failed to send message: ' + error.message);
+    return;
+  }
+
+  // Clear input + reload thread
+  input.value = '';
+  updateMessageCharCount();
+  await loadDealMessages();
+}
+
+function updateMessageCharCount() {
+  const input = document.getElementById('deal-message-input');
+  const countEl = document.getElementById('deal-message-char-count');
+  if (!input || !countEl) return;
+  const len = (input.value || '').length;
+  countEl.textContent = `${len} / 5000`;
+  countEl.style.color = len > 4900 ? '#fca5a5' : 'var(--muted)';
 }
 
 // =====================================================
@@ -11026,6 +11241,8 @@ async function openShareModal() {
       dealsList[idx].share_pin = pin;
       dealsList[idx].share_revoked_at = null;
     }
+    // Messages card now enabled since share exists
+    updateMessagesCardVisibility();
   }
 
   // Populate fields
@@ -11103,6 +11320,7 @@ async function revokeShareAccess() {
   if (idx >= 0) {
     dealsList[idx].share_revoked_at = new Date().toISOString();
   }
+  updateMessagesCardVisibility();
 
   closeShareModal();
   showDealModalMsg('success', 'Access revoked. The brand can no longer view this deal.');
