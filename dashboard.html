@@ -8607,12 +8607,24 @@ function setupCropStage(dataUrl) {
 
   stageImg.onload = () => {
     imgNatural = { w: stageImg.naturalWidth, h: stageImg.naturalHeight };
-    // Read back the displayed size after CSS max-width/max-height constraints
-    imgDisplaySize = { w: stageImg.clientWidth, h: stageImg.clientHeight };
+    // Show the crop area FIRST so the browser can lay out the image
     cropArea.style.display = 'block';
-    // Start with full-image (no real crop) box
-    imgCropBox = { x: 0, y: 0, w: imgDisplaySize.w, h: imgDisplaySize.h };
-    resetCropBox();
+    // Wait one frame for layout to settle, THEN measure displayed size
+    requestAnimationFrame(() => {
+      imgDisplaySize = { w: stageImg.clientWidth, h: stageImg.clientHeight };
+      // Fallback: if still zero (edge case), derive from natural + container bounds
+      if (!imgDisplaySize.w || !imgDisplaySize.h) {
+        const maxH = 540;
+        const containerW = stage.clientWidth || 640;
+        const scale = Math.min(containerW / imgNatural.w, maxH / imgNatural.h, 1);
+        imgDisplaySize = {
+          w: Math.round(imgNatural.w * scale),
+          h: Math.round(imgNatural.h * scale)
+        };
+      }
+      imgCropBox = { x: 0, y: 0, w: imgDisplaySize.w, h: imgDisplaySize.h };
+      resetCropBox();
+    });
   };
   stageImg.src = dataUrl;
 }
@@ -8670,14 +8682,19 @@ function renderCropBox() {
   const stage = document.getElementById('img-crop-stage');
   const stageImg = document.getElementById('img-crop-src');
   const box = document.getElementById('img-crop-box');
-  // Refresh display size in case of resize
-  imgDisplaySize = { w: stageImg.clientWidth, h: stageImg.clientHeight };
+  // Refresh display size each render in case of layout changes
+  if (stageImg.clientWidth && stageImg.clientHeight) {
+    imgDisplaySize = { w: stageImg.clientWidth, h: stageImg.clientHeight };
+  }
+  if (!imgDisplaySize.w || !imgDisplaySize.h) return;
   // Offset image within stage (for letterboxing)
   const stageRect = stage.getBoundingClientRect();
   const imgRect = stageImg.getBoundingClientRect();
   const offsetX = imgRect.left - stageRect.left;
   const offsetY = imgRect.top - stageRect.top;
-  // Clamp crop box to image bounds
+  // Clamp box dimensions first, then position
+  imgCropBox.w = Math.min(imgCropBox.w, imgDisplaySize.w);
+  imgCropBox.h = Math.min(imgCropBox.h, imgDisplaySize.h);
   imgCropBox.x = Math.max(0, Math.min(imgDisplaySize.w - imgCropBox.w, imgCropBox.x));
   imgCropBox.y = Math.max(0, Math.min(imgDisplaySize.h - imgCropBox.h, imgCropBox.y));
   box.style.display = 'block';
