@@ -246,6 +246,7 @@
   .mock-pay-paid { color: #4ade80; }
   .mock-pay-waiting { color: #fbbf24; }
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -618,26 +619,26 @@ const SUPABASE_URL = 'https://kjytapcgxukalwsyputk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMTcxMzEsImV4cCI6MjA5MDg5MzEzMX0.VC8mcU5lUeA56kG2gHssvl88EVWr018XttA86jpfEn0';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Tier required for THIS tool. Set per page: 'free', 'pro', or 'max'.
-const TOOL_REQUIRED_TIER = 'pro'; // kept for reference, no longer used for routing
-
-// Try button: signup if not logged in, dashboard if logged in.
+// Smart Try button: opens signup modal if logged out, sends to dashboard if logged in.
 async function tryThisTool(e) {
   if (e) e.preventDefault();
-  const { data: sessionData } = await sb.auth.getSession();
-  if (!sessionData.session) {
-    window.location.href = '../index.html?action=signup';
-  } else {
-    window.location.href = '../dashboard.html';
-  }
+  try {
+    const { data: sessionData } = await sb.auth.getSession();
+    if (sessionData && sessionData.session) {
+      window.location.href = 'dashboard.html';
+      return false;
+    }
+  } catch (err) { /* fall through to signup */ }
+  window.location.href = 'index.html?action=signup';
   return false;
 }
 
-function goSignIn() { window.location.href = '../index.html?action=signin'; }
-function goSignUp() { window.location.href = '../index.html?action=signup'; }
+function goSignIn() { window.location.href = 'index.html?action=signin'; }
+function goSignUp() { window.location.href = 'index.html?action=signup'; }
 function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
 function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
 </script>
 
+<script src="/auth-modal.js"></script>
 </body>
 </html>
