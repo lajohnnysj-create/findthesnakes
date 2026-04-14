@@ -85,7 +85,12 @@
   .contract-soon-tag { padding: 5px 10px; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.25); color: #fbbf24; border-radius: 6px; font-size: 11px; font-weight: 500; flex-shrink: 0; }
 
   /* Messages thread */
-  .msg-thread { display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; padding-right: 4px; margin-bottom: 16px; }
+  .msg-thread { display: flex; flex-direction: column; gap: 10px; max-height: 340px; overflow-y: auto; padding-right: 6px; margin-bottom: 16px; }
+  /* Custom scrollbar for message thread (webkit browsers) */
+  .msg-thread::-webkit-scrollbar { width: 8px; }
+  .msg-thread::-webkit-scrollbar-track { background: transparent; }
+  .msg-thread::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+  .msg-thread::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   .msg-bubble-wrap { display: flex; }
   .msg-bubble-wrap.brand { justify-content: flex-end; }
   .msg-bubble-wrap.creator { justify-content: flex-start; }
@@ -211,7 +216,22 @@
         <div class="contract-name" id="portal-contract-filename">contract.pdf</div>
         <div class="contract-status">Signed contract on file</div>
       </div>
-      <div class="contract-soon-tag">Download coming soon</div>
+      <button onclick="downloadDealFile('contract', this)" id="portal-contract-dl-btn" style="padding:8px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;flex-shrink:0;box-shadow:0 0 16px var(--accent-glow);">Download</button>
+    </div>
+  </div>
+
+  <!-- Invoice -->
+  <div class="portal-card" id="portal-invoice-card" style="display:none;">
+    <div class="portal-card-title">Invoice</div>
+    <div class="contract-row">
+      <div class="contract-icon" style="background:rgba(74,222,128,0.12);color:#4ade80;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5"/></svg>
+      </div>
+      <div class="contract-info">
+        <div class="contract-name" id="portal-invoice-filename">invoice.pdf</div>
+        <div class="contract-status">Invoice ready for review</div>
+      </div>
+      <button onclick="downloadDealFile('invoice', this)" id="portal-invoice-dl-btn" style="padding:8px 14px;background:#4ade80;color:#0a0a14;border:none;border-radius:8px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;flex-shrink:0;">Download</button>
     </div>
   </div>
 
@@ -396,6 +416,14 @@ function renderPortal() {
     document.getElementById('portal-contract-card').style.display = 'none';
   }
 
+  // Invoice
+  if (deal.invoice_file_path) {
+    document.getElementById('portal-invoice-card').style.display = 'block';
+    document.getElementById('portal-invoice-filename').textContent = deal.invoice_file_name || 'invoice.pdf';
+  } else {
+    document.getElementById('portal-invoice-card').style.display = 'none';
+  }
+
   // Messages
   renderMessages(dealData.messages || []);
 
@@ -488,6 +516,39 @@ async function refreshMessages(btn) {
 }
 
 // ============================================================
+// FILE DOWNLOAD (calls deal-file-url edge function)
+// ============================================================
+async function downloadDealFile(fileType, btn) {
+  if (!btn) return;
+  const orig = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Loading...';
+
+  try {
+    const { data, error } = await sb.functions.invoke('deal-file-url', {
+      body: { token: dealToken, pin: dealPin, file_type: fileType }
+    });
+
+    if (error) throw new Error(error.message || 'Failed to load download');
+    if (data && data.error) throw new Error(data.error);
+    if (!data || !data.url) throw new Error('No download URL returned');
+
+    // Trigger download by opening in new tab (the URL has Content-Disposition: attachment)
+    window.open(data.url, '_blank', 'noopener,noreferrer');
+    btn.textContent = 'Downloaded';
+  } catch (err) {
+    console.error('Download failed', err);
+    btn.textContent = 'Failed';
+    alert('Could not download file: ' + err.message);
+  } finally {
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.disabled = false;
+    }, 1500);
+  }
+}
+
+// ============================================================
 // SEND MESSAGE
 // ============================================================
 function updateMsgCharCount() {
@@ -541,6 +602,17 @@ async function sendMessage() {
   // Clear input and refresh thread
   input.value = '';
   updateMsgCharCount();
+
+  // Fire-and-forget creator notification (smart batching enforced server-side)
+  const preview = content.length > 200 ? content.slice(0, 200) + '…' : content;
+  sb.functions.invoke('send-deal-notification', {
+    body: {
+      type: 'brand_message_to_creator',
+      deal_id: dealData.deal.id,
+      message_preview: preview
+    }
+  }).catch(err => console.warn('Notification failed (non-fatal):', err));
+
   // Re-fetch full deal to get the latest message list
   const result = await loadDeal();
   if (result.ok) {
