@@ -3956,7 +3956,7 @@
         <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;background:linear-gradient(135deg,#a78bfa,#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;margin-bottom:8px;">Creator Max</div>
         <h2 style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-0.3px;">Script Builder is a Creator Max feature</h2>
         <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;">Write and organize your video scripts with draggable blocks. Add a hook, break into sections, rearrange freely, and export as PDF or teleprompter.</p>
-        <button onclick="startCheckout('max')" style="padding:12px 26px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.35);">Upgrade to Creator Max — $20/mo</button>
+        <button onclick="handleMaxUpgradeClick()" style="padding:12px 26px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.35);">Upgrade to Creator Max — $20/mo</button>
       </div>
 
       <!-- Editor wrapper (shown when Max) -->
@@ -4007,7 +4007,7 @@
           <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(232,121,249,0.15));border:1px solid rgba(167,139,250,0.3);border-radius:999px;font-size:11px;font-weight:700;color:#e879f9;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:20px;">MAX Feature</div>
           <h2 style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-0.3px;">Brand Deal CRM is a Creator Max feature</h2>
           <p style="color:var(--muted);font-size:14px;max-width:480px;margin:0 auto 24px;">Manage your brand deals, track deliverables, securely share details with brands, and see your revenue analytics — all in one place.</p>
-          <button onclick="showTool('welcome'); setTimeout(() => document.getElementById('settings-modal')?.classList.add('open'), 100);" style="padding:12px 28px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(167,139,250,0.3);">Upgrade to Creator Max</button>
+          <button onclick="handleMaxUpgradeClick()" style="padding:12px 28px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(167,139,250,0.3);">Upgrade to Creator Max</button>
         </div>
 
         <!-- Main CRM (for Max users) -->
@@ -4697,6 +4697,17 @@ function closeTopbarUpgradeConfirm() {
 async function confirmTopbarUpgradeToMax() {
   closeTopbarUpgradeConfirm();
   await startCheckout('max');
+}
+
+// Unified handler for any "Upgrade to Creator Max" button outside the topbar.
+// Free users go straight to Stripe checkout (need to enter card).
+// Pro users see the confirmation modal first (avoid accidental in-place upgrade).
+function handleMaxUpgradeClick() {
+  if (isPro() && !isMax()) {
+    promptUpgradeToMax();
+  } else {
+    startCheckout('max');
+  }
 }
 
 // Step 1: user clicked "Downgrade to Pro" — show inline confirmation
