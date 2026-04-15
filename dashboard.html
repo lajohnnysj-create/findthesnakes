@@ -4684,15 +4684,18 @@ async function confirmUpgradeToMaxFinal() {
 }
 
 // Confirm + trigger upgrade from outside the settings modal (e.g. topbar button)
-async function promptUpgradeToMax() {
-  const ok = await ryxaConfirm({
-    title: 'Upgrade to Creator Max?',
-    body: 'Your current Pro plan will be upgraded immediately. Stripe will charge a prorated amount for the difference and your billing date stays the same.<br><br>Creator Max is <strong style="color:var(--text);">$20/month</strong>.',
-    okText: 'Yes, upgrade',
-    okColor: 'purple',
-    iconType: 'send'
-  });
-  if (!ok) return;
+function promptUpgradeToMax() {
+  const modal = document.getElementById('topbar-upgrade-confirm-modal');
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeTopbarUpgradeConfirm() {
+  const modal = document.getElementById('topbar-upgrade-confirm-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function confirmTopbarUpgradeToMax() {
+  closeTopbarUpgradeConfirm();
   await startCheckout('max');
 }
 
@@ -13662,6 +13665,23 @@ window.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
+
+<div id="topbar-upgrade-confirm-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;pointer-events:all;">
+  <div style="background:#0f0f1a;border:1px solid rgba(124,58,237,0.35);border-radius:16px;padding:28px;position:relative;width:100%;max-width:440px;pointer-events:all;margin:20px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,rgba(124,58,237,0.18),rgba(232,121,249,0.12));border:1px solid rgba(167,139,250,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <h3 style="font-family:Syne,sans-serif;font-size:18px;font-weight:700;color:var(--text);margin:0;">Upgrade to Creator Max?</h3>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:14px;line-height:1.6;">Your current Pro plan will be upgraded immediately. Stripe will charge a prorated amount for the difference and your billing date stays the same.</p>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.6;">Creator Max is <strong style="color:var(--text);">$20/month</strong>.</p>
+    <div style="display:flex;gap:10px;">
+      <button onclick="confirmTopbarUpgradeToMax()" style="flex:1;padding:11px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 16px rgba(167,139,250,0.25);">Yes, upgrade</button>
+      <button onclick="closeTopbarUpgradeConfirm()" style="padding:11px 18px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <script src="/cookie-banner.js"></script>
 </body>
