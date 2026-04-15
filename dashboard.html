@@ -1493,8 +1493,7 @@
   .dash-stat-sub { font-size: 11px; color: var(--muted); line-height: 1.4; position: relative; }
   .dash-stat-breakdown { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; position: relative; }
   .dash-stat-pill { font-size: 10px; padding: 3px 9px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); border-radius: 999px; color: #c4b5fd; font-weight: 500; }
-  .dash-stat-locked { font-size: 11px; color: #c4b5fd; line-height: 1.4; padding: 7px 11px; background: rgba(124,58,237,0.08); border: 1px dashed rgba(124,58,237,0.3); border-radius: 8px; margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; }
-  .dash-stat-locked:hover { background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.5); }
+  .dash-stat-locked { font-size: 11px; color: #c4b5fd; line-height: 1.4; padding: 7px 11px; background: rgba(124,58,237,0.08); border: 1px dashed rgba(124,58,237,0.3); border-radius: 8px; margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; }
   .dash-stat-locked svg { width: 11px; height: 11px; flex-shrink: 0; }
 
   /* Time range controls */
@@ -1508,7 +1507,11 @@
   .dash-range-custom.active .dash-range-custom-label { color: #c4b5fd; }
   .dash-range-custom-label { font-size: 12px; color: var(--muted); font-weight: 500; }
   .dash-range-date { padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text); border-radius: 5px; font-size: 11px; font-family: "DM Sans", sans-serif; color-scheme: dark; }
-  .dash-range-date::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.7; cursor: pointer; }
+  .dash-range-date::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(2);
+    opacity: 0.6;
+    cursor: pointer;
+  }
   .dash-range-date::-webkit-calendar-picker-indicator:hover { opacity: 1; }
   .dash-range-date:focus { border-color: var(--accent); outline: none; }
   .dash-sparkline { display: flex; align-items: flex-end; gap: 2px; height: 32px; margin-top: 12px; position: relative; }
@@ -1539,6 +1542,8 @@
   .upgrade-banner-btns { display: flex; gap: 10px; flex-wrap: wrap; }
   .upgrade-banner-btn-pro { padding: 9px 20px; background: var(--accent); border: none; color: #fff; border-radius: 8px; font-size: 13px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 20px var(--accent-glow); }
   .upgrade-banner-btn-pro:hover { background: var(--accent2); }
+  .upgrade-banner-btn-max { padding: 9px 20px; background: linear-gradient(135deg,#a78bfa,#e879f9); border: none; color: #fff; border-radius: 8px; font-size: 13px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 20px rgba(232,121,249,0.35); }
+  .upgrade-banner-btn-max:hover { filter: brightness(1.1); }
 
   /* ── LOADING MODAL ── */
   #loading-overlay { position: fixed; inset: 0; z-index: 9998; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; pointer-events: all; }
@@ -2714,6 +2719,7 @@
       <div class="upgrade-banner-text"><strong>Unlock everything with Pro</strong>. Full follower audit, unlimited invoices, more QR codes and image conversions.</div>
       <div class="upgrade-banner-btns">
         <button class="upgrade-banner-btn-pro" onclick="startCheckout()">Go Pro &#x2014; $10/mo &#x2B50;</button>
+        <button class="upgrade-banner-btn-max" onclick="startCheckout('max')">Upgrade to Creator Max &#x2014; $20/mo</button>
       </div>
     </div>
 
@@ -4491,7 +4497,26 @@ function updateTierUI() {
         ? '&#x2728; Pro Creator'
         : 'Creator Tools';
   }
-  if (upgradeBtn) upgradeBtn.style.display = pro ? 'none' : 'block';
+  if (upgradeBtn) {
+    if (max) {
+      upgradeBtn.style.display = 'none';
+    } else if (pro) {
+      // Pro user: show Max upgrade with gradient styling
+      upgradeBtn.style.display = 'block';
+      upgradeBtn.textContent = 'Upgrade to Creator Max';
+      upgradeBtn.onclick = () => startCheckout('max');
+      upgradeBtn.style.background = 'linear-gradient(135deg,#a78bfa,#e879f9)';
+      upgradeBtn.style.boxShadow = '0 0 20px rgba(232,121,249,0.35)';
+    } else {
+      // Free user: show Pro upgrade with default styling
+      upgradeBtn.style.display = 'block';
+      upgradeBtn.textContent = 'Upgrade to Pro';
+      upgradeBtn.onclick = () => startCheckout();
+      upgradeBtn.style.background = '';
+      upgradeBtn.style.boxShadow = '';
+    }
+  }
+  // Banner only shows for Free users
   if (upgradeBanner) upgradeBanner.style.display = pro ? 'none' : 'flex';
 
   // Refresh Brand Deal CRM if it's the active tool (Max gating may have changed)
@@ -4782,7 +4807,7 @@ async function loadDashStats() {
   if (!isMax) {
     // Locked state for Free/Pro
     rEl.textContent = '$0';
-    rSub.innerHTML = `<span class="dash-stat-locked" onclick="window.location.href='pricing.html'">
+    rSub.innerHTML = `<span class="dash-stat-locked">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       Revenue tracking available with Creator Max
     </span>`;
