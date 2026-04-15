@@ -4190,6 +4190,48 @@
                 <div id="deal-invoice-progress" style="display:none;margin-top:8px;font-size:12px;color:var(--muted);">Uploading...</div>
               </div>
 
+              <!-- MESSAGES CHAT BOX (inline, between invoice and private notes) -->
+              <div id="deal-messages-card" style="display:none;margin-bottom:24px;background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(232,121,249,0.03));border:1px solid rgba(124,58,237,0.2);border-radius:14px;padding:18px;position:relative;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <div style="width:28px;height:28px;border-radius:8px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div>
+                      <div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);">Messages</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="refreshMessagesWithFeedback(this)" title="Refresh" style="padding:5px 10px;background:transparent;border:1px solid rgba(124,58,237,0.25);color:var(--muted);border-radius:6px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                    Refresh
+                  </button>
+                </div>
+
+                <!-- Messages thread (fixed height, ~3 messages visible) -->
+                <div id="deal-messages-thread" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:220px;overflow-y:auto;padding-right:6px;">
+                  <!-- populated dynamically -->
+                </div>
+
+                <!-- Empty state -->
+                <div id="deal-messages-empty" style="padding:20px 16px;background:rgba(124,58,237,0.04);border:1px dashed rgba(124,58,237,0.2);border-radius:10px;text-align:center;margin-bottom:12px;">
+                  <div style="font-size:12px;color:var(--muted);">No messages yet. Start the conversation below.</div>
+                </div>
+
+                <!-- Composer -->
+                <div id="deal-message-composer" style="display:flex;flex-direction:column;gap:6px;">
+                  <textarea id="deal-message-input" rows="2" placeholder="Write a message to the brand..." maxlength="5000" class="deal-input" style="resize:none;min-height:56px;max-height:56px;background:rgba(0,0,0,0.2);border-color:rgba(124,58,237,0.2);" oninput="updateMessageCharCount()"></textarea>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                    <div id="deal-message-char-count" style="font-size:10px;color:var(--muted);">0 / 5000</div>
+                    <button onclick="postCreatorMessage()" id="deal-message-send-btn" style="padding:7px 16px;background:var(--accent);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 12px var(--accent-glow);">Send</button>
+                  </div>
+                </div>
+
+                <!-- Share-not-enabled state -->
+                <div id="deal-messages-no-share" style="display:none;padding:12px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:8px;margin-top:6px;">
+                  <div style="font-size:11px;color:var(--muted);line-height:1.5;">Messages will be visible to the brand once you share this deal. Click <strong style="color:var(--text);">Share with brand</strong> above to generate the portal link.</div>
+                </div>
+              </div>
+
               <!-- PRIVATE NOTES section -->
               <div style="margin-bottom:20px;">
                 <div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:14px;">Private Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(only visible to you)</span></div>
@@ -4205,45 +4247,6 @@
                 <button onclick="showDealsList()" style="padding:12px 20px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
                 <div style="flex:1;"></div>
                 <button id="deal-delete-btn" onclick="promptDeleteDeal()" style="display:none;padding:12px 16px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Delete</button>
-              </div>
-            </div>
-
-            <!-- ========== MESSAGES CARD ========== -->
-            <div id="deal-messages-card" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-top:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
-                <div>
-                  <div style="font-family:Syne,sans-serif;font-size:16px;font-weight:700;letter-spacing:-0.2px;color:var(--text);margin-bottom:2px;">Messages</div>
-                  <div style="font-size:12px;color:var(--muted);">Communicate with the brand about this deal.</div>
-                </div>
-                <button type="button" onclick="refreshMessagesWithFeedback(this)" title="Refresh" style="padding:8px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                  Refresh
-                </button>
-              </div>
-
-              <!-- Messages thread (newest at bottom) -->
-              <div id="deal-messages-thread" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;max-height:340px;overflow-y:auto;padding-right:6px;">
-                <!-- populated dynamically -->
-              </div>
-
-              <!-- Empty state -->
-              <div id="deal-messages-empty" style="padding:30px 20px;background:var(--surface);border:1px dashed var(--border);border-radius:10px;text-align:center;margin-bottom:16px;">
-                <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">No messages yet</div>
-                <div style="font-size:12px;color:var(--muted);">Start the conversation below. The brand will see your messages in their portal.</div>
-              </div>
-
-              <!-- Composer -->
-              <div id="deal-message-composer" style="display:flex;flex-direction:column;gap:8px;">
-                <textarea id="deal-message-input" rows="3" placeholder="Write a message to the brand..." maxlength="5000" class="deal-input" style="resize:vertical;min-height:70px;" oninput="updateMessageCharCount()"></textarea>
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-                  <div id="deal-message-char-count" style="font-size:11px;color:var(--muted);">0 / 5000</div>
-                  <button onclick="postCreatorMessage()" id="deal-message-send-btn" style="padding:9px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 16px var(--accent-glow);">Send</button>
-                </div>
-              </div>
-
-              <!-- Share-not-enabled state -->
-              <div id="deal-messages-no-share" style="display:none;padding:16px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:10px;margin-top:4px;">
-                <div style="font-size:12px;color:var(--muted);line-height:1.5;">Messages will be visible to the brand once you share this deal with them. Click <strong style="color:var(--text);">Share with brand</strong> above to generate the portal link.</div>
               </div>
             </div>
 
