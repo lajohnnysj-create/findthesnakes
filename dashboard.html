@@ -1481,37 +1481,41 @@
   .welcome-screen p { color: var(--muted); font-size: 16px; line-height: 1.7; max-width: 480px; margin-bottom: 32px; }
 
   /* Dashboard Stats Boxes */
-  .dash-stats-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 640px; width: 100%; margin-bottom: 32px; }
-  .dash-stat-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: left; }
-  .dash-stat-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .dash-stat-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .dash-stat-icon.revenue { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.25); }
-  .dash-stat-icon.views { background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); }
-  .dash-stat-icon svg { width: 16px; height: 16px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .dash-stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
-  .dash-stat-value { font-family: "Syne", sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -1px; margin-bottom: 4px; }
-  .dash-stat-value.revenue-val { color: #4ade80; }
-  .dash-stat-value.views-val { color: #60a5fa; }
-  .dash-stat-sub { font-size: 11px; color: var(--muted); line-height: 1.4; }
-  .dash-stat-breakdown { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-  .dash-stat-pill { font-size: 10px; padding: 3px 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
+  .dash-stats-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 720px; width: 100%; margin-bottom: 32px; }
+  .dash-stat-box { position: relative; background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(232,121,249,0.04)); border: 1px solid rgba(124,58,237,0.2); border-radius: 18px; padding: 22px; text-align: left; overflow: hidden; transition: border-color 0.2s; }
+  .dash-stat-box::before { content: ''; position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(232,121,249,0.08) 0%, transparent 70%); pointer-events: none; }
+  .dash-stat-box:hover { border-color: rgba(124,58,237,0.4); }
+  .dash-stat-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; position: relative; }
+  .dash-stat-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(232,121,249,0.12)); border: 1px solid rgba(167,139,250,0.3); }
+  .dash-stat-icon svg { width: 17px; height: 17px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke: #c4b5fd; }
+  .dash-stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+  .dash-stat-value { font-family: "Syne", sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -1.2px; margin-bottom: 4px; background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; position: relative; }
+  .dash-stat-sub { font-size: 11px; color: var(--muted); line-height: 1.4; position: relative; }
+  .dash-stat-breakdown { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; position: relative; }
+  .dash-stat-pill { font-size: 10px; padding: 3px 9px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); border-radius: 999px; color: #c4b5fd; font-weight: 500; }
+  .dash-stat-locked { font-size: 11px; color: #c4b5fd; line-height: 1.4; padding: 7px 11px; background: rgba(124,58,237,0.08); border: 1px dashed rgba(124,58,237,0.3); border-radius: 8px; margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; }
+  .dash-stat-locked:hover { background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.5); }
+  .dash-stat-locked svg { width: 11px; height: 11px; flex-shrink: 0; }
+
   /* Time range controls */
-  .dash-range-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; max-width: 640px; width: 100%; }
-  .dash-range-btn { padding: 5px 12px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; font-size: 11px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.15s; }
+  .dash-range-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; max-width: 720px; width: 100%; flex-wrap: wrap; }
+  .dash-range-btn { padding: 6px 14px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; font-size: 12px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.15s; }
   .dash-range-btn:hover { border-color: rgba(124,58,237,0.4); color: var(--text); }
-  .dash-range-btn.active { background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.4); color: #c4b5fd; }
-  .dash-range-custom { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-  .dash-range-date { padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-size: 11px; font-family: "DM Sans", sans-serif; }
+  .dash-range-btn.active { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(232,121,249,0.1)); border-color: rgba(124,58,237,0.5); color: #c4b5fd; }
+  .dash-range-custom { display: flex; align-items: center; gap: 6px; padding: 5px 10px; background: transparent; border: 1px solid var(--border); border-radius: 8px; transition: all 0.15s; cursor: pointer; }
+  .dash-range-custom:hover { border-color: rgba(124,58,237,0.4); }
+  .dash-range-custom.active { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(232,121,249,0.1)); border-color: rgba(124,58,237,0.5); }
+  .dash-range-custom.active .dash-range-custom-label { color: #c4b5fd; }
+  .dash-range-custom-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .dash-range-date { padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text); border-radius: 5px; font-size: 11px; font-family: "DM Sans", sans-serif; }
   .dash-range-date:focus { border-color: var(--accent); outline: none; }
-  .dash-sparkline { display: flex; align-items: flex-end; gap: 2px; height: 32px; margin-top: 10px; }
-  .dash-sparkline-bar { flex: 1; background: rgba(124,58,237,0.3); border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.3s; }
-  .dash-sparkline-bar.revenue-bar { background: rgba(74,222,128,0.3); }
-  .dash-sparkline-bar.views-bar { background: rgba(96,165,250,0.3); }
+  .dash-sparkline { display: flex; align-items: flex-end; gap: 2px; height: 32px; margin-top: 12px; position: relative; }
+  .dash-sparkline-bar { flex: 1; background: linear-gradient(180deg, rgba(232,121,249,0.5), rgba(124,58,237,0.3)); border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.3s; }
 
   @media (max-width: 640px) {
     .dash-stats-wrap { grid-template-columns: 1fr; }
-    .dash-range-bar { flex-wrap: wrap; }
-    .dash-range-custom { margin-left: 0; width: 100%; }
+    .dash-range-bar { flex-direction: column; align-items: stretch; }
+    .dash-range-custom { justify-content: center; }
   }
 
   .welcome-tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 640px; width: 100%; margin-bottom: 40px; }
@@ -2719,10 +2723,11 @@
           <button class="dash-range-btn" onclick="setDashRange(7)" id="dash-range-7">7d</button>
           <button class="dash-range-btn active" onclick="setDashRange(14)" id="dash-range-14">14d</button>
           <button class="dash-range-btn" onclick="setDashRange(30)" id="dash-range-30">30d</button>
-          <div class="dash-range-custom">
-            <input type="date" class="dash-range-date" id="dash-range-start" onchange="setDashCustomRange()">
-            <span style="font-size:11px;color:var(--muted);">to</span>
-            <input type="date" class="dash-range-date" id="dash-range-end" onchange="setDashCustomRange()">
+          <div class="dash-range-custom" id="dash-range-custom">
+            <span class="dash-range-custom-label">Custom:</span>
+            <input type="date" class="dash-range-date" id="dash-range-start" onchange="setDashCustomRange()" onclick="event.stopPropagation()">
+            <span style="font-size:11px;color:var(--muted);">→</span>
+            <input type="date" class="dash-range-date" id="dash-range-end" onchange="setDashCustomRange()" onclick="event.stopPropagation()">
           </div>
         </div>
 
@@ -2731,12 +2736,12 @@
           <!-- Page Visits -->
           <div class="dash-stat-box">
             <div class="dash-stat-header">
-              <div class="dash-stat-icon views">
-                <svg viewBox="0 0 24 24" stroke="#60a5fa"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <div class="dash-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </div>
               <div class="dash-stat-label">Page Visits</div>
             </div>
-            <div class="dash-stat-value views-val" id="dash-views-total">—</div>
+            <div class="dash-stat-value" id="dash-views-total">—</div>
             <div class="dash-stat-sub" id="dash-views-sub">Loading...</div>
             <div class="dash-stat-breakdown" id="dash-views-breakdown"></div>
             <div class="dash-sparkline" id="dash-views-sparkline"></div>
@@ -2745,12 +2750,12 @@
           <!-- Total Revenue -->
           <div class="dash-stat-box">
             <div class="dash-stat-header">
-              <div class="dash-stat-icon revenue">
-                <svg viewBox="0 0 24 24" stroke="#4ade80"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <div class="dash-stat-icon">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               </div>
               <div class="dash-stat-label">Total Revenue</div>
             </div>
-            <div class="dash-stat-value revenue-val" id="dash-revenue-total">—</div>
+            <div class="dash-stat-value" id="dash-revenue-total">—</div>
             <div class="dash-stat-sub" id="dash-revenue-sub">Loading...</div>
             <div class="dash-stat-breakdown" id="dash-revenue-breakdown"></div>
             <div class="dash-sparkline" id="dash-revenue-sparkline"></div>
@@ -4687,6 +4692,7 @@ function setDashRange(days) {
   document.getElementById('dash-range-start').value = '';
   document.getElementById('dash-range-end').value = '';
   document.querySelectorAll('.dash-range-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('dash-range-custom').classList.remove('active');
   const btn = document.getElementById('dash-range-' + days);
   if (btn) btn.classList.add('active');
   loadDashStats();
@@ -4700,6 +4706,7 @@ function setDashCustomRange() {
   dashCustomStart = s;
   dashCustomEnd = e;
   document.querySelectorAll('.dash-range-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('dash-range-custom').classList.add('active');
   loadDashStats();
 }
 
@@ -4708,7 +4715,7 @@ function formatDashUSD(cents) {
   return '$' + (cents / 100).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
-function renderSparkline(containerId, data, maxKey, barClass) {
+function renderSparkline(containerId, data, maxKey) {
   const el = document.getElementById(containerId);
   if (!el) return;
   if (!data || data.length === 0) { el.innerHTML = ''; return; }
@@ -4716,7 +4723,7 @@ function renderSparkline(containerId, data, maxKey, barClass) {
   const maxVal = Math.max(...vals, 1);
   el.innerHTML = vals.map(v => {
     const pct = Math.max(2, (v / maxVal) * 100);
-    return `<div class="dash-sparkline-bar ${barClass}" style="height:${pct}%;" title="${v}"></div>`;
+    return `<div class="dash-sparkline-bar" style="height:${pct}%;" title="${v}"></div>`;
   }).join('');
 }
 
@@ -4724,11 +4731,8 @@ async function loadDashStats() {
   if (!currentUser) return;
   const { start, end } = getDashDateRange();
 
-  // Load both in parallel
-  const [viewsRes, revenueRes] = await Promise.all([
-    sb.rpc('get_page_view_stats', { p_start_date: start, p_end_date: end }),
-    sb.rpc('get_revenue_stats', { p_start_date: start, p_end_date: end })
-  ]);
+  // Load page views (always)
+  const viewsRes = await sb.rpc('get_page_view_stats', { p_start_date: start, p_end_date: end });
 
   // --- Page Views ---
   const vEl = document.getElementById('dash-views-total');
@@ -4743,7 +4747,6 @@ async function loadDashStats() {
     const dayCount = dashCustomStart ? Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1 : dashRangeDays;
     const avg = v.total > 0 ? Math.round(v.total / dayCount) : 0;
     vSub.textContent = `~${avg}/day avg over ${dayCount} days`;
-    // Breakdown pills
     const bp = v.by_page || {};
     const pills = [];
     if (bp.bio) pills.push(`<span class="dash-stat-pill">Bio: ${Number(bp.bio).toLocaleString()}</span>`);
@@ -4751,14 +4754,30 @@ async function loadDashStats() {
     if (bp.course) pills.push(`<span class="dash-stat-pill">Course: ${Number(bp.course).toLocaleString()}</span>`);
     if (bp.coaching) pills.push(`<span class="dash-stat-pill">Coaching: ${Number(bp.coaching).toLocaleString()}</span>`);
     vBreak.innerHTML = pills.join('');
-    // Sparkline
-    renderSparkline('dash-views-sparkline', v.daily, 'count', 'views-bar');
+    renderSparkline('dash-views-sparkline', v.daily, 'count');
   }
 
-  // --- Revenue ---
+  // --- Revenue (Max only) ---
   const rEl = document.getElementById('dash-revenue-total');
   const rSub = document.getElementById('dash-revenue-sub');
   const rBreak = document.getElementById('dash-revenue-breakdown');
+  const rSpark = document.getElementById('dash-revenue-sparkline');
+  const isMax = (typeof userTier !== 'undefined') && userTier === 'max';
+
+  if (!isMax) {
+    // Locked state for Free/Pro
+    rEl.textContent = '$0';
+    rSub.innerHTML = `<span class="dash-stat-locked" onclick="window.location.href='pricing.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Revenue tracking available with Creator Max
+    </span>`;
+    rBreak.innerHTML = '';
+    rSpark.innerHTML = '';
+    return;
+  }
+
+  // Max user — load revenue
+  const revenueRes = await sb.rpc('get_revenue_stats', { p_start_date: start, p_end_date: end });
   if (revenueRes.error || !revenueRes.data) {
     rEl.textContent = '—';
     rSub.textContent = 'Could not load';
@@ -4776,10 +4795,9 @@ async function loadDashStats() {
     if (r.total_cents > 0) {
       rSub.textContent = `${Object.keys(bs).length} source${Object.keys(bs).length !== 1 ? 's' : ''} over ${dayCount} days`;
     } else {
-      rSub.textContent = 'No revenue recorded in this period';
+      rSub.textContent = `No revenue recorded over ${dayCount} days`;
     }
-    // Sparkline
-    renderSparkline('dash-revenue-sparkline', r.daily, 'cents', 'revenue-bar');
+    renderSparkline('dash-revenue-sparkline', r.daily, 'cents');
   }
 }
 
