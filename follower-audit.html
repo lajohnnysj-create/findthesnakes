@@ -759,12 +759,6 @@
   .upgrade-banner-text { font-size: 14px; color: var(--muted); }
   .upgrade-banner-text strong { color: var(--text); font-weight: 500; }
   .upgrade-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-  .upgrade-btn-one {
-    padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500;
-    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
-    background: transparent; border: 1px solid var(--border-hover); color: var(--text);
-  }
-  .upgrade-btn-one:hover { border-color: var(--accent); color: var(--accent); }
   .upgrade-btn-pro {
     padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500;
     font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
@@ -782,7 +776,7 @@
     .dash-main { padding: 24px 16px 80px; }
     .upgrade-banner { flex-direction: column; align-items: flex-start; padding: 16px; }
     .upgrade-btns { width: 100%; flex-direction: column; }
-    .upgrade-btn-one, .upgrade-btn-pro { width: 100%; padding: 12px; text-align: center; }
+    .upgrade-btn-pro { width: 100%; padding: 12px; text-align: center; }
     .tool-header { text-align: center; }
     .upload-grid { grid-template-columns: 1fr; gap: 12px; }
     .stats-row { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
@@ -956,13 +950,12 @@ body { overflow-x: hidden; }
 <!-- MAIN CONTENT -->
 <div class="dash-main">
 
-  <!-- UPGRADE BANNER (shown for free/one-time users) -->
+  <!-- UPGRADE BANNER (shown for free users) -->
   <div class="upgrade-banner" id="upgrade-banner">
     <div class="upgrade-banner-text">
       <strong>Upgrade to unlock full results</strong>. See everyone who unfollowed you, manage your whitelist, snake list, audit history and more.
     </div>
     <div class="upgrade-btns">
-      <button class="upgrade-btn-one" id="upgrade-btn-one" onclick="startCheckout('one_time')">One-time unlock — $3</button>
       <button class="upgrade-btn-pro" onclick="startCheckout('monthly')">Go Pro — $10/mo ⭐</button>
     </div>
   </div>
@@ -1126,7 +1119,6 @@ window.onunhandledrejection = function(e) {
 // ════════════════════════════════════════════
 const SUPABASE_URL = 'https://kjytapcgxukalwsyputk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMTcxMzEsImV4cCI6MjA5MDg5MzEzMX0.VC8mcU5lUeA56kG2gHssvl88EVWr018XttA86jpfEn0';
-const STRIPE_PRICE_ONE_TIME = 'price_1TIZ7FFQ1L0aeJrZOtoSEVRJ';
 const STRIPE_PRICE_MONTHLY  = 'price_1TIZ8pFQ1L0aeJrZEX1bQnUI';
 
 // Free tier limit
@@ -1139,7 +1131,7 @@ const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
-let userTier = 'free'; // 'free' | 'one_time' | 'monthly' | 'max'
+let userTier = 'free'; // 'free' | 'monthly' | 'max' (legacy 'one_time' tier still respected if present in DB)
 function userIsPro() { return userTier === 'monthly' || userTier === 'max'; }
 let currentAnalysisPaid = false; // true if this analysis was paid for
 let userStatus = 'free'; // 'free' | 'active' | 'cancelling' | 'cancelled'
@@ -1346,13 +1338,12 @@ let pendingCheckout = null; // stores planType if checkout triggered auth
 
 function openAuthModal() {
   // On dashboard, redirect to index for sign in
-  window.location.href = 'index.html';
+  window.location.href = 'index.html?action=signin';
 }
 
 function openAuthModalForCheckout(planType) {
   pendingCheckout = planType;
-  openAuthModal();
-  showAuthMsg('error', 'Sign in or create a free account to continue to checkout.');
+  window.location.href = 'index.html?action=signin';
 }
 function closeAuthModal() {
   const modal = document.getElementById('auth-modal');
@@ -1452,12 +1443,12 @@ async function startCheckout(planType) {
   try {
   if (!currentUser) {
     pendingCheckout = planType;
-    openAuthModal();
+    window.location.href='index.html?action=signin';
     showAuthMsg('error', 'Sign in or create a free account to continue to checkout.');
     return;
   }
 
-  const priceId = planType === 'one_time' ? STRIPE_PRICE_ONE_TIME : STRIPE_PRICE_MONTHLY;
+  const priceId = STRIPE_PRICE_MONTHLY;
 
   const { data, error } = await sb.functions.invoke('create-checkout-session', {
     body: {
@@ -2161,27 +2152,9 @@ function updateNavTierBadge() {
   const upgradeBanner = document.getElementById('upgrade-banner');
   if (!badge) return;
 
-  // Show upgrade banner for free and one-time users
+  // Show upgrade banner for free users
   if (upgradeBanner) {
-    upgradeBanner.classList.toggle('visible', userTier === 'free' || userTier === 'one_time');
-    const upgradeOneBtn = document.getElementById('upgrade-btn-one');
-    if (upgradeOneBtn) {
-      if (userTier === 'one_time') {
-        // Paid but not yet used — disable the button
-        upgradeOneBtn.disabled = true;
-        upgradeOneBtn.textContent = 'Analysis Ready ✓';
-        upgradeOneBtn.style.opacity = '0.45';
-        upgradeOneBtn.style.cursor = 'not-allowed';
-        upgradeOneBtn.title = 'You already have an analysis ready to use. Upload your files above!';
-      } else {
-        // Free — enable the button
-        upgradeOneBtn.disabled = false;
-        upgradeOneBtn.textContent = 'One-time unlock — $3';
-        upgradeOneBtn.style.opacity = '1';
-        upgradeOneBtn.style.cursor = 'pointer';
-        upgradeOneBtn.title = '';
-      }
-    }
+    upgradeBanner.classList.toggle('visible', !userIsPro());
   }
 
   if (userIsPro()) {
@@ -2199,10 +2172,10 @@ function updateNavTierBadge() {
       cancelBtn.style.borderColor = isCancelling ? 'rgba(74,222,128,0.4)' : 'rgba(255,255,255,0.5)';
     }
   } else {
-    badge.textContent = userTier === 'one_time' ? 'One-time' : 'Free';
+    badge.textContent = 'Free';
     badge.className = 'account-tier-badge free';
     const bottomBadge = document.getElementById('account-tier-display');
-    if (bottomBadge) { bottomBadge.textContent = userTier === 'one_time' ? 'One-time' : 'Free'; bottomBadge.className = 'account-tier-badge free'; }
+    if (bottomBadge) { bottomBadge.textContent = 'Free'; bottomBadge.className = 'account-tier-badge free'; }
     if (cancelBtn) cancelBtn.style.display = 'none';
   }
 }
@@ -3007,7 +2980,7 @@ function buildPaywall(hiddenCount, totalUnfollowers) {
         <span class="paywall-btn-price">$10/mo. Unlimited access</span>
       </button>
     </div>
-    ${!currentUser ? `<p style="margin-top:20px;font-size:13px;color:var(--muted)">Already paid? <a href="#" onclick="openAuthModal();return false;" style="color:var(--accent)">Sign in to restore access</a></p>` : ''}
+    ${!currentUser ? `<p style="margin-top:20px;font-size:13px;color:var(--muted)">Already paid? <a href="#" onclick="window.location.href='index.html?action=signin';return false;" style="color:var(--accent)">Sign in to restore access</a></p>` : ''}
   </div>`;
 }
 
