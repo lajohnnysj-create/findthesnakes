@@ -1470,11 +1470,22 @@
   .tier-badge.max { background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(232,121,249,0.2)); color: #fff; border: 1px solid rgba(232,121,249,0.4); }
   .upgrade-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 20px var(--accent-glow); }
   .upgrade-btn:hover { background: var(--accent2); }
-  /* On narrow screens the topbar runs out of room for two upgrade buttons +
-     the tier badge. Hide the secondary Max button — Free users still see Max
-     in the welcome banner and per-tool upsells. */
+  /* On narrow screens the topbar runs out of room. Hide both upgrade buttons
+     and the tier badge — Free users still see the upgrade banner below + per-tool
+     upsells, and tier is always visible in the sidebar. */
   @media (max-width: 760px) {
-    #topbar-upgrade-max-btn { display: none !important; }
+    #topbar-upgrade-btn,
+    #topbar-upgrade-max-btn,
+    #topbar-tier-badge { display: none !important; }
+  }
+  /* Mobile upgrade banner: stack copy on top, buttons side-by-side below
+     so it doesn't dominate the screen. */
+  @media (max-width: 640px) {
+    .upgrade-banner { padding: 14px 16px; gap: 12px; }
+    .upgrade-banner-text { font-size: 13px; width: 100%; text-align: center; }
+    .upgrade-banner-btns { width: 100%; flex-wrap: nowrap; gap: 8px; }
+    .upgrade-banner-btn-pro,
+    .upgrade-banner-btn-max { flex: 1; padding: 10px 6px; font-size: 12px; text-align: center; box-shadow: none; }
   }
 
   /* ── TOOL CONTENT AREA ── */
@@ -2725,10 +2736,10 @@
 
     <!-- UPGRADE BANNER -->
     <div class="upgrade-banner" id="upgrade-banner" style="display:none;">
-      <div class="upgrade-banner-text"><strong>Unlock everything with Pro</strong>. Full follower audit, unlimited invoices, more QR codes and image conversions.</div>
+      <div class="upgrade-banner-text"><strong>Unlock more with Pro or Creator Max.</strong></div>
       <div class="upgrade-banner-btns">
         <button class="upgrade-banner-btn-pro" onclick="startCheckout(undefined, this)">Go Pro &#x2014; $10/mo &#x2B50;</button>
-        <button class="upgrade-banner-btn-max" onclick="startCheckout('max', this)">Upgrade to Creator Max &#x2014; $20/mo</button>
+        <button class="upgrade-banner-btn-max" onclick="startCheckout('max', this)">Creator Max &#x2014; $20/mo</button>
       </div>
     </div>
 
