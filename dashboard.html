@@ -2,7 +2,7 @@
 <html lang="en" lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -54,7 +54,7 @@
 
   /* ── SIDEBAR ── */
   .sidebar {
-    width: var(--sidebar-width); min-height: 100vh; background: var(--surface);
+    width: var(--sidebar-width); min-height: 100vh; min-height: 100dvh; background: var(--surface);
     border-right: 1px solid var(--border); display: flex; flex-direction: column;
     position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
     transition: transform 0.3s ease;
@@ -1256,7 +1256,7 @@
     .cine-card-section .cine-section-line { max-width: 40px; }
     .cine-hint { display: none; }
   }
-  .sidebar-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
+  .sidebar-bottom { padding: 16px 12px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--border); }
   .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface2); margin-bottom: 8px; }
   .sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
   .sidebar-user-info { flex: 1; overflow: hidden; }
