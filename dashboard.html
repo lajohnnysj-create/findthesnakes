@@ -1943,6 +1943,9 @@
     .bio-grid { grid-template-columns: 1fr !important; min-width: 0 !important; }
     .bio-grid > div { min-width: 0 !important; }
     .bio-grid > div:last-child { position: static !important; }
+    .bio-top-grid { grid-template-columns: 1fr !important; min-width: 0 !important; }
+    .bio-top-grid > div { min-width: 0 !important; }
+    .bio-top-grid > div:last-child { position: static !important; }
     #bio-preview-frame { height: 600px; max-width: 400px; margin: 0 auto; }
   }
   /* Tighter mobile fixes */
@@ -3269,10 +3272,10 @@
           <button id="bio-publish-btn" onclick="togglePublish()" style="padding:9px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Publish</button>
         </div>
 
-        <!-- Main grid: form left, preview right -->
-        <div class="bio-grid" style="display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;">
+        <!-- TOP SECTION: URL + Profile alongside Live Preview -->
+        <div class="bio-top-grid" style="display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;margin-bottom:24px;">
 
-          <!-- FORM COLUMN -->
+          <!-- Left: compact URL + Profile -->
           <div style="display:flex;flex-direction:column;gap:16px;">
 
             <!-- Username -->
@@ -3322,6 +3325,20 @@
               </div>
               </div>
             </div>
+
+          </div>
+
+          <!-- Right: Live Preview (sticky) -->
+          <div style="position:sticky;top:100px;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;margin-bottom:10px;text-align:center;">Live preview</div>
+            <div id="bio-preview-frame" style="background:var(--surface2);border:1px solid var(--border);border-radius:24px;padding:14px;height:640px;overflow:hidden;">
+              <iframe id="bio-preview-iframe" srcdoc="" style="width:100%;height:100%;border:none;border-radius:16px;background:var(--bg);"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- FULL-WIDTH SECTIONS below the top grid -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
 
             <!-- Theme -->
             <div class="bio-section">
@@ -3469,15 +3486,6 @@
               </div>
             </div>
           </div>
-
-          <!-- PREVIEW COLUMN -->
-          <div style="position:sticky;top:100px;">
-            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;margin-bottom:10px;text-align:center;">Live preview</div>
-            <div id="bio-preview-frame" style="background:var(--surface2);border:1px solid var(--border);border-radius:24px;padding:14px;height:640px;overflow:hidden;">
-              <iframe id="bio-preview-iframe" srcdoc="" style="width:100%;height:100%;border:none;border-radius:16px;background:var(--bg);"></iframe>
-            </div>
-          </div>
-        </div>
 
         <!-- Bottom save bar on mobile -->
         <div id="bio-save-status" style="margin-top:16px;font-size:13px;color:var(--muted);text-align:center;min-height:20px;"></div>
