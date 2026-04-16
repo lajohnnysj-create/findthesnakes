@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/stripe-js@3"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
@@ -1279,24 +1280,6 @@
     text-transform: uppercase;
   }
 
-  /* Progress bar */
-  .cine-progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: rgba(255,255,255,0.08);
-    z-index: 6;
-  }
-  .cine-progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(to right, #a78bfa, #e879f9);
-    transition: width 80ms linear;
-    box-shadow: 0 0 8px rgba(232,121,249,0.5);
-  }
-
   /* Keyboard hint */
   .cine-hint {
     position: absolute;
@@ -1312,6 +1295,119 @@
     pointer-events: none;
   }
   .cine-hint.fade-out { opacity: 0; }
+
+  /* Bottom control bar — hidden by default, slides up on hover */
+  .cine-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 8;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+  .cine-bar.visible {
+    transform: translateY(0);
+    pointer-events: all;
+  }
+  .cine-bar-inner {
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 60%, transparent);
+    padding: 32px 24px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cine-bar-progress {
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .cine-bar-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #a78bfa, #e879f9);
+    transition: width 80ms linear;
+    box-shadow: 0 0 8px rgba(232,121,249,0.5);
+  }
+  .cine-bar-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cine-bar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .cine-bar-btn:hover { background: rgba(255,255,255,0.14); }
+  .cine-bar-btn.play-btn {
+    width: auto;
+    padding: 0 16px;
+    background: linear-gradient(135deg, #a78bfa, #e879f9);
+    border-color: transparent;
+    font-weight: 600;
+  }
+  .cine-bar-btn.play-btn:hover { background: linear-gradient(135deg, #9366f8, #d93eea); }
+  .cine-bar-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 4px; }
+  /* Music mood selector */
+  .cine-music-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .cine-music-btn {
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.5);
+    border-radius: 7px;
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .cine-music-btn:hover { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+  .cine-music-btn.active { background: rgba(124,58,237,0.2); border-color: rgba(124,58,237,0.5); color: #c4b5fd; }
+  .cine-music-mute {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.5);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .cine-music-mute:hover { color: #fff; border-color: rgba(255,255,255,0.25); }
+  .cine-music-mute.muted { color: rgba(255,255,255,0.2); }
+  .cine-music-label { font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px; }
+  /* Hover zone — invisible trigger area at bottom */
+  .cine-hover-zone {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    z-index: 7;
+  }
 
   @media (max-width: 640px) {
     .cine-close-btn { top: 14px; right: 14px; width: 36px; height: 36px; }
@@ -14173,40 +14269,95 @@ function openCinematic() {
         <div class="cine-paused-hint">Click or press space to resume</div>
       </div>
     </div>
-    <div class="cine-progress">
-      <div class="cine-progress-bar" id="cine-progress-bar"></div>
+    <div class="cine-hover-zone" id="cine-hover-zone"></div>
+    <div class="cine-bar" id="cine-bar">
+      <div class="cine-bar-inner">
+        <div class="cine-bar-progress">
+          <div class="cine-bar-progress-fill" id="cine-progress-bar"></div>
+        </div>
+        <div class="cine-bar-controls">
+          <button class="cine-bar-btn" onclick="event.stopPropagation();cinePrevCard()" aria-label="Previous">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="cine-bar-btn play-btn" onclick="event.stopPropagation();cineTogglePlay()" id="cine-bar-play">
+            <svg id="cine-bar-play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            <span id="cine-bar-play-label">Pause</span>
+          </button>
+          <button class="cine-bar-btn" onclick="event.stopPropagation();cineNextCard()" aria-label="Next">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="cine-bar-divider"></div>
+          <span class="cine-music-label">Music</span>
+          <div class="cine-music-group">
+            <button class="cine-music-btn" data-mood="peaceful" onclick="event.stopPropagation();setCineMood('peaceful')">Peaceful</button>
+            <button class="cine-music-btn" data-mood="comedy" onclick="event.stopPropagation();setCineMood('comedy')">Comedy</button>
+            <button class="cine-music-btn" data-mood="action" onclick="event.stopPropagation();setCineMood('action')">Action</button>
+          </div>
+          <button class="cine-music-mute" id="cine-music-mute" onclick="event.stopPropagation();toggleCineMusic()" aria-label="Toggle music">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="cine-hint" id="cine-hint">Space: pause · ← →: skip · Esc: exit</div>
   `;
   document.body.appendChild(el);
 
   cineState = {
     cards,
-    idx: -1,         // will advance to 0 on first tick
+    idx: -1,
     playing: true,
-    phase: 'idle',   // 'in' | 'hold' | 'out' | 'idle'
+    phase: 'idle',
     phaseStart: 0,
     rafId: null,
     keyHandler: null,
     totalDuration: cards.reduce((sum, c) => sum + c.duration, 0),
     elapsedBeforeCurrent: 0,
-    hintTimeout: null,
+    musicMood: null,    // null | 'peaceful' | 'comedy' | 'action'
+    musicMuted: true,   // starts muted — user opts in
+    barHideTimeout: null,
   };
 
   cineState.keyHandler = cineOnKey;
   document.addEventListener('keydown', cineState.keyHandler);
 
-  // Click to pause/resume
+  // Click stage to pause/resume (but not the bar or close button)
   el.addEventListener('click', (e) => {
-    if (e.target.closest('.cine-close-btn')) return;
+    if (e.target.closest('.cine-close-btn') || e.target.closest('.cine-bar') || e.target.closest('.cine-hover-zone')) return;
     cineTogglePlay();
   });
 
-  // Auto-hide hint after 4s
-  cineState.hintTimeout = setTimeout(() => {
-    const h = document.getElementById('cine-hint');
-    if (h) h.classList.add('fade-out');
-  }, 4000);
+  // Hover zone: show bar when mouse enters bottom area, hide after leaving
+  const hoverZone = document.getElementById('cine-hover-zone');
+  const bar = document.getElementById('cine-bar');
+  function showCineBar() {
+    if (bar) bar.classList.add('visible');
+    clearTimeout(cineState?.barHideTimeout);
+  }
+  function scheduleHideCineBar() {
+    if (!cineState) return;
+    cineState.barHideTimeout = setTimeout(() => {
+      if (bar && !bar.matches(':hover')) bar.classList.remove('visible');
+    }, 2000);
+  }
+  if (hoverZone) {
+    hoverZone.addEventListener('mouseenter', showCineBar);
+    hoverZone.addEventListener('mouseleave', scheduleHideCineBar);
+  }
+  if (bar) {
+    bar.addEventListener('mouseenter', showCineBar);
+    bar.addEventListener('mouseleave', scheduleHideCineBar);
+    // On touch: tap anywhere near bottom to toggle
+    bar.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+  }
+  // Show bar briefly on open so user knows it's there
+  showCineBar();
+  scheduleHideCineBar();
+
+  // Also show bar on any mouse movement, then auto-hide
+  el.addEventListener('mousemove', () => {
+    showCineBar();
+    scheduleHideCineBar();
+  });
 
   // Start
   cineNextCard();
@@ -14394,22 +14545,28 @@ function cineTogglePlay() {
   if (!cineState) return;
   cineState.playing = !cineState.playing;
   const pausedEl = document.getElementById('cine-paused');
+  const barIcon = document.getElementById('cine-bar-play-icon');
+  const barLabel = document.getElementById('cine-bar-play-label');
   if (cineState.playing) {
     if (pausedEl) pausedEl.style.display = 'none';
-    // Resume: adjust phaseStart so the remaining time continues correctly
+    if (barIcon) barIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    if (barLabel) barLabel.textContent = 'Pause';
     cineState.phaseStart = performance.now() - cineState.pausedElapsed;
     cineTick();
   } else {
     if (cineState.rafId) cancelAnimationFrame(cineState.rafId);
     cineState.pausedElapsed = performance.now() - cineState.phaseStart;
     if (pausedEl) pausedEl.style.display = 'flex';
+    if (barIcon) barIcon.innerHTML = '<polygon points="6 3 20 12 6 21 6 3"/>';
+    if (barLabel) barLabel.textContent = 'Play';
   }
 }
 
 function closeCinematic() {
   if (cineState?.rafId) cancelAnimationFrame(cineState.rafId);
   if (cineState?.keyHandler) document.removeEventListener('keydown', cineState.keyHandler);
-  if (cineState?.hintTimeout) clearTimeout(cineState.hintTimeout);
+  if (cineState?.barHideTimeout) clearTimeout(cineState.barHideTimeout);
+  stopCineMusic();
   cineState = null;
   const el = document.getElementById('cinematic-overlay');
   if (el) el.remove();
@@ -14429,7 +14586,237 @@ function cineOnKey(e) {
   } else if (e.key === 'ArrowLeft') {
     e.preventDefault();
     cinePrevCard();
+  } else if (e.key === 'm' || e.key === 'M') {
+    e.preventDefault();
+    toggleCineMusic();
   }
+}
+
+// ========== CINEMATIC MUSIC (Tone.js) ==========
+let cineMusicNodes = null;
+
+function setCineMood(mood) {
+  if (!cineState) return;
+  // Update button states
+  document.querySelectorAll('.cine-music-btn').forEach(b => b.classList.toggle('active', b.dataset.mood === mood));
+
+  cineState.musicMood = mood;
+  cineState.musicMuted = false;
+
+  const muteBtn = document.getElementById('cine-music-mute');
+  if (muteBtn) muteBtn.classList.remove('muted');
+
+  // Rebuild music with new mood
+  stopCineMusic();
+  startCineMusic(mood);
+}
+
+function toggleCineMusic() {
+  if (!cineState) return;
+  cineState.musicMuted = !cineState.musicMuted;
+
+  const muteBtn = document.getElementById('cine-music-mute');
+  if (cineState.musicMuted) {
+    if (muteBtn) muteBtn.classList.add('muted');
+    stopCineMusic();
+  } else {
+    if (muteBtn) muteBtn.classList.remove('muted');
+    if (cineState.musicMood) startCineMusic(cineState.musicMood);
+  }
+}
+
+function stopCineMusic() {
+  if (cineMusicNodes) {
+    try {
+      cineMusicNodes.forEach(n => {
+        try { n.stop?.(); } catch(e){}
+        try { n.disconnect?.(); } catch(e){}
+        try { n.dispose?.(); } catch(e){}
+      });
+    } catch(e){}
+    cineMusicNodes = null;
+  }
+  try { Tone.Transport.stop(); Tone.Transport.cancel(); } catch(e){}
+}
+
+async function startCineMusic(mood) {
+  if (typeof Tone === 'undefined') return;
+  stopCineMusic();
+
+  // Ensure audio context is started (browsers require user interaction)
+  await Tone.start();
+  cineMusicNodes = [];
+
+  if (mood === 'peaceful') {
+    buildPeacefulMusic();
+  } else if (mood === 'comedy') {
+    buildComedyMusic();
+  } else if (mood === 'action') {
+    buildActionMusic();
+  }
+
+  Tone.Transport.bpm.value = mood === 'action' ? 120 : mood === 'comedy' ? 110 : 72;
+  Tone.Transport.start();
+}
+
+function buildPeacefulMusic() {
+  // Warm pad
+  const pad = new Tone.PolySynth(Tone.Synth, {
+    oscillator: { type: 'sine' },
+    envelope: { attack: 2, decay: 1, sustain: 0.8, release: 3 },
+    volume: -18
+  }).toDestination();
+  cineMusicNodes.push(pad);
+
+  const padChords = [
+    ['C4','E4','G4','B4'],
+    ['A3','C4','E4','G4'],
+    ['F3','A3','C4','E4'],
+    ['G3','B3','D4','F4']
+  ];
+  let chordIdx = 0;
+  const padLoop = new Tone.Loop(time => {
+    pad.triggerAttackRelease(padChords[chordIdx % padChords.length], '2n', time);
+    chordIdx++;
+  }, '1m');
+  padLoop.start(0);
+  cineMusicNodes.push(padLoop);
+
+  // Gentle bell arpeggios
+  const bell = new Tone.Synth({
+    oscillator: { type: 'triangle' },
+    envelope: { attack: 0.01, decay: 0.8, sustain: 0, release: 1.2 },
+    volume: -22
+  }).toDestination();
+  cineMusicNodes.push(bell);
+
+  const arpNotes = ['E5','G5','B5','E6','B5','G5','E5','D5'];
+  let arpIdx = 0;
+  const arpLoop = new Tone.Loop(time => {
+    bell.triggerAttackRelease(arpNotes[arpIdx % arpNotes.length], '8n', time);
+    arpIdx++;
+  }, '4n');
+  arpLoop.start(0);
+  arpLoop.probability = 0.7;
+  cineMusicNodes.push(arpLoop);
+}
+
+function buildComedyMusic() {
+  // Plucky pizzicato
+  const pluck = new Tone.PluckSynth({ volume: -14 }).toDestination();
+  cineMusicNodes.push(pluck);
+
+  const pluckNotes = ['C4','E4','G4','C5','B4','G4','A4','F4','D4','G4','E4','C4'];
+  let pluckIdx = 0;
+  const pluckLoop = new Tone.Loop(time => {
+    pluck.triggerAttackRelease(pluckNotes[pluckIdx % pluckNotes.length], time);
+    pluckIdx++;
+  }, '8n');
+  pluckLoop.start(0);
+  pluckLoop.probability = 0.8;
+  cineMusicNodes.push(pluckLoop);
+
+  // Quirky high blips
+  const blip = new Tone.Synth({
+    oscillator: { type: 'square' },
+    envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 },
+    volume: -28
+  }).toDestination();
+  cineMusicNodes.push(blip);
+
+  const blipNotes = ['G5','E6','C6','A5'];
+  let blipIdx = 0;
+  const blipLoop = new Tone.Loop(time => {
+    blip.triggerAttackRelease(blipNotes[blipIdx % blipNotes.length], '32n', time);
+    blipIdx++;
+  }, '2n');
+  blipLoop.start('4n');
+  blipLoop.probability = 0.5;
+  cineMusicNodes.push(blipLoop);
+
+  // Soft bass bounce
+  const bass = new Tone.Synth({
+    oscillator: { type: 'triangle' },
+    envelope: { attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.4 },
+    volume: -20
+  }).toDestination();
+  cineMusicNodes.push(bass);
+
+  const bassNotes = ['C2','C2','F2','G2'];
+  let bassIdx = 0;
+  const bassLoop = new Tone.Loop(time => {
+    bass.triggerAttackRelease(bassNotes[bassIdx % bassNotes.length], '8n', time);
+    bassIdx++;
+  }, '2n');
+  bassLoop.start(0);
+  cineMusicNodes.push(bassLoop);
+}
+
+function buildActionMusic() {
+  // Driving bass
+  const bass = new Tone.Synth({
+    oscillator: { type: 'sawtooth' },
+    envelope: { attack: 0.01, decay: 0.15, sustain: 0.3, release: 0.2 },
+    volume: -16
+  }).toDestination();
+  const bassFilter = new Tone.Filter(200, 'lowpass').toDestination();
+  bass.connect(bassFilter);
+  cineMusicNodes.push(bass, bassFilter);
+
+  const bassPattern = ['E2','E2','E2','G2','E2','E2','A2','B2'];
+  let bassIdx = 0;
+  const bassLoop = new Tone.Loop(time => {
+    bass.triggerAttackRelease(bassPattern[bassIdx % bassPattern.length], '16n', time);
+    bassIdx++;
+  }, '8n');
+  bassLoop.start(0);
+  cineMusicNodes.push(bassLoop);
+
+  // Kick-like thump
+  const kick = new Tone.MembraneSynth({
+    pitchDecay: 0.05,
+    octaves: 6,
+    envelope: { attack: 0.001, decay: 0.3, sustain: 0, release: 0.3 },
+    volume: -12
+  }).toDestination();
+  cineMusicNodes.push(kick);
+
+  const kickLoop = new Tone.Loop(time => {
+    kick.triggerAttackRelease('C1', '8n', time);
+  }, '4n');
+  kickLoop.start(0);
+  cineMusicNodes.push(kickLoop);
+
+  // Hi-hat noise
+  const hat = new Tone.NoiseSynth({
+    noise: { type: 'white' },
+    envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.03 },
+    volume: -24
+  }).toDestination();
+  cineMusicNodes.push(hat);
+
+  const hatLoop = new Tone.Loop(time => {
+    hat.triggerAttackRelease('32n', time);
+  }, '8n');
+  hatLoop.start(0);
+  cineMusicNodes.push(hatLoop);
+
+  // Stab chord hits
+  const stab = new Tone.PolySynth(Tone.Synth, {
+    oscillator: { type: 'square' },
+    envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.3 },
+    volume: -22
+  }).toDestination();
+  cineMusicNodes.push(stab);
+
+  const stabChords = [['E3','B3','E4'], ['A3','C4','E4']];
+  let stabIdx = 0;
+  const stabLoop = new Tone.Loop(time => {
+    stab.triggerAttackRelease(stabChords[stabIdx % stabChords.length], '8n', time);
+    stabIdx++;
+  }, '1m');
+  stabLoop.start('2n');
+  cineMusicNodes.push(stabLoop);
 }
 
 function buildScriptFullText() {
