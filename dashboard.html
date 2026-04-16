@@ -14289,6 +14289,7 @@ function openCinematic() {
           <div class="cine-bar-divider"></div>
           <span class="cine-music-label">Music</span>
           <div class="cine-music-group">
+            <button class="cine-music-btn active" data-mood="none" onclick="event.stopPropagation();setCineMood('none')">None</button>
             <button class="cine-music-btn" data-mood="peaceful" onclick="event.stopPropagation();setCineMood('peaceful')">Peaceful</button>
             <button class="cine-music-btn" data-mood="comedy" onclick="event.stopPropagation();setCineMood('comedy')">Comedy</button>
             <button class="cine-music-btn" data-mood="action" onclick="event.stopPropagation();setCineMood('action')">Action</button>
@@ -14600,19 +14601,34 @@ function setCineMood(mood) {
   // Update button states
   document.querySelectorAll('.cine-music-btn').forEach(b => b.classList.toggle('active', b.dataset.mood === mood));
 
-  cineState.musicMood = mood;
-  cineState.musicMuted = false;
+  cineState.musicMood = mood === 'none' ? null : mood;
 
   const muteBtn = document.getElementById('cine-music-mute');
-  if (muteBtn) muteBtn.classList.remove('muted');
 
-  // Rebuild music with new mood
-  stopCineMusic();
-  startCineMusic(mood);
+  if (mood === 'none' || !mood) {
+    // Stop music, mute
+    cineState.musicMuted = true;
+    if (muteBtn) muteBtn.classList.add('muted');
+    stopCineMusic();
+  } else {
+    cineState.musicMuted = false;
+    if (muteBtn) muteBtn.classList.remove('muted');
+    stopCineMusic();
+    startCineMusic(mood);
+  }
 }
 
 function toggleCineMusic() {
   if (!cineState) return;
+
+  // If no mood is selected, mute toggle does nothing meaningful
+  if (!cineState.musicMood) {
+    cineState.musicMuted = true;
+    const muteBtn = document.getElementById('cine-music-mute');
+    if (muteBtn) muteBtn.classList.add('muted');
+    return;
+  }
+
   cineState.musicMuted = !cineState.musicMuted;
 
   const muteBtn = document.getElementById('cine-music-mute');
@@ -14621,22 +14637,20 @@ function toggleCineMusic() {
     stopCineMusic();
   } else {
     if (muteBtn) muteBtn.classList.remove('muted');
-    if (cineState.musicMood) startCineMusic(cineState.musicMood);
+    startCineMusic(cineState.musicMood);
   }
 }
 
 function stopCineMusic() {
+  try { Tone.Transport.stop(); } catch(e){}
+  try { Tone.Transport.cancel(0); } catch(e){}
   if (cineMusicNodes) {
-    try {
-      cineMusicNodes.forEach(n => {
-        try { n.stop?.(); } catch(e){}
-        try { n.disconnect?.(); } catch(e){}
-        try { n.dispose?.(); } catch(e){}
-      });
-    } catch(e){}
+    cineMusicNodes.forEach(n => {
+      try { if (n.stop) n.stop(0); } catch(e){}
+      try { if (n.dispose) n.dispose(); } catch(e){}
+    });
     cineMusicNodes = null;
   }
-  try { Tone.Transport.stop(); Tone.Transport.cancel(); } catch(e){}
 }
 
 async function startCineMusic(mood) {
@@ -14644,19 +14658,23 @@ async function startCineMusic(mood) {
   stopCineMusic();
 
   // Ensure audio context is started (browsers require user interaction)
-  await Tone.start();
+  try { await Tone.start(); } catch(e){ return; }
   cineMusicNodes = [];
 
-  if (mood === 'peaceful') {
-    buildPeacefulMusic();
-  } else if (mood === 'comedy') {
-    buildComedyMusic();
-  } else if (mood === 'action') {
-    buildActionMusic();
-  }
+  try {
+    if (mood === 'peaceful') {
+      buildPeacefulMusic();
+    } else if (mood === 'comedy') {
+      buildComedyMusic();
+    } else if (mood === 'action') {
+      buildActionMusic();
+    }
 
-  Tone.Transport.bpm.value = mood === 'action' ? 120 : mood === 'comedy' ? 110 : 72;
-  Tone.Transport.start();
+    Tone.Transport.bpm.value = mood === 'action' ? 120 : mood === 'comedy' ? 110 : 72;
+    Tone.Transport.start();
+  } catch(e) {
+    console.error('Failed to start cinematic music:', e);
+  }
 }
 
 function buildPeacefulMusic() {
