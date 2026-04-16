@@ -1643,8 +1643,8 @@
 
   /* Dashboard Stats Boxes */
   .dash-stats-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 720px; width: 100%; margin-bottom: 32px; }
-  .dash-stat-box { position: relative; background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(232,121,249,0.04)); border: 1px solid rgba(124,58,237,0.2); border-radius: 18px; padding: 22px; text-align: left; overflow: hidden; transition: border-color 0.2s; }
-  .dash-stat-box::before { content: ''; position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(232,121,249,0.08) 0%, transparent 70%); pointer-events: none; }
+  .dash-stat-box { position: relative; background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(232,121,249,0.04)); border: 1px solid rgba(124,58,237,0.2); border-radius: 18px; padding: 22px; text-align: left; overflow: visible; transition: border-color 0.2s; }
+  .dash-stat-box::before { content: ''; position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(232,121,249,0.08) 0%, transparent 70%); pointer-events: none; border-radius: 50%; }
   .dash-stat-box:hover { border-color: rgba(124,58,237,0.4); }
   .dash-stat-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; position: relative; }
   .dash-stat-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(232,121,249,0.12)); border: 1px solid rgba(167,139,250,0.3); }
@@ -1658,14 +1658,18 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: rgba(124,58,237,0.1);
-    border: 1px solid rgba(124,58,237,0.25);
-    color: var(--muted);
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.3);
+    color: #c4b5fd;
     cursor: help;
     flex-shrink: 0;
     margin-left: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    font-style: italic;
+    font-family: Georgia, serif;
+    line-height: 1;
   }
-  .dash-stat-info svg { width: 10px; height: 10px; }
   .dash-stat-info-tip {
     display: none;
     position: absolute;
@@ -1681,6 +1685,8 @@
     color: var(--text);
     text-transform: none;
     letter-spacing: 0;
+    font-style: normal;
+    font-family: 'DM Sans', sans-serif;
     white-space: nowrap;
     z-index: 20;
     box-shadow: 0 4px 16px rgba(0,0,0,0.4);
@@ -3067,8 +3073,7 @@
                 <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </div>
               <div class="dash-stat-label">Page Visits
-                <span class="dash-stat-info">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span class="dash-stat-info">i
                   <span class="dash-stat-info-tip">Total views for Link in Bio and Media Kit</span>
                 </span>
               </div>
@@ -3086,8 +3091,7 @@
                 <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               </div>
               <div class="dash-stat-label">Total Revenue
-                <span class="dash-stat-info">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span class="dash-stat-info">i
                   <span class="dash-stat-info-tip">Total revenue from Courses, Brand Deals, 1:1 Private Coaching</span>
                 </span>
               </div>
