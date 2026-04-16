@@ -1401,6 +1401,10 @@
     .cine-hint { display: none; }
   }
   .sidebar-bottom { padding: 16px 12px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--border); }
+  .settings-modal-inner::-webkit-scrollbar { width: 6px; }
+  .settings-modal-inner::-webkit-scrollbar-track { background: transparent; }
+  .settings-modal-inner::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.35); border-radius: 3px; }
+  .settings-modal-inner::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,0.55); }
   .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface2); margin-bottom: 8px; }
   .sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
   .sidebar-user-info { flex: 1; overflow: hidden; }
@@ -2825,8 +2829,8 @@
 
 <!-- SETTINGS MODAL -->
 <div id="settings-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;pointer-events:all;">
-  <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:36px;position:relative;width:100%;max-width:440px;pointer-events:all;margin:20px;">
-    <button onclick="closeSettingsModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#7a788f;font-size:18px;cursor:pointer;" aria-label="Close">&#x2715;</button>
+  <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:36px;position:relative;width:100%;max-width:440px;pointer-events:all;margin:20px;max-height:calc(100vh - 80px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,0.4) transparent;" class="settings-modal-inner">
+    <button onclick="closeSettingsModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#7a788f;font-size:18px;cursor:pointer;z-index:2;" aria-label="Close">&#x2715;</button>
     <h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;margin-bottom:4px;letter-spacing:-0.3px;">Settings</h2>
     <p style="color:var(--muted);font-size:13px;margin-bottom:28px;">Manage your account and subscription</p>
 
