@@ -891,7 +891,15 @@ async function handleAuth() {
       showAuthMsg('success', 'Check your email to confirm your account!');
     }
   }
-  else { closeAuthModal(); window.location.href = 'dashboard.html'; }
+  else {
+    closeAuthModal();
+    // Honor ?redirect=... if provided (used by gated pages like follower-audit).
+    // Only allow same-origin relative paths to prevent open-redirect abuse.
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
+    const safe = redirect && redirect.startsWith('/') && !redirect.startsWith('//');
+    window.location.href = safe ? redirect : 'dashboard.html';
+  }
 }
 
 async function handleForgotPassword() {
