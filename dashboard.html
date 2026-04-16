@@ -3633,7 +3633,7 @@
               <!-- Hidden legacy inputs (JS compat) -->
               <input type="hidden" id="img-width" value="">
               <input type="hidden" id="img-height" value="">
-              <input type="checkbox" id="img-resize-lock" checked style="display:none;">
+              <input type="checkbox" id="img-resize-lock" aria-label="Lock aspect ratio" checked style="display:none;">
               <div id="pro-resize" style="display:none;"></div>
             </div>
           </div>
@@ -4254,7 +4254,7 @@
                 <div id="deal-contract-empty" style="padding:20px;background:var(--surface);border:1px dashed var(--border);border-radius:10px;text-align:center;">
                   <div id="deal-contract-save-first" style="display:none;font-size:12px;color:var(--muted);">Save the deal first, then upload the contract here.</div>
                   <div id="deal-contract-uploader" style="display:none;">
-                    <input type="file" id="deal-contract-input" accept="application/pdf" style="display:none;" onchange="handleContractFileSelected(event)">
+                    <input type="file" id="deal-contract-input" accept="application/pdf" aria-label="Upload contract PDF" style="display:none;" onchange="handleContractFileSelected(event)">
                     <button type="button" id="deal-contract-choose-btn" onclick="document.getElementById('deal-contract-input').click()" style="padding:9px 16px;background:transparent;border:1px solid var(--border-hover);color:var(--text);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Choose PDF</button>
                   </div>
                 </div>
@@ -4282,7 +4282,7 @@
                 <!-- Empty state: no invoice -->
                 <div id="deal-invoice-empty" style="padding:20px;background:var(--surface);border:1px dashed var(--border);border-radius:10px;text-align:center;">
                   <div id="deal-invoice-uploader">
-                    <input type="file" id="deal-invoice-input" accept="application/pdf" style="display:none;" onchange="handleInvoiceFileSelected(event)">
+                    <input type="file" id="deal-invoice-input" accept="application/pdf" aria-label="Upload invoice PDF" style="display:none;" onchange="handleInvoiceFileSelected(event)">
                     <button type="button" id="deal-invoice-choose-btn" onclick="document.getElementById('deal-invoice-input').click()" style="padding:9px 16px;background:transparent;border:1px solid var(--border-hover);color:var(--text);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Upload Invoice PDF</button>
                   </div>
                 </div>
