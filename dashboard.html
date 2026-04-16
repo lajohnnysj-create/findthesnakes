@@ -1014,6 +1014,56 @@
     background: rgba(0,0,0,0.95);
     flex-shrink: 0;
   }
+  .tp-voice-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.6);
+    padding: 0 14px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tp-voice-toggle:hover { background: rgba(255,255,255,0.1); }
+  .tp-voice-toggle.active {
+    background: rgba(124,58,237,0.2);
+    border-color: rgba(124,58,237,0.4);
+    color: #c4b5fd;
+  }
+  .tp-voice-speed {
+    display: none;
+    align-items: center;
+    gap: 4px;
+  }
+  .tp-voice-speed.visible { display: flex; }
+  .tp-voice-speed-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .tp-voice-speed-btn:hover { background: rgba(255,255,255,0.12); }
+  .tp-voice-speed-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    min-width: 32px;
+    text-align: center;
+    font-weight: 600;
+  }
   @media (max-width: 640px) {
     .tp-content { font-size: 32px; padding: 0 6vw; }
     .tp-hint { display: none; }
@@ -13781,8 +13831,18 @@ function openTeleprompter() {
       <div class="tp-divider"></div>
       <button class="tp-ctrl-btn" onclick="tpAdjustFontSize(-1)" aria-label="Smaller text">A<small>−</small></button>
       <button class="tp-ctrl-btn" onclick="tpAdjustFontSize(1)" aria-label="Larger text">A<small>+</small></button>
+      <div class="tp-divider"></div>
+      <button class="tp-voice-toggle" id="tp-voice-toggle" onclick="tpToggleVoice()" aria-label="Toggle voice read-aloud">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <span id="tp-voice-label">Voice</span>
+      </button>
+      <div class="tp-voice-speed" id="tp-voice-speed">
+        <button class="tp-voice-speed-btn" onclick="tpAdjustVoiceSpeed(-0.15)" aria-label="Slower voice">−</button>
+        <span class="tp-voice-speed-label" id="tp-voice-speed-val">1×</span>
+        <button class="tp-voice-speed-btn" onclick="tpAdjustVoiceSpeed(0.15)" aria-label="Faster voice">+</button>
+      </div>
     </div>
-    <div class="tp-hint">Space: play/pause · ↑↓: speed · Esc: exit</div>
+    <div class="tp-hint">Space: play/pause · ↑↓: speed · V: voice · Esc: exit</div>
   `;
   document.body.appendChild(tp);
 
@@ -13793,6 +13853,9 @@ function openTeleprompter() {
     fontSize: 48,
     rafId: null,
     keyHandler: null,
+    voiceOn: false,
+    voiceRate: 1.0,
+    voiceParts: parts, // keep reference for voice reading
   };
   applyTpFontSize();
   tpState.keyHandler = tpOnKey;
@@ -13809,6 +13872,10 @@ let tpState = null;
 function closeTeleprompter() {
   if (tpState?.rafId) cancelAnimationFrame(tpState.rafId);
   if (tpState?.keyHandler) document.removeEventListener('keydown', tpState.keyHandler);
+  // Stop any active voice
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
   tpState = null;
   const tp = document.getElementById('teleprompter-overlay');
   if (tp) tp.remove();
@@ -13884,6 +13951,116 @@ function tpOnKey(e) {
   } else if (e.key === 'Home' || e.key === 'r') {
     e.preventDefault();
     tpRestart();
+  } else if (e.key === 'v' || e.key === 'V') {
+    e.preventDefault();
+    tpToggleVoice();
+  }
+}
+
+// ========== TELEPROMPTER VOICE ==========
+
+function tpToggleVoice() {
+  if (!tpState) return;
+  tpState.voiceOn = !tpState.voiceOn;
+
+  const btn = document.getElementById('tp-voice-toggle');
+  const label = document.getElementById('tp-voice-label');
+  const speedRow = document.getElementById('tp-voice-speed');
+
+  if (tpState.voiceOn) {
+    if (btn) btn.classList.add('active');
+    if (label) label.textContent = 'Voice On';
+    if (speedRow) speedRow.classList.add('visible');
+    tpStartVoice();
+  } else {
+    if (btn) btn.classList.remove('active');
+    if (label) label.textContent = 'Voice';
+    if (speedRow) speedRow.classList.remove('visible');
+    tpStopVoice();
+  }
+}
+
+function tpStartVoice() {
+  if (!tpState || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+
+  // Combine all script parts into one text
+  const text = (tpState.voiceParts || []).join('.\n\n');
+  if (!text.trim()) return;
+
+  // Split into sentences/chunks to avoid the browser cutting off long utterances
+  const chunks = text.match(/[^.!?\n]+[.!?\n]+|[^.!?\n]+$/g) || [text];
+
+  let chunkIndex = 0;
+
+  function speakNext() {
+    if (!tpState || !tpState.voiceOn || chunkIndex >= chunks.length) {
+      // Done speaking — turn off voice
+      if (tpState && tpState.voiceOn) {
+        tpState.voiceOn = false;
+        const btn = document.getElementById('tp-voice-toggle');
+        const label = document.getElementById('tp-voice-label');
+        const speedRow = document.getElementById('tp-voice-speed');
+        if (btn) btn.classList.remove('active');
+        if (label) label.textContent = 'Voice';
+        if (speedRow) speedRow.classList.remove('visible');
+      }
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(chunks[chunkIndex].trim());
+    utterance.rate = tpState.voiceRate;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    // Try to pick a good voice (prefer en-US, non-robotic)
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => v.lang.startsWith('en') && v.name.includes('Samantha')) // iOS
+      || voices.find(v => v.lang.startsWith('en-US') && !v.name.includes('Google'))
+      || voices.find(v => v.lang.startsWith('en-US'))
+      || voices.find(v => v.lang.startsWith('en'))
+      || voices[0];
+    if (preferred) utterance.voice = preferred;
+
+    utterance.onend = function() {
+      chunkIndex++;
+      speakNext();
+    };
+    utterance.onerror = function() {
+      chunkIndex++;
+      speakNext();
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Chrome requires voices to be loaded — they load async
+  if (window.speechSynthesis.getVoices().length === 0) {
+    window.speechSynthesis.onvoiceschanged = function() {
+      window.speechSynthesis.onvoiceschanged = null;
+      speakNext();
+    };
+  } else {
+    speakNext();
+  }
+}
+
+function tpStopVoice() {
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function tpAdjustVoiceSpeed(delta) {
+  if (!tpState) return;
+  tpState.voiceRate = Math.max(0.5, Math.min(2.0, Math.round((tpState.voiceRate + delta) * 100) / 100));
+  const el = document.getElementById('tp-voice-speed-val');
+  if (el) el.textContent = tpState.voiceRate.toFixed(1) + '×';
+
+  // If currently speaking, restart with new speed
+  if (tpState.voiceOn && window.speechSynthesis && window.speechSynthesis.speaking) {
+    tpStopVoice();
+    tpStartVoice();
   }
 }
 
