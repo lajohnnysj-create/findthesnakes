@@ -1592,6 +1592,15 @@
     .inv-download-row { flex-direction: column; }
     #deal-modal > div { max-width: 100% !important; }
     .deal-grid-2 { grid-template-columns: 1fr !important; }
+    /* Deal detail mobile fixes */
+    #deals-detail-view > div:last-child { padding: 16px !important; }
+    #deals-detail-view h2 { font-size: 20px !important; }
+    #deal-locked-banner { padding: 12px 14px !important; }
+    #deal-locked-banner button { width: 100%; text-align: center; }
+    #deal-contract-existing > div,
+    #deal-invoice-existing > div { gap: 10px; }
+    #deal-contract-existing .deal-btn-row,
+    #deal-invoice-existing .deal-btn-row { width: 100%; }
   }
   /* Brand Deal CRM — Analytics */
   .deals-stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
@@ -4247,16 +4256,16 @@
             </div>
 
             <!-- Locked banner (shown when deal is Completed or Cancelled) -->
-            <div id="deal-locked-banner" style="display:none;padding:14px 18px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:12px;margin-bottom:18px;">
+            <div id="deal-locked-banner" style="display:none;padding:14px 18px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:12px;margin-bottom:18px;overflow:hidden;">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-                <div style="display:flex;align-items:center;gap:10px;">
+                <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#4ade80;flex-shrink:0;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  <div>
+                  <div style="min-width:0;">
                     <div id="deal-locked-title" style="font-size:13px;font-weight:600;color:#4ade80;">Deal Completed</div>
-                    <div style="font-size:11px;color:var(--muted);">This deal is locked. Revert to Active to make changes.</div>
+                    <div style="font-size:11px;color:var(--muted);line-height:1.4;">This deal is locked. Revert to Active to make changes.</div>
                   </div>
                 </div>
-                <button onclick="revertDealToActive()" style="padding:7px 14px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.35);color:#c4b5fd;border-radius:7px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Revert to Active</button>
+                <button onclick="revertDealToActive()" style="padding:7px 14px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.35);color:#c4b5fd;border-radius:7px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">Revert to Active</button>
               </div>
             </div>
 
@@ -4363,18 +4372,20 @@
                   </div>
                 </div>
                 <!-- Populated state: contract exists -->
-                <div id="deal-contract-existing" style="display:none;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;align-items:center;gap:12px;">
-                  <div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;flex-shrink:0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#c4b5fd;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  </div>
-                  <div style="flex:1;min-width:0;">
-                    <div id="deal-contract-filename" style="font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">contract.pdf</div>
-                    <div style="font-size:11px;color:var(--muted);">PDF uploaded</div>
-                  </div>
-                  <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
-                    <button type="button" id="deal-contract-view-btn" onclick="viewContract()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">View</button>
-                    <button type="button" id="deal-contract-replace-btn" onclick="document.getElementById('deal-contract-input').click()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Replace</button>
-                    <button type="button" id="deal-contract-remove-btn" onclick="removeContract()" style="padding:7px 12px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Remove</button>
+                <div id="deal-contract-existing" style="display:none;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;display:none;">
+                  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;flex-shrink:0;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#c4b5fd;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                      <div id="deal-contract-filename" style="font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">contract.pdf</div>
+                      <div style="font-size:11px;color:var(--muted);">PDF uploaded</div>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+                      <button type="button" id="deal-contract-view-btn" onclick="viewContract()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">View</button>
+                      <button type="button" id="deal-contract-replace-btn" onclick="document.getElementById('deal-contract-input').click()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Replace</button>
+                      <button type="button" id="deal-contract-remove-btn" onclick="removeContract()" style="padding:7px 12px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Remove</button>
+                    </div>
                   </div>
                 </div>
                 <div id="deal-contract-progress" style="display:none;margin-top:8px;font-size:12px;color:var(--muted);">Uploading...</div>
@@ -4391,18 +4402,20 @@
                   </div>
                 </div>
                 <!-- Populated state: invoice exists -->
-                <div id="deal-invoice-existing" style="display:none;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;align-items:center;gap:12px;">
-                  <div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.3);border-radius:8px;flex-shrink:0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#4ade80;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5"/></svg>
-                  </div>
-                  <div style="flex:1;min-width:0;">
-                    <div id="deal-invoice-filename" style="font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">invoice.pdf</div>
-                    <div id="deal-invoice-status" style="font-size:11px;color:var(--muted);">Invoice uploaded</div>
-                  </div>
-                  <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
-                    <button type="button" id="deal-invoice-view-btn" onclick="viewInvoice()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">View</button>
-                    <button type="button" id="deal-invoice-replace-btn" onclick="document.getElementById('deal-invoice-input').click()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Replace</button>
-                    <button type="button" id="deal-invoice-remove-btn" onclick="removeInvoice()" style="padding:7px 12px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Remove</button>
+                <div id="deal-invoice-existing" style="display:none;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;display:none;">
+                  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.3);border-radius:8px;flex-shrink:0;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#4ade80;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5"/></svg>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                      <div id="deal-invoice-filename" style="font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">invoice.pdf</div>
+                      <div id="deal-invoice-status" style="font-size:11px;color:var(--muted);">Invoice uploaded</div>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+                      <button type="button" id="deal-invoice-view-btn" onclick="viewInvoice()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">View</button>
+                      <button type="button" id="deal-invoice-replace-btn" onclick="document.getElementById('deal-invoice-input').click()" style="padding:7px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Replace</button>
+                      <button type="button" id="deal-invoice-remove-btn" onclick="removeInvoice()" style="padding:7px 12px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:7px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Remove</button>
+                    </div>
                   </div>
                 </div>
                 <!-- Send to brand button -->
@@ -11271,7 +11284,7 @@ function renderStatusBreakdown() {
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
           <div style="font-size:12px;color:var(--text);">${escapeHtml(DEAL_STATUS_LABELS[status])}</div>
-          <div style="font-size:12px;color:var(--muted);">${count} <span style="opacity:0.6;">(${pct.toFixed(0)}%)</span></div>
+          <div style="font-size:12px;color:var(--muted);">${count} <span style="color:var(--muted2);">(${pct.toFixed(0)}%)</span></div>
         </div>
         <div style="height:4px;background:var(--surface);border-radius:4px;overflow:hidden;">
           <div style="height:100%;width:${pct}%;background:${color};border-radius:4px;"></div>
