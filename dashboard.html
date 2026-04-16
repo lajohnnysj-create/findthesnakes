@@ -2989,7 +2989,7 @@
     <button class="sidebar-item" id="nav-scripts" onclick="showTool('scripts')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/><path d="M6 21l-2-2 2-2M18 21l2-2-2-2"/></svg></div>
       <span class="sidebar-item-label">Script Builder</span>
-      <span class="sidebar-item-badge max">MAX</span>
+      <span class="sidebar-item-badge">PRO</span>
     </button>
     <button class="sidebar-item" id="nav-grid" onclick="showTool('grid')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
@@ -3162,7 +3162,7 @@
           <div class="welcome-tool-card" onclick="showTool('scripts')">
             <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/><path d="M6 21l-2-2 2-2M18 21l2-2-2-2"/></svg></div>
             <div>
-              <div class="welcome-tool-name">Script Builder <span style="font-size:9px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;padding:2px 6px;border-radius:4px;margin-left:4px;vertical-align:middle;font-weight:700;letter-spacing:0.03em;">MAX</span></div>
+              <div class="welcome-tool-name">Script Builder <span style="font-size:9px;background:var(--accent);color:#fff;padding:2px 6px;border-radius:4px;margin-left:4px;vertical-align:middle;font-weight:700;letter-spacing:0.03em;">PRO</span></div>
               <div class="welcome-tool-desc">Write your next reel, video, podcast, or story in blocks</div>
             </div>
           </div>
@@ -4315,10 +4315,10 @@
         <div style="width:56px;height:56px;margin:0 auto 16px;background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(232,121,249,0.12));border:1px solid rgba(232,121,249,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e879f9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
         </div>
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;background:linear-gradient(135deg,#a78bfa,#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;margin-bottom:8px;">Creator Max</div>
-        <h2 style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-0.3px;">Script Builder is a Creator Max feature</h2>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent2);font-weight:700;margin-bottom:8px;">Pro Feature</div>
+        <h2 style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-0.3px;">Script Builder is a Pro feature</h2>
         <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;">Write and organize your video scripts with draggable blocks. Add a hook, break into sections, rearrange freely, and export as PDF or teleprompter.</p>
-        <button onclick="handleMaxUpgradeClick(event)" style="padding:12px 26px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.35);">Upgrade to Creator Max — $20/mo</button>
+        <button onclick="startCheckout('monthly', this)" style="padding:12px 26px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);">Upgrade to Pro — $10/mo</button>
       </div>
 
       <!-- Editor wrapper (shown when Max) -->
@@ -9456,7 +9456,7 @@ function openSettingsModal() {
 // =====================================================
 // STRIPE CONNECT
 // =====================================================
-const STRIPE_CONNECT_CLIENT_ID = 'ca_ULc7AzJR6nqlaSnY1d8TvXn6WeNcLWpL';
+// Stripe Connect client ID is now handled server-side in /api/stripe-connect-start
 
 async function loadStripeConnectStatus() {
   const disconnectedEl = document.getElementById('settings-stripe-disconnected');
@@ -9492,7 +9492,7 @@ async function loadStripeConnectStatus() {
   }
 }
 
-function connectStripeAccount() {
+async function connectStripeAccount() {
   if (!currentUser) return;
 
   const btn = document.getElementById('settings-stripe-connect-btn');
@@ -9501,17 +9501,29 @@ function connectStripeAccount() {
     btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" style="animation:btn-spin 0.6s linear infinite;" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Redirecting to Stripe...`;
   }
 
-  // Build the Stripe OAuth URL
-  const redirectUri = encodeURIComponent('https://ryxa.io/api/stripe-connect-callback');
-  const state = encodeURIComponent(currentUser.id);
-  const url = `https://connect.stripe.com/oauth/authorize`
-    + `?response_type=code`
-    + `&client_id=${STRIPE_CONNECT_CLIENT_ID}`
-    + `&scope=read_write`
-    + `&redirect_uri=${redirectUri}`
-    + `&state=${state}`;
+  try {
+    // Request a signed OAuth URL from our secure backend
+    const resp = await fetch('/api/stripe-connect-start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: currentUser.id }),
+    });
 
-  window.location.href = url;
+    const data = await resp.json();
+
+    if (!resp.ok || !data.url) {
+      throw new Error(data.error || 'Failed to start Stripe Connect');
+    }
+
+    window.location.href = data.url;
+  } catch (err) {
+    console.error('Stripe Connect start error:', err);
+    showStripeMsg('error', 'Failed to start Stripe Connect. Please try again.');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg> Connect Stripe Account`;
+    }
+  }
 }
 
 async function disconnectStripeAccount() {
@@ -13144,10 +13156,10 @@ async function revokeShareAccess() {
 }
 
 function initScriptsTool() {
-  const isMaxUser = isMax();
+  const hasAccess = isPro();
   const paywall = document.getElementById('scripts-paywall');
   const editorWrap = document.getElementById('scripts-editor-wrap');
-  if (!isMaxUser) {
+  if (!hasAccess) {
     if (paywall) paywall.style.display = 'block';
     if (editorWrap) editorWrap.style.display = 'none';
     return;
