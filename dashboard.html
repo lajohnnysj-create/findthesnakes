@@ -1646,9 +1646,10 @@
   .pipeline-wrap::-webkit-scrollbar-track { background: transparent; }
   .pipeline-wrap::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.35); border-radius: 4px; }
   .pipeline-wrap::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,0.55); }
-  .pipeline-board { display: flex; gap: 14px; min-width: min-content; padding: 2px; }
+  .pipeline-board { display: flex; gap: 14px; padding: 2px; }
   .pipeline-col {
-    flex: 0 0 240px;
+    flex: 1;
+    min-width: 0;
     min-height: 200px;
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -1689,7 +1690,13 @@
   .pipeline-card-amount { font-family: Syne, sans-serif; font-size: 14px; font-weight: 700; color: var(--text); }
   .pipeline-card-payment { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 100px; }
   @media (max-width: 640px) {
-    .pipeline-col { flex: 0 0 200px; }
+    .pipeline-board { gap: 8px; }
+    .pipeline-col-header { padding: 10px 12px 8px; }
+    .pipeline-col-title { font-size: 11px; }
+    .pipeline-card { padding: 10px 12px; }
+    .pipeline-card-title { font-size: 12px; }
+    .pipeline-card-brand { font-size: 10px; }
+    .pipeline-card-amount { font-size: 12px; }
   }
     .bio-grid { grid-template-columns: 1fr !important; min-width: 0 !important; }
     .bio-grid > div { min-width: 0 !important; }
