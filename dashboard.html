@@ -1602,7 +1602,8 @@
     #deal-contract-existing .deal-btn-row,
     #deal-invoice-existing .deal-btn-row { width: 100%; }
     .deal-input { max-width: 100% !important; min-width: 0 !important; font-size: 16px !important; }
-    .deal-grid-2 > div { min-width: 0 !important; }
+    .deal-grid-2 > div { min-width: 0 !important; overflow: hidden; }
+    input[type="date"].deal-input { width: 100% !important; box-sizing: border-box !important; appearance: none !important; -webkit-appearance: none !important; }
   }
   /* Brand Deal CRM — Analytics */
   .deals-stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
@@ -4272,7 +4273,7 @@
             </div>
 
             <!-- Detail content in a card container -->
-            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:24px;">
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:24px;overflow:hidden;">
               <input type="hidden" id="deal-id">
 
               <!-- BASIC INFO section -->
@@ -4316,13 +4317,13 @@
               <div style="margin-bottom:24px;">
                 <div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:14px;">Timing</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;" class="deal-grid-2">
-                  <div style="min-width:0;">
+                  <div style="min-width:0;overflow:hidden;">
                     <label class="deal-label" for="deal-campaign-start">Start Date</label>
-                    <input type="date" id="deal-campaign-start" class="deal-input" style="max-width:100%;min-width:0;">
+                    <input type="date" id="deal-campaign-start" class="deal-input" style="width:100%;box-sizing:border-box;appearance:none;-webkit-appearance:none;">
                   </div>
-                  <div style="min-width:0;">
+                  <div style="min-width:0;overflow:hidden;">
                     <label class="deal-label" for="deal-campaign-end">End Date</label>
-                    <input type="date" id="deal-campaign-end" class="deal-input" style="max-width:100%;min-width:0;">
+                    <input type="date" id="deal-campaign-end" class="deal-input" style="width:100%;box-sizing:border-box;appearance:none;-webkit-appearance:none;">
                     <div style="font-size:11px;color:var(--muted);margin-top:4px;">We'll remind you 3 days before.</div>
                   </div>
                 </div>
