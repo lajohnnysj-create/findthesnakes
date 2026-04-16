@@ -2905,7 +2905,12 @@
 
     <!-- Stripe Connect -->
     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;margin-bottom:12px;">Payouts</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent2);font-weight:600;">Payouts</div>
+        <svg width="40" height="16" viewBox="0 0 60 25" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.5;">
+          <path d="M5.4 8.4c0-1 .8-1.4 2.1-1.4 1.9 0 4.2.6 6.1 1.6V3.2C11.7 2.4 9.8 2 7.5 2 3 2 0 4.4 0 8.7c0 6.7 9.2 5.6 9.2 8.5 0 1.2-1 1.5-2.4 1.5-2.1 0-4.8-.8-6.8-2v5.5c2.3 1 4.6 1.4 6.8 1.4 4.6 0 7.8-2.3 7.8-6.7C14.6 10 5.4 11.3 5.4 8.4zm14.8-5.2L15.8 4l-.1.5v14.8h4.5V3.2zm5.9-3L21.6.9v21.4H26V.2h.1zm8.3 3L34 4l-.1.5v14.8h4.5V3.2zm13-1C45.6 2 44.2 3 43.4 4.2l-.2-2h-4v20.1h4.5V9.5c1.1-1.4 2.9-1.1 3.4-1V3.2c-.6-.2-2.5-.5-3.5 1zm7.5-1.9L50.5 4 50.4 7H48v3.9h2.4v8c0 3.4 1.6 4.8 4.8 4.8 1.5 0 2.5-.3 2.5-.3V19.5s-.7.2-1.5.2c-1.1 0-1.7-.4-1.7-1.8v-6h1.7V8h-1.7V.3h-.1zm11.7 5.3c-3.5 0-6 1.9-6 4.7 0 3.6 3.3 4.3 5.7 5 1.6.5 2.4.8 2.4 1.5 0 .9-.9 1.3-2 1.3-1.8 0-3.5-.7-5-1.7v3.7c1.3.7 3.2 1.2 5 1.2 3.6 0 6.2-1.8 6.2-4.8 0-3.8-3.4-4.4-5.8-5.1-1.5-.5-2.3-.7-2.3-1.4 0-.7.7-1.1 1.8-1.1 1.5 0 3.3.6 4.8 1.4V5.9c-1.4-.6-3.1-1-4.8-1z" fill="#635BFF"/>
+        </svg>
+      </div>
       <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5;">Connect your Stripe account to receive payments from Courses, Brand Deals, and 1:1 Private Coaching.</p>
 
       <!-- Not connected state -->
@@ -2976,15 +2981,15 @@
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
       <span class="sidebar-item-label">Link in Bio</span>
     </button>
-    <button class="sidebar-item" id="nav-mediakit" onclick="showTool('mediakit')">
-      <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="16" y1="17" x2="16" y2="15"/></svg></div>
-      <span class="sidebar-item-label">Media Kit</span>
-      <span class="sidebar-item-badge">PRO</span>
-    </button>
     <button class="sidebar-item" id="nav-deals" onclick="showTool('deals')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 12h18"/></svg></div>
       <span class="sidebar-item-label">Brand Deals <span style="font-size:9px;font-weight:600;letter-spacing:0.08em;color:var(--muted);vertical-align:middle;margin-left:2px;">CRM</span></span>
       <span class="sidebar-item-badge max">MAX</span>
+    </button>
+    <button class="sidebar-item" id="nav-mediakit" onclick="showTool('mediakit')">
+      <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="16" y1="17" x2="16" y2="15"/></svg></div>
+      <span class="sidebar-item-label">Media Kit</span>
+      <span class="sidebar-item-badge">PRO</span>
     </button>
     <button class="sidebar-item" id="nav-scripts" onclick="showTool('scripts')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/><path d="M6 21l-2-2 2-2M18 21l2-2-2-2"/></svg></div>
