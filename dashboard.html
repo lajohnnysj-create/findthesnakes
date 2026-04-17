@@ -7762,8 +7762,8 @@ function buildPreviewHTML() {
   body{margin:0;padding:${(bioState.avatar_display === 'hero' && bioState.avatar_url) ? '0 18px 24px' : '40px 18px 24px'};font-family:'DM Sans',sans-serif;background:${t.bg};color:${t.text};min-height:100vh;}
   ${bgImageCSS}
   ${bgOverlayCSS || glowCSS}
-  .w{position:relative;z-index:1;max-width:480px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;}
-  .hero-wrap{margin:0 -18px;width:calc(100% + 36px);}
+  .w{position:relative;z-index:1;max-width:${(bioState.avatar_display === 'hero' && bioState.avatar_url) ? '100%' : '480px'};margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .hero-wrap{margin:0 -18px;width:calc(100% + 36px);position:relative;overflow:hidden;}
   .avfr{width:100px;height:100px;border-radius:50%;padding:3px;background:${t.avatarBorder};margin-bottom:6px;}
   .nm{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-0.4px;text-align:center;word-break:break-word;}
   .bio-line{font-size:13px;color:${t.muted2};text-align:center;line-height:1.4;max-width:340px;word-break:break-word;}
@@ -7810,7 +7810,7 @@ function buildPreviewHTML() {
   .hero-info .bio-line{text-shadow:0 1px 6px rgba(0,0,0,0.5);}
   .hero-info .sb{background:rgba(0,0,0,0.35);border-color:rgba(255,255,255,0.2);backdrop-filter:blur(6px);}
   .hero-info{display:none;}
-  .hero-below{margin-top:-60px;position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 18px;}
+  .hero-below{margin-top:-60px;position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 18px;max-width:480px;width:100%;margin-left:auto;margin-right:auto;}
   </style></head><body>
   <div class="w">
     ${(bioState.avatar_display === 'hero' && bioState.avatar_url) ? `
