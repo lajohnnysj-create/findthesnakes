@@ -930,23 +930,33 @@ async function load() {
 // Page view tracking with visitor dedup
 async function trackPageView(username, pageType) {
   try {
-    const raw = [
-      navigator.userAgent || '',
-      navigator.language || '',
-      screen.width + 'x' + screen.height,
-      new Date().getTimezoneOffset().toString()
-    ].join('|');
-    const msgBuf = new TextEncoder().encode(raw);
-    const hashBuf = await crypto.subtle.digest('SHA-256', msgBuf);
-    const hashArr = Array.from(new Uint8Array(hashBuf));
-    const visitorHash = hashArr.map(b => b.toString(16).padStart(2, '0')).join('');
+    // Generate a visitor hash from available browser signals (no PII stored)
+    let visitorHash;
+    try {
+      const raw = [
+        navigator.userAgent || '',
+        navigator.language || '',
+        screen.width + 'x' + screen.height,
+        new Date().getTimezoneOffset().toString()
+      ].join('|');
+      const msgBuf = new TextEncoder().encode(raw);
+      const hashBuf = await crypto.subtle.digest('SHA-256', msgBuf);
+      const hashArr = Array.from(new Uint8Array(hashBuf));
+      visitorHash = hashArr.map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (hashErr) {
+      // Fallback if crypto.subtle is unavailable (e.g. non-HTTPS context)
+      visitorHash = 'fb-' + btoa(navigator.userAgent + screen.width + screen.height).slice(0, 32);
+    }
 
-    sb.rpc('record_page_view', {
+    const { error } = await sb.rpc('record_page_view', {
       p_username: username,
       p_page_type: pageType,
       p_visitor_hash: visitorHash
-    }).catch(() => {});
-  } catch (e) { /* tracking is best-effort */ }
+    });
+    if (error) console.error('Page view tracking error:', error.message);
+  } catch (e) {
+    console.error('trackPageView failed:', e);
+  }
 }
 
 load().catch(err => {
