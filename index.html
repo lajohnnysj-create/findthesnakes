@@ -125,7 +125,7 @@
   .forgot-link:hover { color: var(--accent2); }
   @keyframes spin { to { transform: rotate(360deg); } }
   .auth-spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
-  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 120px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 120px 24px 80px; text-align: center; position: relative; overflow-x: clip; }
   .hero-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 80% 80%, rgba(168,85,247,0.08) 0%, transparent 60%); }
   .grid-lines { position: absolute; inset: 0; pointer-events: none; z-index: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at 50% 30%, black 0%, transparent 70%); }
   .hero-content { position: relative; z-index: 1; max-width: 900px; }
@@ -138,7 +138,7 @@
   .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
 
   /* TESTIMONIALS */
-  .testimonials-section { margin: 0 0 56px; padding: 0; overflow: hidden; width: 100%; }
+  .testimonials-section { margin: 0 0 56px; padding: 0; overflow: hidden; width: 100vw; position: relative; left: 50%; transform: translateX(-50%); }
   .testimonials-heading { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 6px; color: var(--text); letter-spacing: -0.5px; padding: 0 20px; }
   .testimonials-heading span { background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .testimonials-sub { font-size: 15px; color: var(--muted); text-align: center; margin-bottom: 28px; padding: 0 20px; }
@@ -543,6 +543,7 @@
       <button class="btn-primary" onclick="openSignupModal()">Get started free &#x2192;</button>
       <a class="btn-secondary" href="pricing.html">See pricing</a>
     </div>
+  </div>
 
     <!-- TESTIMONIALS -->
     <div class="testimonials-section">
@@ -626,6 +627,7 @@
       </div>
     </div>
 
+  <div class="hero-content">
     <div class="hero-mockup">
       <div class="mockup-glow"></div>
       <div class="mockup-frame">
