@@ -13476,6 +13476,7 @@ function resolveDashConfirm(val) {
   if (_dashConfirmResolve) { _dashConfirmResolve(val); _dashConfirmResolve = null; }
 }
 
+// Post an automated contract event message to the deal's chat thread
 async function signContractAsCreator() {
   if (!currentDealId) return;
   const deal = dealsList.find(d => d.id === currentDealId);
@@ -13709,7 +13710,6 @@ async function markContractCreatorSigned() {
       if (brandAlreadySigned) { dealsList[dealIdx].contract_locked = true; dealsList[dealIdx].status = 'active'; }
     }
     renderContractUI(dealsList[dealIdx]);
-    renderDealsList();
     showDealModalMsg('success', 'Contract marked as signed.' + (brandAlreadySigned ? ' Deal is now active.' : ''));
     setTimeout(() => { const msg = document.getElementById('deal-detail-msg'); if (msg) msg.style.display = 'none'; }, 2500);
   } catch (err) {
