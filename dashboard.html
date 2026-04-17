@@ -2147,7 +2147,6 @@
   @media (max-width: 900px) {
     .grid-editor-grid { grid-template-columns: 1fr; }
     .grid-phone-wrap { max-width: 320px; margin: 0 auto; order: -1; }
-    .grid-thumbnails { grid-template-columns: repeat(9, 1fr); }
   }
 
   /* Drop zone — compact when photos exist */
@@ -2166,14 +2165,11 @@
     background: rgba(124,58,237,0.08);
   }
 
-  /* Thumbnails — 9-column grid (2 rows of 9 = 18 max) */
+  /* Thumbnails — 6-column grid (3 rows of 6 = 18 max) */
   .grid-thumbnails {
     display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 4px;
-  }
-  @media (max-width: 900px) {
-    .grid-thumbnails { grid-template-columns: repeat(9, 1fr); }
   }
   @media (max-width: 420px) {
     .grid-thumbnails { grid-template-columns: repeat(6, 1fr); }
@@ -2233,6 +2229,9 @@
 
   /* Phone mockup (IG-inspired, rebranded) */
   .grid-phone-wrap { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .grid-phone-wrap { position: static; }
+  }
   .grid-phone {
     background: #0a0a0a;
     border: 2px solid #262626;
