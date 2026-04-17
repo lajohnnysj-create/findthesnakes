@@ -132,6 +132,35 @@
   .full-error-card p { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 0; }
 
   .loading-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; color: var(--muted); font-size: 14px; }
+  /* Portal Sign PDF Tool */
+  .psm-palette-item { display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid var(--border-hover);border-radius:7px;font-size:11px;color:var(--muted);cursor:grab;user-select:none;transition:all 0.15s;font-family:DM Sans,sans-serif; }
+  .psm-palette-item:hover { border-color:rgba(124,58,237,0.4);background:rgba(124,58,237,0.05); }
+  .psm-palette-item.selected { background:rgba(124,58,237,0.12);border-color:rgba(124,58,237,0.5);color:#c4b5fd; }
+  .pdfsign-page-wrap { position:relative;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,0.2);width:100%;max-width:918px; }
+  .pdfsign-page-wrap canvas { display:block;width:100%;height:auto;border-radius:6px; }
+  .pdfsign-field-overlay { position:absolute;inset:0;pointer-events:auto; }
+  .pdfsign-field { position:absolute;border:2px dashed rgba(124,58,237,0.6);background:rgba(124,58,237,0.08);border-radius:4px;pointer-events:all;cursor:move;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:13px;color:#4b2d8a;user-select:none;min-width:40px;min-height:24px;overflow:visible; }
+  .pdfsign-field:hover { border-color:#7c3aed;background:rgba(124,58,237,0.14); }
+  .pdfsign-field.filled { border:2px solid transparent;background:transparent;color:#000; }
+  .pdfsign-field.filled:hover { border:2px dashed rgba(124,58,237,0.4);background:rgba(124,58,237,0.04); }
+  .pdfsign-field-type-label { position:absolute;top:-18px;left:0;font-size:10px;color:#7c3aed;background:var(--surface2);padding:1px 5px;border-radius:3px;letter-spacing:0.04em;text-transform:uppercase;font-weight:600; }
+  .pdfsign-field.filled .pdfsign-field-type-label { display:none; }
+  .pdfsign-field:hover .pdfsign-field-type-label { display:block; }
+  .pdfsign-field-delete { position:absolute;top:-12px;right:-12px;width:26px;height:26px;background:#ef4444;color:#fff;border:2px solid #fff;border-radius:50%;font-size:14px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 2px 6px rgba(0,0,0,0.35); }
+  .pdfsign-field-delete:hover { background:#dc2626;transform:scale(1.1); }
+  .pdfsign-field-resize { position:absolute;bottom:-10px;right:-10px;width:22px;height:22px;background:#7c3aed;border:3px solid #fff;border-radius:50%;cursor:nwse-resize;z-index:3;box-shadow:0 2px 6px rgba(0,0,0,0.35); }
+  .pdfsign-field-resize:hover { background:#a855f7;transform:scale(1.1); }
+  .pdfsign-field-content { width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:2px;overflow:hidden; }
+  .pdfsign-field-content img { max-width:100%;max-height:100%;object-fit:contain; }
+  .pdfsign-field-text { font-size:inherit;color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px; }
+  .pdfsign-field-checkbox-on { font-size:20px;line-height:1;color:#000;font-weight:700; }
+  .pdfsign-modal { position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:20px; }
+  .pdfsign-modal-inner { background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;width:100%;position:relative;max-height:90vh;overflow-y:auto; }
+  .pdfsign-modal-close { position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer; }
+  .pdfsign-sig-tabs { display:flex;gap:4px;background:var(--surface2);padding:4px;border-radius:10px;margin-bottom:14px; }
+  .pdfsign-sig-tab { flex:1;padding:8px 12px;background:transparent;border:none;color:var(--muted);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:7px; }
+  .pdfsign-sig-tab.active { background:var(--accent);color:#fff; }
+  .pdfsign-sig-panel { min-height:200px; }
 </style>
 </head>
 <body>
@@ -249,29 +278,97 @@
     </div>
   </div>
 
-  <!-- Contract signing modal (hidden) -->
-  <div id="portal-sign-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);padding:16px;overflow-y:auto;">
-    <div style="max-width:800px;margin:0 auto;background:var(--bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <div style="font-family:Syne,sans-serif;font-size:16px;font-weight:700;color:var(--text);">Sign Contract</div>
-          <div id="portal-sign-filename" style="font-size:11px;color:var(--muted);margin-top:2px;"></div>
+  <!-- Contract signing full-screen modal -->
+  <div id="portal-sign-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg);overflow-y:auto;">
+    <!-- Header -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:10;">
+      <div>
+        <div style="font-family:Syne,sans-serif;font-size:16px;font-weight:700;color:var(--text);">Sign Contract</div>
+        <div id="portal-sign-filename" style="font-size:11px;color:var(--muted);margin-top:2px;"></div>
+      </div>
+      <button onclick="closePortalSignModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Palette toolbar -->
+    <div class="psm-palette" style="padding:10px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-wrap:wrap;position:sticky;top:53px;background:var(--bg);z-index:10;">
+      <div style="display:flex;gap:4px;flex-wrap:wrap;flex:1;">
+        <div class="psm-palette-item" data-ftype="signature" draggable="true" onclick="psmPaletteClick(event,'signature')" ondragstart="psmDragStart(event,'signature')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M20 19H4"/><path d="M4 15.5s2.5-6 6-6 2.5 4.5 6 4.5 4-3 4-3"/></svg>
+          <span>Signature</span>
         </div>
-        <button onclick="closePortalSignModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <div class="psm-palette-item" data-ftype="text" draggable="true" onclick="psmPaletteClick(event,'text')" ondragstart="psmDragStart(event,'text')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+          <span>Text</span>
+        </div>
+        <div class="psm-palette-item" data-ftype="date" draggable="true" onclick="psmPaletteClick(event,'date')" ondragstart="psmDragStart(event,'date')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span>Date</span>
+        </div>
+        <div class="psm-palette-item" data-ftype="checkbox" draggable="true" onclick="psmPaletteClick(event,'checkbox')" ondragstart="psmDragStart(event,'checkbox')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="8 12 11 15 16 10"/></svg>
+          <span>Checkbox</span>
+        </div>
+        <div class="psm-palette-item" data-ftype="crossout" draggable="true" onclick="psmPaletteClick(event,'crossout')" ondragstart="psmDragStart(event,'crossout')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><line x1="4" y1="12" x2="20" y2="12"/></svg>
+          <span>Crossout</span>
+        </div>
       </div>
-      <div style="padding:10px 20px;background:rgba(124,58,237,0.06);border-bottom:1px solid var(--border);font-size:11px;color:var(--text);">
-        Click on the document to place your signature. Then click <strong>Save Signature</strong>.
+      <button id="portal-sign-save-btn" onclick="savePortalSignature()" style="padding:8px 18px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;white-space:nowrap;">Save & Upload</button>
+    </div>
+    <div id="psm-status" style="display:none;padding:8px 20px;font-size:11px;color:#c4b5fd;background:rgba(124,58,237,0.06);border-bottom:1px solid var(--border);text-align:center;"></div>
+    <!-- PDF pages -->
+    <div style="padding:20px;background:var(--surface2);min-height:60vh;">
+      <div id="portal-sign-pages" style="display:flex;flex-direction:column;gap:16px;align-items:center;max-width:918px;margin:0 auto;"></div>
+    </div>
+  </div>
+
+  <!-- Signature modal -->
+  <div id="psm-sig-modal" class="pdfsign-modal" style="display:none;">
+    <div class="pdfsign-modal-inner" style="max-width:520px;">
+      <button onclick="psmCloseSigModal()" class="pdfsign-modal-close">&#x2715;</button>
+      <h3 style="font-family:Syne,sans-serif;font-size:18px;font-weight:800;margin-bottom:6px;letter-spacing:-0.3px;">Add your signature</h3>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:14px;">Draw, type, or upload your signature.</p>
+      <div class="pdfsign-sig-tabs">
+        <button class="pdfsign-sig-tab active" data-mode="draw" onclick="psmSwitchSigMode('draw')">Draw</button>
+        <button class="pdfsign-sig-tab" data-mode="type" onclick="psmSwitchSigMode('type')">Type</button>
+        <button class="pdfsign-sig-tab" data-mode="upload" onclick="psmSwitchSigMode('upload')">Upload</button>
       </div>
-      <div style="padding:10px 20px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;">
-        <span style="font-size:11px;color:var(--muted);">Your signature:</span>
-        <input type="text" id="portal-sign-name" placeholder="Type your full name" style="flex:1;padding:8px 12px;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;font-size:13px;color:var(--text);font-family:'Syne',sans-serif;font-weight:700;outline:none;">
+      <div id="psm-sig-draw" class="pdfsign-sig-panel">
+        <canvas id="psm-sig-canvas" width="480" height="180" style="width:100%;height:180px;background:#fff;border:1px solid var(--border-hover);border-radius:10px;cursor:crosshair;touch-action:none;"></canvas>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+          <button onclick="psmClearSigCanvas()" style="padding:6px 12px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;">Clear</button>
+        </div>
       </div>
-      <div id="portal-sign-pages" style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;align-items:center;max-height:60vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(168,85,247,0.4) transparent;"></div>
-      <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;">
-        <button onclick="closePortalSignModal()" style="padding:9px 18px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
-        <button id="portal-sign-save-btn" onclick="savePortalSignature()" style="padding:9px 18px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;">Save Signature</button>
+      <div id="psm-sig-type" class="pdfsign-sig-panel" style="display:none;">
+        <input type="text" id="psm-sig-type-input" placeholder="Type your full name" oninput="psmUpdateTypedSig()" style="width:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--border-hover);border-radius:10px;font-size:15px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;margin-bottom:12px;box-sizing:border-box;">
+        <div id="psm-sig-type-preview" style="background:#fff;border:1px solid var(--border-hover);border-radius:10px;padding:24px 16px;min-height:90px;display:flex;align-items:center;justify-content:center;font-family:'Brush Script MT',cursive;font-size:40px;color:#000;font-style:italic;">Type to preview</div>
+      </div>
+      <div id="psm-sig-upload" class="pdfsign-sig-panel" style="display:none;">
+        <label style="display:block;padding:32px 16px;background:var(--surface);border:1px dashed var(--border-hover);border-radius:10px;text-align:center;cursor:pointer;">
+          <div style="font-size:13px;color:var(--muted);">Upload a signature image (PNG/JPG)</div>
+          <input type="file" id="psm-sig-upload-input" accept="image/*" onchange="psmOnSigUpload(this.files[0])" style="display:none;">
+        </label>
+        <div id="psm-sig-upload-preview" style="display:none;margin-top:12px;background:#fff;border:1px solid var(--border-hover);border-radius:10px;padding:16px;text-align:center;">
+          <img id="psm-sig-upload-img" alt="" style="max-height:120px;max-width:100%;">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end;">
+        <button onclick="psmCloseSigModal()" style="padding:10px 16px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
+        <button onclick="psmApplySig()" style="padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Text/Date input modal -->
+  <div id="psm-text-modal" class="pdfsign-modal" style="display:none;">
+    <div class="pdfsign-modal-inner" style="max-width:420px;">
+      <button onclick="psmCloseTextModal()" class="pdfsign-modal-close">&#x2715;</button>
+      <h3 id="psm-text-title" style="font-family:Syne,sans-serif;font-size:18px;font-weight:800;margin-bottom:12px;letter-spacing:-0.3px;">Enter text</h3>
+      <input type="text" id="psm-text-input" onkeydown="if(event.key==='Enter'){event.preventDefault();psmApplyText();}" style="width:100%;padding:12px 14px;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+      <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end;">
+        <button onclick="psmCloseTextModal()" style="padding:9px 14px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:12px;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
+        <button onclick="psmApplyText()" style="padding:9px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Apply</button>
       </div>
     </div>
   </div>
@@ -827,6 +924,27 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================
 // CONTRACT SIGNING (Brand Side)
 // ============================================================
+// CONTRACT SIGNING — Full PDF Sign Tool Port
+// ============================================================
+
+// State
+let psmFields = [];
+let psmFieldIdSeq = 1;
+let psmPdfBytes = null;
+let psmPdfDoc = null;
+let psmPageDimensions = [];
+let psmSessionSig = null;
+let psmActiveFieldId = null;
+let psmDragType = null;
+let psmTouchPending = null;
+
+const PSM_FIELD_DEFAULTS = {
+  signature: { w: 0.22, h: 0.055 },
+  text:      { w: 0.18, h: 0.028 },
+  date:      { w: 0.13, h: 0.028 },
+  checkbox:  { w: 0.018, h: 0.022 },
+  crossout:  { w: 0.20, h: 0.012 },
+};
 
 function renderPortalContractStatus(deal) {
   const creatorEl = document.getElementById('portal-creator-sign-status');
@@ -842,26 +960,18 @@ function renderPortalContractStatus(deal) {
   } else {
     creatorEl.innerHTML = '<span style="color:#fbbf24;">Not signed</span>';
   }
-
   if (deal.brand_signed_at) {
     const d = new Date(deal.brand_signed_at);
     brandEl.innerHTML = '<span style="color:#4ade80;">Signed</span> <span style="color:var(--muted);font-weight:400;">' + d.toLocaleDateString() + '</span>';
   } else {
     brandEl.innerHTML = '<span style="color:#fbbf24;">Not signed</span>';
   }
-
   if (isLocked) {
-    signBtn.style.display = 'none';
-    markBtn.style.display = 'none';
-    lockedEl.style.display = 'block';
+    signBtn.style.display = 'none'; markBtn.style.display = 'none'; lockedEl.style.display = 'block';
   } else if (!deal.brand_signed_at) {
-    signBtn.style.display = 'inline-block';
-    markBtn.style.display = 'inline-block';
-    lockedEl.style.display = 'none';
+    signBtn.style.display = 'inline-block'; markBtn.style.display = 'inline-block'; lockedEl.style.display = 'none';
   } else {
-    signBtn.style.display = 'none';
-    markBtn.style.display = 'none';
-    lockedEl.style.display = 'none';
+    signBtn.style.display = 'none'; markBtn.style.display = 'none'; lockedEl.style.display = 'none';
   }
 }
 
@@ -869,187 +979,553 @@ async function viewPortalContract() {
   const deal = dealData.deal;
   if (!deal || !deal.contract_file_path) return;
   const btn = document.getElementById('portal-contract-view-btn');
-  btn.disabled = true;
-  btn.textContent = 'Loading...';
+  btn.disabled = true; btn.textContent = 'Loading...';
   try {
-    const { data, error } = await sb.functions.invoke('deal-file-url', {
-      body: { token: dealToken, pin: dealPin, file_type: 'contract' }
-    });
-    if (error) throw new Error(error.message || 'Failed to load');
+    const { data, error } = await sb.functions.invoke('deal-file-url', { body: { token: dealToken, pin: dealPin, file_type: 'contract' } });
+    if (error) throw new Error(error.message || 'Failed');
     if (data && data.error) throw new Error(data.error);
     if (!data || !data.url) throw new Error('No URL returned');
     window.open(data.url, '_blank', 'noopener,noreferrer');
-  } catch (err) {
-    alert('Failed to open contract: ' + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'View';
-  }
+  } catch (err) { alert('Failed to open contract: ' + err.message); }
+  finally { btn.disabled = false; btn.textContent = 'View'; }
 }
 
-let portalSignFields = [];
-let portalSignPdfBytes = null;
-
+// ---- Open signing modal & render PDF ----
 async function openPortalSignModal() {
   const deal = dealData.deal;
   if (!deal || !deal.contract_file_path) return;
-
   const btn = document.getElementById('portal-contract-sign-btn');
-  btn.disabled = true;
-  btn.textContent = 'Loading...';
+  btn.disabled = true; btn.textContent = 'Loading...';
 
   try {
-    // Get signed URL via edge function
-    const { data, error } = await sb.functions.invoke('deal-file-url', {
-      body: { token: dealToken, pin: dealPin, file_type: 'contract' }
-    });
-    if (error) throw new Error(error.message || 'Failed to load');
+    const { data, error } = await sb.functions.invoke('deal-file-url', { body: { token: dealToken, pin: dealPin, file_type: 'contract' } });
+    if (error) throw new Error(error.message || 'Failed');
     if (data && data.error) throw new Error(data.error);
     if (!data || !data.url) throw new Error('No URL returned');
 
     const resp = await fetch(data.url);
     if (!resp.ok) throw new Error('Failed to download');
-    const arrayBuffer = await resp.arrayBuffer();
-    portalSignPdfBytes = new Uint8Array(arrayBuffer);
-    portalSignFields = [];
+    psmPdfBytes = new Uint8Array(await resp.arrayBuffer());
+    psmFields = []; psmFieldIdSeq = 1; psmPageDimensions = [];
 
     document.getElementById('portal-sign-filename').textContent = deal.contract_file_name || 'contract.pdf';
-    document.getElementById('portal-sign-name').value = '';
+
+    const loadingTask = window.pdfjsLib.getDocument({ data: new Uint8Array(psmPdfBytes) });
+    psmPdfDoc = await loadingTask.promise;
 
     const container = document.getElementById('portal-sign-pages');
-    container.innerHTML = '<div style="color:var(--muted);padding:20px;text-align:center;">Rendering PDF...</div>';
-
-    const loadingTask = window.pdfjsLib.getDocument({ data: new Uint8Array(portalSignPdfBytes) });
-    const pdfDoc = await loadingTask.promise;
     container.innerHTML = '';
 
-    for (let i = 0; i < pdfDoc.numPages; i++) {
-      const page = await pdfDoc.getPage(i + 1);
+    for (let i = 0; i < psmPdfDoc.numPages; i++) {
+      const page = await psmPdfDoc.getPage(i + 1);
+      const vp = page.getViewport({ scale: 1 });
+      psmPageDimensions.push({ width: vp.width, height: vp.height });
       const viewport = page.getViewport({ scale: 1.5 });
       const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      canvas.style.cssText = 'width:100%;height:auto;display:block;border-radius:8px;cursor:crosshair;';
-      canvas.dataset.pageIndex = i;
+      canvas.width = viewport.width; canvas.height = viewport.height;
+      canvas.style.cssText = 'display:block;width:100%;height:auto;border-radius:6px;';
       const ctx = canvas.getContext('2d');
       await page.render({ canvasContext: ctx, viewport }).promise;
 
       const pageWrap = document.createElement('div');
-      pageWrap.style.cssText = 'position:relative;width:100%;max-width:720px;border:1px solid var(--border);border-radius:8px;overflow:visible;';
+      pageWrap.className = 'pdfsign-page-wrap';
+      pageWrap.dataset.pageIndex = i;
       pageWrap.appendChild(canvas);
-      container.appendChild(pageWrap);
 
-      canvas.addEventListener('click', function(e) {
-        const sigName = document.getElementById('portal-sign-name').value.trim();
-        if (!sigName) { alert('Please type your name in the signature field first.'); return; }
-        const rect = canvas.getBoundingClientRect();
-        const normX = (e.clientX - rect.left) / rect.width;
-        const normY = (e.clientY - rect.top) / rect.height;
-        placePortalSignature(parseInt(canvas.dataset.pageIndex), normX, normY, pageWrap, sigName);
-      });
+      const overlay = document.createElement('div');
+      overlay.className = 'pdfsign-field-overlay';
+      overlay.addEventListener('dragover', function(e) { e.preventDefault(); });
+      overlay.addEventListener('drop', function(e) { e.preventDefault(); psmHandleDrop(e, i, overlay); });
+      overlay.addEventListener('click', function(e) { psmHandleOverlayClick(e, i); });
+      pageWrap.appendChild(overlay);
+      container.appendChild(pageWrap);
     }
 
     document.getElementById('portal-sign-modal').style.display = 'block';
-  } catch (err) {
-    alert('Failed to load contract: ' + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Sign Contract';
-  }
-}
-
-function placePortalSignature(pageIndex, normX, normY, pageWrap, sigName) {
-  const w = 0.25, h = 0.06;
-  const field = {
-    id: Date.now() + '-' + Math.random().toString(36).slice(2,6),
-    pageIndex: pageIndex,
-    x: Math.max(0, Math.min(normX - w/2, 1 - w)),
-    y: Math.max(0, Math.min(normY - h/2, 1 - h)),
-    w: w, h: h,
-    value: sigName
-  };
-  portalSignFields.push(field);
-
-  const el = document.createElement('div');
-  el.id = 'psf-' + field.id;
-  el.style.cssText = 'position:absolute;left:' + (field.x*100) + '%;top:' + (field.y*100) + '%;width:' + (field.w*100) + '%;height:' + (field.h*100) + '%;border:2px solid rgba(124,58,237,0.6);background:rgba(124,58,237,0.08);border-radius:3px;display:flex;align-items:center;padding:2px 6px;font-family:Syne,sans-serif;font-weight:700;font-size:12px;color:var(--text);cursor:default;';
-  el.textContent = sigName;
-
-  const del = document.createElement('div');
-  del.style.cssText = 'position:absolute;top:-8px;right:-8px;width:16px;height:16px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:#fff;line-height:1;';
-  del.textContent = '\u00d7';
-  del.addEventListener('click', function(e) {
-    e.stopPropagation();
-    portalSignFields = portalSignFields.filter(function(f) { return f.id !== field.id; });
-    el.remove();
-  });
-  el.appendChild(del);
-  pageWrap.appendChild(el);
+    document.body.style.overflow = 'hidden';
+  } catch (err) { alert('Failed to load contract: ' + err.message); }
+  finally { btn.disabled = false; btn.textContent = 'Sign Contract'; }
 }
 
 function closePortalSignModal() {
   document.getElementById('portal-sign-modal').style.display = 'none';
-  portalSignFields = [];
-  portalSignPdfBytes = null;
+  document.body.style.overflow = '';
+  psmFields = []; psmPdfBytes = null; psmPdfDoc = null; psmPageDimensions = [];
+  psmTouchPending = null; psmClearPaletteSelection();
   document.getElementById('portal-sign-pages').innerHTML = '';
 }
 
-async function savePortalSignature() {
-  if (portalSignFields.length === 0) { alert('Please place at least one signature on the document.'); return; }
-  if (!portalSignPdfBytes) { alert('No PDF loaded.'); return; }
+// ---- Palette interactions ----
+function psmDragStart(e, fieldType) {
+  psmDragType = fieldType;
+  e.dataTransfer.setData('text/plain', fieldType);
+  e.dataTransfer.effectAllowed = 'copy';
+}
 
-  const btn = document.getElementById('portal-sign-save-btn');
-  btn.disabled = true;
-  btn.textContent = 'Saving...';
+function psmPaletteClick(e, fieldType) {
+  const item = e.currentTarget;
+  const wasSelected = item.classList.contains('selected');
+  psmClearPaletteSelection();
+  if (!wasSelected) {
+    item.classList.add('selected');
+    psmTouchPending = fieldType;
+    psmShowStatus('Tap on the document to place the ' + fieldType + ' field.');
+  } else {
+    psmTouchPending = null;
+    psmHideStatus();
+  }
+}
+
+function psmClearPaletteSelection() {
+  document.querySelectorAll('.psm-palette-item').forEach(function(el) { el.classList.remove('selected'); });
+  psmTouchPending = null;
+}
+
+function psmShowStatus(msg) {
+  const el = document.getElementById('psm-status');
+  el.textContent = msg; el.style.display = 'block';
+}
+function psmHideStatus() {
+  document.getElementById('psm-status').style.display = 'none';
+}
+
+function psmHandleDrop(e, pageIndex, overlay) {
+  const rect = overlay.getBoundingClientRect();
+  const normX = (e.clientX - rect.left) / rect.width;
+  const normY = (e.clientY - rect.top) / rect.height;
+  const fieldType = psmDragType || e.dataTransfer.getData('text/plain');
+  if (!fieldType) return;
+  psmAddField(pageIndex, fieldType, normX, normY);
+  psmDragType = null;
+}
+
+function psmHandleOverlayClick(e, pageIndex) {
+  if (!psmTouchPending) return;
+  if (e.target.closest('.pdfsign-field')) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const normX = (e.clientX - rect.left) / rect.width;
+  const normY = (e.clientY - rect.top) / rect.height;
+  psmAddField(pageIndex, psmTouchPending, normX, normY);
+  psmClearPaletteSelection();
+  psmHideStatus();
+}
+
+// ---- Field management ----
+function psmAddField(pageIndex, type, normX, normY) {
+  const d = PSM_FIELD_DEFAULTS[type] || PSM_FIELD_DEFAULTS.text;
+  const field = {
+    id: 'f' + (psmFieldIdSeq++),
+    type: type,
+    pageIndex: pageIndex,
+    x: Math.max(0, Math.min(normX - d.w/2, 1 - d.w)),
+    y: Math.max(0, Math.min(normY - d.h/2, 1 - d.h)),
+    w: d.w, h: d.h,
+    value: type === 'checkbox' ? true : (type === 'crossout' ? true : (type === 'date' ? new Date().toLocaleDateString('en-US') : ''))
+  };
+  psmFields.push(field);
+  psmRenderField(field);
+
+  // Auto-open editor for signature/text/date
+  if (type === 'signature') { if (!psmSessionSig) psmOpenSigModal(field.id); else { field.value = psmSessionSig; psmRenderFieldContent(field); } }
+  else if (type === 'text') psmOpenTextModal(field.id, 'text');
+  else if (type === 'date') psmOpenTextModal(field.id, 'date');
+}
+
+function psmRenderField(field) {
+  const pageWrap = document.querySelector('.pdfsign-page-wrap[data-page-index="' + field.pageIndex + '"]');
+  if (!pageWrap) return;
+  const overlay = pageWrap.querySelector('.pdfsign-field-overlay');
+  if (!overlay) return;
+
+  const el = document.createElement('div');
+  el.className = 'pdfsign-field' + (psmHasValue(field) ? ' filled' : '');
+  el.id = 'psm-' + field.id;
+  el.style.left = (field.x*100)+'%'; el.style.top = (field.y*100)+'%';
+  el.style.width = (field.w*100)+'%'; el.style.height = (field.h*100)+'%';
+
+  // Type label
+  const label = document.createElement('div');
+  label.className = 'pdfsign-field-type-label';
+  label.textContent = field.type;
+  el.appendChild(label);
+
+  // Content
+  const content = document.createElement('div');
+  content.className = 'pdfsign-field-content';
+  el.appendChild(content);
+  psmRenderFieldContent(field);
+
+  // Delete button
+  const del = document.createElement('button');
+  del.className = 'pdfsign-field-delete';
+  del.textContent = '\u00d7';
+  del.addEventListener('click', function(e) { e.stopPropagation(); psmDeleteField(field.id); });
+  el.appendChild(del);
+
+  // Resize handle
+  const resize = document.createElement('div');
+  resize.className = 'pdfsign-field-resize';
+  resize.addEventListener('mousedown', function(e) { e.stopPropagation(); e.preventDefault(); psmStartResize(e, field.id); });
+  resize.addEventListener('touchstart', function(e) { e.stopPropagation(); e.preventDefault(); psmStartResize(e.touches[0], field.id); }, { passive: false });
+  el.appendChild(resize);
+
+  // Move via drag
+  el.addEventListener('mousedown', function(e) { if (e.target.closest('.pdfsign-field-delete,.pdfsign-field-resize')) return; psmStartMove(e, field.id, el); });
+  el.addEventListener('touchstart', function(e) { if (e.target.closest('.pdfsign-field-delete,.pdfsign-field-resize')) return; psmStartMove(e.touches[0], field.id, el); }, { passive: false });
+
+  // Click to edit
+  el.addEventListener('dblclick', function(e) { e.stopPropagation(); psmEditField(field); });
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (field.type === 'checkbox') { field.value = !field.value; psmRenderFieldContent(field); }
+    else if (field.type === 'crossout') { /* toggle not needed */ }
+  });
+
+  overlay.appendChild(el);
+}
+
+function psmRenderFieldContent(field) {
+  const el = document.getElementById('psm-' + field.id);
+  if (!el) return;
+  const content = el.querySelector('.pdfsign-field-content');
+  if (!content) return;
+  content.innerHTML = '';
+  el.className = 'pdfsign-field' + (psmHasValue(field) ? ' filled' : '');
+
+  if (field.type === 'signature' && field.value) {
+    if (field.value.startsWith('data:image')) {
+      content.innerHTML = '<img src="' + field.value + '" alt="Signature">';
+    } else {
+      content.innerHTML = '<span class="pdfsign-field-text" style="font-family:Brush Script MT,cursive;font-style:italic;font-size:18px;">' + escapeHtml(field.value) + '</span>';
+    }
+  } else if (field.type === 'text' && field.value) {
+    content.innerHTML = '<span class="pdfsign-field-text">' + escapeHtml(field.value) + '</span>';
+  } else if (field.type === 'date' && field.value) {
+    content.innerHTML = '<span class="pdfsign-field-text">' + escapeHtml(field.value) + '</span>';
+  } else if (field.type === 'checkbox') {
+    content.innerHTML = field.value ? '<span class="pdfsign-field-checkbox-on">X</span>' : '';
+  } else if (field.type === 'crossout') {
+    content.innerHTML = '<div style="width:100%;height:2px;background:#000;"></div>';
+  } else {
+    content.innerHTML = '<span style="font-size:10px;opacity:0.5;">' + field.type + '</span>';
+  }
+}
+
+function psmHasValue(f) {
+  if (f.type === 'checkbox' || f.type === 'crossout') return true;
+  return !!f.value;
+}
+
+function psmDeleteField(id) {
+  psmFields = psmFields.filter(function(f) { return f.id !== id; });
+  var el = document.getElementById('psm-' + id);
+  if (el) el.remove();
+}
+
+function psmEditField(field) {
+  if (field.type === 'signature') psmOpenSigModal(field.id);
+  else if (field.type === 'text' || field.type === 'date') psmOpenTextModal(field.id, field.type);
+}
+
+// ---- Move & Resize ----
+function psmStartMove(e, fieldId, fieldEl) {
+  const field = psmFields.find(function(f) { return f.id === fieldId; });
+  if (!field) return;
+  const overlay = fieldEl.closest('.pdfsign-field-overlay');
+  if (!overlay) return;
+  const rect = overlay.getBoundingClientRect();
+  const startX = (e.clientX || e.pageX) - rect.left;
+  const startY = (e.clientY || e.pageY) - rect.top;
+  const origX = field.x, origY = field.y;
+
+  function onMove(ev) {
+    const cx = (ev.clientX || (ev.touches && ev.touches[0].clientX)) - rect.left;
+    const cy = (ev.clientY || (ev.touches && ev.touches[0].clientY)) - rect.top;
+    field.x = Math.max(0, Math.min(origX + (cx - startX)/rect.width, 1 - field.w));
+    field.y = Math.max(0, Math.min(origY + (cy - startY)/rect.height, 1 - field.h));
+    fieldEl.style.left = (field.x*100)+'%'; fieldEl.style.top = (field.y*100)+'%';
+  }
+  function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); document.removeEventListener('touchmove', onMove); document.removeEventListener('touchend', onUp); }
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('touchend', onUp);
+}
+
+function psmStartResize(e, fieldId) {
+  const field = psmFields.find(function(f) { return f.id === fieldId; });
+  if (!field) return;
+  const fieldEl = document.getElementById('psm-' + fieldId);
+  const overlay = fieldEl.closest('.pdfsign-field-overlay');
+  if (!overlay) return;
+  const rect = overlay.getBoundingClientRect();
+  const startX = e.clientX || e.pageX;
+  const startY = e.clientY || e.pageY;
+  const origW = field.w, origH = field.h;
+
+  function onMove(ev) {
+    const cx = (ev.clientX || (ev.touches && ev.touches[0].clientX));
+    const cy = (ev.clientY || (ev.touches && ev.touches[0].clientY));
+    field.w = Math.max(0.02, Math.min(origW + (cx - startX)/rect.width, 1 - field.x));
+    field.h = Math.max(0.015, Math.min(origH + (cy - startY)/rect.height, 1 - field.y));
+    fieldEl.style.width = (field.w*100)+'%'; fieldEl.style.height = (field.h*100)+'%';
+  }
+  function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); document.removeEventListener('touchmove', onMove); document.removeEventListener('touchend', onUp); }
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('touchend', onUp);
+}
+
+// ---- Text/Date modal ----
+function psmOpenTextModal(fieldId, type) {
+  psmActiveFieldId = fieldId;
+  var field = psmFields.find(function(f) { return f.id === fieldId; });
+  document.getElementById('psm-text-title').textContent = type === 'date' ? 'Enter date' : 'Enter text';
+  var inp = document.getElementById('psm-text-input');
+  inp.value = field ? (field.value || '') : '';
+  document.getElementById('psm-text-modal').style.display = 'flex';
+  setTimeout(function() { inp.focus(); }, 100);
+}
+function psmCloseTextModal() {
+  document.getElementById('psm-text-modal').style.display = 'none';
+  psmActiveFieldId = null;
+}
+function psmApplyText() {
+  var field = psmFields.find(function(f) { return f.id === psmActiveFieldId; });
+  if (field) {
+    field.value = document.getElementById('psm-text-input').value;
+    psmRenderFieldContent(field);
+  }
+  psmCloseTextModal();
+}
+
+// ---- Signature modal ----
+function psmOpenSigModal(fieldId) {
+  psmActiveFieldId = fieldId;
+  document.getElementById('psm-sig-modal').style.display = 'flex';
+  psmSwitchSigMode('draw');
+  psmSetupSigCanvas();
+}
+function psmCloseSigModal() {
+  document.getElementById('psm-sig-modal').style.display = 'none';
+  psmActiveFieldId = null;
+}
+
+function psmSwitchSigMode(mode) {
+  document.querySelectorAll('#psm-sig-modal .pdfsign-sig-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.mode === mode); });
+  document.getElementById('psm-sig-draw').style.display = mode === 'draw' ? 'block' : 'none';
+  document.getElementById('psm-sig-type').style.display = mode === 'type' ? 'block' : 'none';
+  document.getElementById('psm-sig-upload').style.display = mode === 'upload' ? 'block' : 'none';
+  if (mode === 'draw') psmSetupSigCanvas();
+  if (mode === 'type') { var inp = document.getElementById('psm-sig-type-input'); inp.value = ''; document.getElementById('psm-sig-type-preview').textContent = 'Type to preview'; setTimeout(function() { inp.focus(); }, 100); }
+}
+
+let psmSigDrawing = false;
+let psmSigCtx = null;
+
+function psmSetupSigCanvas() {
+  var canvas = document.getElementById('psm-sig-canvas');
+  var ctx = canvas.getContext('2d');
+  psmSigCtx = ctx;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  canvas.onpointerdown = function(e) { psmSigDrawing = true; ctx.beginPath(); var p = psmSigPoint(e, canvas); ctx.moveTo(p.x, p.y); e.preventDefault(); };
+  canvas.onpointermove = function(e) { if (!psmSigDrawing) return; var p = psmSigPoint(e, canvas); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); };
+  canvas.onpointerup = function() { psmSigDrawing = false; };
+  canvas.onpointerleave = function() { psmSigDrawing = false; };
+}
+
+function psmSigPoint(e, canvas) {
+  var rect = canvas.getBoundingClientRect();
+  return { x: (e.clientX - rect.left) * (canvas.width / rect.width), y: (e.clientY - rect.top) * (canvas.height / rect.height) };
+}
+
+function psmClearSigCanvas() {
+  var canvas = document.getElementById('psm-sig-canvas');
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function psmUpdateTypedSig() {
+  var text = document.getElementById('psm-sig-type-input').value;
+  var preview = document.getElementById('psm-sig-type-preview');
+  preview.textContent = text || 'Type to preview';
+}
+
+function psmOnSigUpload(file) {
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function() {
+    document.getElementById('psm-sig-upload-img').src = reader.result;
+    document.getElementById('psm-sig-upload-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function psmApplySig() {
+  var activePanel = document.querySelector('#psm-sig-modal .pdfsign-sig-tab.active');
+  var mode = activePanel ? activePanel.dataset.mode : 'draw';
+  var dataUrl = null;
+
+  if (mode === 'draw') {
+    dataUrl = await psmTrimSigCanvas();
+    if (!dataUrl) { alert('Please draw your signature first.'); return; }
+  } else if (mode === 'type') {
+    var text = document.getElementById('psm-sig-type-input').value.trim();
+    if (!text) { alert('Please type your name.'); return; }
+    dataUrl = psmRenderTypedSig(text);
+  } else if (mode === 'upload') {
+    var img = document.getElementById('psm-sig-upload-img');
+    if (!img.src || img.src === '') { alert('Please upload an image.'); return; }
+    dataUrl = img.src;
+  }
+
+  if (dataUrl) {
+    psmSessionSig = dataUrl;
+    var field = psmFields.find(function(f) { return f.id === psmActiveFieldId; });
+    if (field) { field.value = dataUrl; psmRenderFieldContent(field); }
+  }
+  psmCloseSigModal();
+}
+
+async function psmTrimSigCanvas() {
+  var canvas = document.getElementById('psm-sig-canvas');
+  var ctx = canvas.getContext('2d');
+  var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  var d = imgData.data;
+  var minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+  var found = false;
+  for (var y = 0; y < canvas.height; y++) {
+    for (var x = 0; x < canvas.width; x++) {
+      var i = (y * canvas.width + x) * 4;
+      if (d[i] < 240 || d[i+1] < 240 || d[i+2] < 240) {
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+        found = true;
+      }
+    }
+  }
+  if (!found) return null;
+  var pad = 10;
+  minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad);
+  maxX = Math.min(canvas.width, maxX + pad); maxY = Math.min(canvas.height, maxY + pad);
+  var w = maxX - minX, h = maxY - minY;
+  var trimmed = document.createElement('canvas');
+  trimmed.width = w; trimmed.height = h;
+  var tCtx = trimmed.getContext('2d');
+  // Make transparent background
+  tCtx.drawImage(canvas, minX, minY, w, h, 0, 0, w, h);
+  // Remove white pixels
+  var td = tCtx.getImageData(0, 0, w, h);
+  for (var j = 0; j < td.data.length; j += 4) {
+    if (td.data[j] > 240 && td.data[j+1] > 240 && td.data[j+2] > 240) {
+      td.data[j+3] = 0;
+    }
+  }
+  tCtx.putImageData(td, 0, 0);
+  return trimmed.toDataURL('image/png');
+}
+
+function psmRenderTypedSig(text) {
+  var canvas = document.createElement('canvas');
+  canvas.width = 480; canvas.height = 120;
+  var ctx = canvas.getContext('2d');
+  ctx.font = 'italic 48px "Brush Script MT", cursive';
+  ctx.fillStyle = '#000';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, 10, 60);
+  return canvas.toDataURL('image/png');
+}
+
+function escapeHtml(s) {
+  var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+// ---- Build signed PDF bytes ----
+function dataUrlToBytes(dataUrl) {
+  var base64 = dataUrl.split(',')[1];
+  var binary = atob(base64);
+  var bytes = new Uint8Array(binary.length);
+  for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+// ---- Save ----
+async function savePortalSignature() {
+  if (psmFields.length === 0) { alert('Please add at least one field to the document.'); return; }
+  if (!psmPdfBytes) { alert('No PDF loaded.'); return; }
+
+  var btn = document.getElementById('portal-sign-save-btn');
+  btn.disabled = true; btn.textContent = 'Saving...';
 
   try {
     if (!window.PDFLib) throw new Error('PDF editor not loaded. Refresh the page.');
-    const { PDFDocument, rgb, StandardFonts } = window.PDFLib;
-    const pdfDoc = await PDFDocument.load(portalSignPdfBytes);
-    const helv = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const pages = pdfDoc.getPages();
+    var PDFLib = window.PDFLib;
+    var pdfDoc = await PDFLib.PDFDocument.load(psmPdfBytes);
+    var helv = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+    var pages = pdfDoc.getPages();
 
-    for (const field of portalSignFields) {
-      const page = pages[field.pageIndex];
+    for (var fi = 0; fi < psmFields.length; fi++) {
+      var field = psmFields[fi];
+      if (!psmHasValue(field)) continue;
+      var page = pages[field.pageIndex];
       if (!page) continue;
-      const { width: pW, height: pH } = page.getSize();
-      const absX = field.x * pW;
-      const absY = pH - (field.y * pH) - (field.h * pH);
-      const absW = field.w * pW;
-      const absH = field.h * pH;
-      const text = String(field.value || '');
-      let fontSize = Math.min(14, absH * 0.7);
-      let textWidth = helv.widthOfTextAtSize(text, fontSize);
-      while (textWidth > absW - 4 && fontSize > 5) { fontSize -= 0.5; textWidth = helv.widthOfTextAtSize(text, fontSize); }
-      page.drawText(text, {
-        x: absX + 2,
-        y: absY + (absH - fontSize) / 2 + fontSize * 0.25,
-        size: fontSize, font: helv, color: rgb(0, 0, 0),
-      });
+      var ps = page.getSize();
+      var pW = ps.width, pH = ps.height;
+      var absX = field.x * pW, absY = pH - (field.y * pH) - (field.h * pH);
+      var absW = field.w * pW, absH = field.h * pH;
+
+      if (field.type === 'signature' && field.value) {
+        if (field.value.startsWith('data:image/')) {
+          var pngBytes = dataUrlToBytes(field.value);
+          var img = await pdfDoc.embedPng(pngBytes);
+          var scale = Math.min(absW / img.width, absH / img.height);
+          var drawW = img.width * scale, drawH = img.height * scale;
+          page.drawImage(img, { x: absX + (absW-drawW)/2, y: absY + (absH-drawH)/2, width: drawW, height: drawH });
+        }
+      } else if (field.type === 'checkbox') {
+        if (field.value) {
+          var size = Math.min(absW, absH, 18) * 0.9;
+          page.drawText('X', { x: absX + (absW - size*0.55)/2, y: absY + (absH - size)/2 + size*0.1, size: size, font: helv, color: PDFLib.rgb(0,0,0) });
+        }
+      } else if (field.type === 'crossout') {
+        var thickness = Math.max(1, Math.min(absH * 0.4, 2.5));
+        page.drawLine({ start: { x: absX, y: absY + absH/2 }, end: { x: absX + absW, y: absY + absH/2 }, thickness: thickness, color: PDFLib.rgb(0,0,0) });
+      } else {
+        var text = String(field.value || '');
+        if (!text) continue;
+        var fontSize = Math.min(10, absH * 0.65);
+        var tw = helv.widthOfTextAtSize(text, fontSize);
+        while (tw > absW - 4 && fontSize > 4) { fontSize -= 0.5; tw = helv.widthOfTextAtSize(text, fontSize); }
+        page.drawText(text, { x: absX + 2, y: absY + (absH - fontSize)/2 + fontSize*0.25, size: fontSize, font: helv, color: PDFLib.rgb(0,0,0) });
+      }
     }
 
-    const signedBytes = await pdfDoc.save();
-    const deal = dealData.deal;
+    var signedBytes = await pdfDoc.save();
+    var deal = dealData.deal;
 
-    // Convert to base64 for edge function upload
-    const base64Pdf = btoa(String.fromCharCode.apply(null, new Uint8Array(signedBytes)));
+    // Convert to base64
+    var binary = '';
+    var bytes = new Uint8Array(signedBytes);
+    for (var i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    var base64Pdf = btoa(binary);
 
-    // Upload signed contract and mark brand as signed via edge function
-    const now = new Date().toISOString();
-    const shouldLock = !!deal.creator_signed_at;
-    const { data, error } = await sb.functions.invoke('brand-sign-contract', {
-      body: {
-        token: dealToken,
-        pin: dealPin,
-        deal_id: deal.id,
-        signed_pdf_base64: base64Pdf,
-        signed_at: now,
-        lock: shouldLock
-      }
+    var now = new Date().toISOString();
+    var shouldLock = !!deal.creator_signed_at;
+    var result = await sb.functions.invoke('brand-sign-contract', {
+      body: { token: dealToken, pin: dealPin, deal_id: deal.id, signed_pdf_base64: base64Pdf, signed_at: now, lock: shouldLock }
     });
-
-    if (error) throw new Error(error.message || 'Failed to save');
-    if (data && data.error) throw new Error(data.error);
+    if (result.error) throw new Error(result.error.message || 'Failed to save');
+    if (result.data && result.data.error) throw new Error(result.data.error);
 
     deal.brand_signed_at = now;
     if (shouldLock) deal.contract_locked = true;
@@ -1060,37 +1536,27 @@ async function savePortalSignature() {
   } catch (err) {
     alert('Failed to save signature: ' + err.message);
   } finally {
-    btn.disabled = false;
-    btn.textContent = 'Save Signature';
+    btn.disabled = false; btn.textContent = 'Save & Upload';
   }
 }
 
 async function markPortalBrandSigned() {
-  if (!confirm('Mark the contract as signed by your organization? Use this if you signed outside of this portal.')) return;
+  if (!confirm('Mark the contract as signed by your organization?')) return;
   try {
-    const deal = dealData.deal;
-    const now = new Date().toISOString();
-    const shouldLock = !!deal.creator_signed_at;
-    const { data, error } = await sb.functions.invoke('brand-sign-contract', {
-      body: {
-        token: dealToken,
-        pin: dealPin,
-        deal_id: deal.id,
-        signed_at: now,
-        lock: shouldLock,
-        mark_only: true
-      }
+    var deal = dealData.deal;
+    var now = new Date().toISOString();
+    var shouldLock = !!deal.creator_signed_at;
+    var result = await sb.functions.invoke('brand-sign-contract', {
+      body: { token: dealToken, pin: dealPin, deal_id: deal.id, signed_at: now, lock: shouldLock, mark_only: true }
     });
-    if (error) throw new Error(error.message || 'Failed');
-    if (data && data.error) throw new Error(data.error);
+    if (result.error) throw new Error(result.error.message || 'Failed');
+    if (result.data && result.data.error) throw new Error(result.data.error);
 
     deal.brand_signed_at = now;
     if (shouldLock) deal.contract_locked = true;
     renderPortalContractStatus(deal);
     alert('Contract marked as signed.' + (shouldLock ? ' The contract is now fully executed and locked.' : ''));
-  } catch (err) {
-    alert('Failed: ' + err.message);
-  }
+  } catch (err) { alert('Failed: ' + err.message); }
 }
 </script>
 
