@@ -142,18 +142,11 @@
   .testimonials-heading { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; text-align: center; margin: 0 auto 28px; color: #fff; letter-spacing: -0.3px; padding: 0 20px; width: 100%; box-sizing: border-box; }
   .testimonials-heading span { background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .testimonials-track-wrap { position: relative; width: 100%; }
-  .testimonials-track { display: flex; gap: 24px; width: max-content; animation: testimonialScroll 60s linear infinite; padding: 8px 0; }
+  .testimonials-track { display: flex; gap: 24px; width: max-content; animation: testimonialScroll 60s linear infinite; padding: 8px 0; will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
   .testimonials-track:hover { animation-play-state: paused; }
   @keyframes testimonialScroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 12px)); } }
-  .testimonial-card { position: relative; width: 380px; border-radius: 20px; overflow: hidden; flex-shrink: 0; z-index: 0; }
-  .testimonial-card-inner { position: relative; border-radius: 20px; overflow: hidden; height: 100%; z-index: 2; }
-  /* Animated glowing border */
-  .testimonial-card::before { content: ''; position: absolute; inset: -2px; border-radius: 22px; background: conic-gradient(from var(--testimonial-angle, 0deg), #7c3aed, #e879f9, #a78bfa, #7c3aed); z-index: 0; animation: testimonialBorderSpin 4s linear infinite; opacity: 0.7; transition: opacity 0.3s; }
-  .testimonial-card::after { content: ''; position: absolute; inset: -6px; border-radius: 26px; background: conic-gradient(from var(--testimonial-angle, 0deg), #7c3aed, #e879f9, #a78bfa, #7c3aed); z-index: 0; filter: blur(16px); opacity: 0.4; animation: testimonialBorderSpin 4s linear infinite; }
-  .testimonial-card:hover::before { opacity: 1; }
-  .testimonial-card:hover::after { opacity: 0.7; }
-  @keyframes testimonialBorderSpin { to { --testimonial-angle: 360deg; } }
-  @property --testimonial-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  .testimonial-card { position: relative; width: 380px; border-radius: 20px; overflow: hidden; flex-shrink: 0; }
+  .testimonial-card-inner { position: relative; border-radius: 20px; overflow: hidden; height: 100%; }
   .testimonial-bg { position: absolute; inset: 0; background-size: cover; background-position: center top; filter: brightness(0.35); z-index: 0; }
   .testimonial-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.9) 100%); }
   .testimonial-content { position: relative; z-index: 1; padding: 32px 28px 28px; display: flex; flex-direction: column; min-height: 280px; justify-content: flex-end; }
@@ -167,7 +160,6 @@
     .testimonials-heading { font-size: 13px; letter-spacing: -0.2px; margin-bottom: 20px; }
     .testimonial-card { width: 300px; }
     .testimonial-content { padding: 24px 20px 22px; min-height: 260px; }
-    .testimonial-card::after { filter: blur(10px); }
     .testimonials-track { gap: 16px; }
   }
   .btn-primary { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 15px 36px; font-size: 16px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.25s; box-shadow: 0 0 40px var(--accent-glow); text-decoration: none; display: inline-block; }
@@ -547,7 +539,7 @@
 
     <!-- TESTIMONIALS -->
     <div class="testimonials-section">
-      <h2 class="testimonials-heading">Trusted by <span>creators</span><br><em style="font-style:normal;margin-left:3em;">who mean <span>business</span>...</em></h2>
+      <h2 class="testimonials-heading">Trusted by <span>creators</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><em style="font-style:normal;margin-left:6em;">who mean <span>business</span>...</em></h2>
       <div class="testimonials-track-wrap">
         <div class="testimonials-track" id="testimonials-track">
 
