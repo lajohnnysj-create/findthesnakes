@@ -22,8 +22,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
 <script>
-  // Apply saved theme immediately to prevent flash
-  if (localStorage.getItem('ryxa-theme') === 'light') document.body.classList.add('light-mode');
   // Load PDF.js worker when needed
   window.__pdfjsReady = new Promise((resolve) => {
     window.__resolvePdfjs = resolve;
@@ -59,47 +57,6 @@
   ::-webkit-scrollbar-track { background: #0a0a14; }
   ::-webkit-scrollbar-thumb { background: rgba(168,85,247,0.4); border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(168,85,247,0.6); }
-
-  /* Light mode overrides */
-  body.light-mode {
-    --bg: #ffffff;
-    --surface: #f5f5f7;
-    --surface2: #ebebef;
-    --surface3: #e0e0e6;
-    --border: rgba(0,0,0,0.1);
-    --border-hover: rgba(0,0,0,0.2);
-    --accent-glow: rgba(124,58,237,0.15);
-    --text: #1a1a2e;
-    --muted: #5c5c72;
-    --muted2: #6e6e82;
-  }
-  /* Keep sidebar and topbar dark in light mode */
-  body.light-mode .sidebar {
-    background: #0f0f1a;
-    border-color: rgba(255,255,255,0.07);
-  }
-  body.light-mode .sidebar-item-label,
-  body.light-mode .sidebar-logo-text,
-  body.light-mode .sidebar-user-email,
-  body.light-mode .sidebar-section-label { color: #f0eef8; }
-  body.light-mode .sidebar-item { color: #bdbcd0; }
-  body.light-mode .sidebar-item:hover,
-  body.light-mode .sidebar-item.active { color: #f0eef8; }
-  body.light-mode .sidebar-item.active { background: rgba(124,58,237,0.12); }
-  body.light-mode .sidebar-user-tier { color: #a855f7; }
-  body.light-mode .sidebar-settings,
-  body.light-mode .sidebar-signout { color: #bdbcd0; border-color: rgba(255,255,255,0.07); }
-  body.light-mode .sidebar-bottom { border-color: rgba(255,255,255,0.07); }
-  body.light-mode .topbar {
-    background: #0f0f1a;
-    border-color: rgba(255,255,255,0.07);
-  }
-  body.light-mode .topbar-title { color: #f0eef8; }
-  /* Settings modal stays dark */
-  body.light-mode .settings-modal-inner { background: #0f0f1a !important; color: #f0eef8; }
-  /* Light mode toggle track active state */
-  body.light-mode #settings-theme-track { background: var(--accent); border-color: var(--accent); }
-  body.light-mode #settings-theme-thumb { transform: translateX(20px); }
   html { scroll-behavior: smooth; }
   body { font-family: "DM Sans", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; }
 
@@ -3351,21 +3308,6 @@
       </div>
 
       <div id="settings-stripe-msg" style="display:none;margin-top:8px;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.5;"></div>
-    </div>
-
-    <!-- Theme Toggle -->
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;">Appearance</div>
-          <div style="font-size:11px;color:var(--muted);">Switch between dark and light mode</div>
-        </div>
-        <label style="position:relative;width:44px;height:24px;cursor:pointer;flex-shrink:0;">
-          <input type="checkbox" id="settings-theme-toggle" onchange="toggleThemeMode()" style="display:none;">
-          <div id="settings-theme-track" style="position:absolute;inset:0;background:var(--surface3);border:1px solid var(--border-hover);border-radius:12px;transition:all 0.3s;"></div>
-          <div id="settings-theme-thumb" style="position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:all 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>
-        </label>
-      </div>
     </div>
 
     <!-- Help -->
@@ -10322,17 +10264,9 @@ if (urlParams.get('payment') === 'success') {
 
 initAuth();
 
-function toggleThemeMode() {
-  const isLight = document.body.classList.toggle('light-mode');
-  localStorage.setItem('ryxa-theme', isLight ? 'light' : 'dark');
-}
-
 function openSettingsModal() {
   const modal = document.getElementById('settings-modal');
   if (!modal) return;
-  // Sync theme toggle state
-  const themeToggle = document.getElementById('settings-theme-toggle');
-  if (themeToggle) themeToggle.checked = document.body.classList.contains('light-mode');
   const pro = isPro();
   if (currentUser) {
     document.getElementById('settings-avatar').textContent = currentUser.email[0].toUpperCase();
