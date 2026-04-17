@@ -5391,7 +5391,7 @@ async function setUser(user) {
   try {
     const { data: profile } = await sb.from('profiles').select('username').eq('user_id', user.id).maybeSingle();
     if (welcomeName) {
-      const name = profile?.username || 'creator';
+      const name = profile?.username ? '@' + profile.username : 'creator';
       welcomeName.textContent = name;
     }
   } catch (e) { /* keep default */ }
