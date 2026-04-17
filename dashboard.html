@@ -16110,12 +16110,12 @@ function faShowDashboard() {
 
   // Upgrade banner
   const upgradeBanner = document.getElementById('fa-upgrade-banner');
-  if (upgradeBanner) upgradeBanner.classList.toggle('visible', !userIsPro());
+  if (upgradeBanner) upgradeBanner.classList.toggle('visible', !isPro());
 
   // Last audit date
   const lastAuditMsg = document.getElementById('fa-last-audit-msg');
   if (lastAuditMsg) {
-    if (userIsPro() && faAuditHistory.length > 0) {
+    if (isPro() && faAuditHistory.length > 0) {
       const lastDate = new Date(faAuditHistory[0].created_at);
       const formatted = lastDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
       lastAuditMsg.innerHTML = `, you last ran an audit on <strong style="color:var(--text)">${formatted}</strong>`;
@@ -16165,7 +16165,7 @@ function faUpdateWhitelistTabCount() {
   }
 }
 async function faToggleWhitelist(handle) {
-  if (!currentUser || !userIsPro()) return;
+  if (!currentUser || !isPro()) return;
   handle = handle.toLowerCase();
   if (faUserWhitelist.has(handle)) {
     faUserWhitelist.delete(handle);
@@ -16183,7 +16183,7 @@ async function faToggleWhitelist(handle) {
   faUpdateWhitelistTabCount();
 }
 async function faClearWhitelist() {
-  if (!currentUser || !userIsPro()) return;
+  if (!currentUser || !isPro()) return;
   sb.functions.invoke('manage-whitelist', { body: { userId: currentUser.id, action: 'clear' } });
   faUserWhitelist.clear();
   faShowMiniToast('Whitelist cleared');
@@ -16200,7 +16200,7 @@ function faShowMiniToast(msg) {
 
 // ── AUDIT HISTORY ──
 async function faSaveAudit() {
-  if (!currentUser || !userIsPro()) return;
+  if (!currentUser || !isPro()) return;
   const unfollowerCount = faAllResults.filter(r => !r.mutual && !r.followerOnly).length;
   const mutualCount = faAllResults.filter(r => r.mutual).length;
   const followerOnlyCount = faAllResults.filter(r => r.followerOnly).length;
@@ -16214,7 +16214,7 @@ async function faSaveAudit() {
   await faLoadAuditHistory();
 }
 async function faLoadAuditHistory() {
-  if (!currentUser || !userIsPro()) return;
+  if (!currentUser || !isPro()) return;
   const { data } = await sb.from('audits')
     .select('id, created_at, unfollower_count, mutual_count, follower_only_count, total_following, total_followers')
     .eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(1);
@@ -16257,7 +16257,7 @@ async function faDeleteAudit(id, e) {
 
 // ── NOTES ──
 async function faLoadNotes() {
-  if (!currentUser || !userIsPro()) return;
+  if (!currentUser || !isPro()) return;
   const { data } = await sb.from('account_notes').select('handle, note').eq('user_id', currentUser.id);
   if (data) {
     faAccountNotes = {};
@@ -16266,7 +16266,7 @@ async function faLoadNotes() {
   }
 }
 async function faSaveNote(handle, note) {
-  if (!currentUser || !userIsPro()) return;
+  if (!currentUser || !isPro()) return;
   handle = handle.toLowerCase();
   if (note.trim() === '') {
     delete faAccountNotes[handle];
@@ -16282,7 +16282,7 @@ async function faSaveNote(handle, note) {
   else faFilterResults();
 }
 function faToggleNoteRow(handle) {
-  if (!userIsPro()) { faShowMiniToast('Notes are available on the Pro plan 🐍'); return; }
+  if (!isPro()) { faShowMiniToast('Notes are available on the Pro plan 🐍'); return; }
   const row = document.getElementById('fa-note-row-' + handle);
   if (!row) return;
   const isVisible = row.classList.contains('visible');
@@ -16342,7 +16342,7 @@ function faUpdateSnakeTabCount() {
   }
 }
 async function faToggleSnakeList(handle) {
-  if (!currentUser || !userIsPro()) return;
+  if (!currentUser || !isPro()) return;
   handle = handle.toLowerCase();
   if (faUserSnakeList.has(handle)) {
     faUserSnakeList.delete(handle); delete faSnakeListDates[handle];
@@ -16421,7 +16421,7 @@ function faStartOver() {
   if (badge) badge.textContent = '';
   if (newBadge) newBadge.style.display = 'none';
   if (paywall) paywall.innerHTML = '';
-  if (userIsPro()) {
+  if (isPro()) {
     if (scroll) scroll.innerHTML = `<div class="fa-no-analysis-msg"><span class="emoji">📂</span>Upload your Instagram JSON files above and click <strong>Analyze Now</strong> to run a new analysis.<br><br><a href="#" onclick="event.preventDefault();faOpenInstructions();">Need help getting your files? →</a></div>`;
     const welcome = document.getElementById('fa-dashboard-welcome');
     if (welcome) welcome.classList.add('visible');
@@ -16436,7 +16436,7 @@ function faStartOver() {
 // ── TOOL BUTTONS ──
 function faUpdateToolBtns() {
   faUpdateWhitelistTab();
-  const isPaid = userTier === 'one_time' || userIsPro() || faCurrentAnalysisPaid;
+  const isPaid = userTier === 'one_time' || isPro() || faCurrentAnalysisPaid;
   ['fa-print-btn', 'fa-csv-btn'].forEach(id => {
     const btn = document.getElementById(id);
     if (!btn) return;
@@ -16444,7 +16444,7 @@ function faUpdateToolBtns() {
   });
 }
 function faHandleToolBtn(type) {
-  const isPaid = userTier === 'one_time' || userIsPro() || faCurrentAnalysisPaid;
+  const isPaid = userTier === 'one_time' || isPro() || faCurrentAnalysisPaid;
   if (!isPaid) return;
   if (type === 'print') faPrintReport();
   if (type === 'csv') faExportCSV();
@@ -16452,9 +16452,9 @@ function faHandleToolBtn(type) {
 
 // ── CSV EXPORT ──
 function faExportCSV() {
-  const isPaid = userTier === 'one_time' || userIsPro() || faCurrentAnalysisPaid;
+  const isPaid = userTier === 'one_time' || isPro() || faCurrentAnalysisPaid;
   if (!isPaid) return;
-  const isMonthly = userIsPro();
+  const isMonthly = isPro();
   const date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   const rows = [];
   rows.push(['Ryxa. Full Export', '', '', '', '']);
@@ -16515,7 +16515,7 @@ function faExportCSV() {
 
 // ── PRINT ──
 function faPrintReport() {
-  const isMonthly = userIsPro();
+  const isMonthly = isPro();
   const date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   const unfollowers = faAllResults.filter(r => !r.mutual && !r.followerOnly);
   const mutuals = faAllResults.filter(r => r.mutual);
@@ -16596,7 +16596,7 @@ function faAnalyze() {
       followers.forEach(handle => { if (!following.has(handle)) faAllResults.push({ handle, followerOnly: true }); });
       faAllResults.sort((a, b) => a.handle.localeCompare(b.handle));
       faRenderResults();
-      if (userIsPro()) { faCurrentAnalysisPaid = true; faSaveAudit(); }
+      if (isPro()) { faCurrentAnalysisPaid = true; faSaveAudit(); }
       if (userTier === 'one_time' && currentUser) {
         faCurrentAnalysisPaid = true; userTier = 'free'; userStatus = 'free'; updateNavTierBadge();
         sb.functions.invoke('record-analysis', { body: { userId: currentUser.id } });
@@ -16648,7 +16648,7 @@ function faRenderResults() {
   const _results = document.getElementById('fa-results');
   if (_results) _results.style.display = 'block';
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    const isPaid = userTier === 'one_time' || userIsPro() || faCurrentAnalysisPaid;
+    const isPaid = userTier === 'one_time' || isPro() || faCurrentAnalysisPaid;
     const paywallEl = document.getElementById('fa-paywall-container');
     const target = (!isPaid && paywallEl && paywallEl.children.length > 0) ? paywallEl : document.getElementById('fa-results');
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -16667,7 +16667,7 @@ function faRenderResults() {
 }
 
 function faFilterResults() {
-  const isPaid = userTier === 'one_time' || userIsPro() || faCurrentAnalysisPaid;
+  const isPaid = userTier === 'one_time' || isPro() || faCurrentAnalysisPaid;
   faUpdateWhitelistTabCount();
   let filtered = [...faAllResults];
   if (faCurrentFilter === 'whitelist') filtered = filtered.filter(r => faUserWhitelist.has(r.handle.toLowerCase()));
@@ -16701,7 +16701,7 @@ function faFilterResults() {
   const wlCount = faUserWhitelist.size;
   const wlBanner = document.getElementById('fa-wl-banner');
   if (wlBanner) {
-    if (wlCount > 0 && userIsPro()) { wlBanner.style.display = 'flex'; wlBanner.querySelector('span').textContent = `${wlCount} account${wlCount > 1 ? 's' : ''} hidden by your whitelist`; }
+    if (wlCount > 0 && isPro()) { wlBanner.style.display = 'flex'; wlBanner.querySelector('span').textContent = `${wlCount} account${wlCount > 1 ? 's' : ''} hidden by your whitelist`; }
     else wlBanner.style.display = 'none';
   }
 }
@@ -16709,7 +16709,7 @@ function faFilterResults() {
 function faBuildRow(r, blurred) {
   const tag = r.mutual ? `<span class="fa-tag mutual">✓ Mutual</span>` : r.followerOnly ? `<span class="fa-tag mutual">Follows you</span>` : `<span class="fa-tag unfollow">Not following back or profile disabled</span>`;
   const link = blurred ? `<span style="color:var(--muted)">@••••••••••</span>` : `<a href="https://instagram.com/${r.handle}" target="_blank" rel="noopener">@${r.handle}</a>`;
-  const isMonthly = userIsPro();
+  const isMonthly = isPro();
   const isWhitelisted = faUserWhitelist.has(r.handle.toLowerCase());
   const existingNote = faAccountNotes[r.handle.toLowerCase()] || '';
   let wlBtn = '', noteBtn = '', noteRow = '';
@@ -16738,11 +16738,11 @@ function faBuildPaywall(hiddenCount, totalUnfollowers) {
 }
 
 function faSetFilter(f, btn) {
-  const isPaid = userTier === 'one_time' || userIsPro() || faCurrentAnalysisPaid;
-  if (f === 'analytics' && !userIsPro()) { faShowMiniToast('Analytics is available on the Pro plan 🐍'); return; }
+  const isPaid = userTier === 'one_time' || isPro() || faCurrentAnalysisPaid;
+  if (f === 'analytics' && !isPro()) { faShowMiniToast('Analytics is available on the Pro plan 🐍'); return; }
   if (f === 'mutual' && !isPaid) { faShowMiniToast('Unlock to see your Mutual followers 🐍'); return; }
-  if (f === 'whitelist' && !userIsPro()) { faShowMiniToast('Whitelist is available on the Pro plan 🐍'); return; }
-  if (f === 'snakes' && !userIsPro()) { faShowMiniToast('Snake List is available on the Pro plan 🐍'); return; }
+  if (f === 'whitelist' && !isPro()) { faShowMiniToast('Whitelist is available on the Pro plan 🐍'); return; }
+  if (f === 'snakes' && !isPro()) { faShowMiniToast('Snake List is available on the Pro plan 🐍'); return; }
   faCurrentFilter = f;
   document.querySelectorAll('#tool-follower .fa-filter-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -16820,10 +16820,10 @@ function faRenderWhitelistSection() {
 }
 
 function faUpdateWhitelistTab() {
-  const isPaid = userTier === 'one_time' || userIsPro() || faCurrentAnalysisPaid;
+  const isPaid = userTier === 'one_time' || isPro() || faCurrentAnalysisPaid;
   const tab = document.getElementById('fa-whitelist-tab');
   if (tab) {
-    if (!userIsPro()) { tab.classList.add('wl-locked'); tab.title = 'Whitelist available on Pro plan'; }
+    if (!isPro()) { tab.classList.add('wl-locked'); tab.title = 'Whitelist available on Pro plan'; }
     else { tab.classList.remove('wl-locked'); tab.title = ''; }
   }
   const mutualTab = document.getElementById('fa-mutual-tab');
@@ -16833,7 +16833,7 @@ function faUpdateWhitelistTab() {
   }
   const snakeTab = document.getElementById('fa-snake-tab');
   if (snakeTab) {
-    if (!userIsPro()) { snakeTab.classList.add('wl-locked'); snakeTab.title = 'Snake List available on Pro plan'; }
+    if (!isPro()) { snakeTab.classList.add('wl-locked'); snakeTab.title = 'Snake List available on Pro plan'; }
     else { snakeTab.classList.remove('wl-locked'); snakeTab.title = ''; }
   }
 }
