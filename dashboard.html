@@ -7759,11 +7759,11 @@ function buildPreviewHTML() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-  body{margin:0;padding:${(bioState.avatar_display === 'hero' && bioState.avatar_url) ? '0 0 24px' : '40px 18px 24px'};font-family:'DM Sans',sans-serif;background:${t.bg};color:${t.text};min-height:100vh;}
+  body{margin:0;padding:${(bioState.avatar_display === 'hero' && bioState.avatar_url) ? '0 18px 24px' : '40px 18px 24px'};font-family:'DM Sans',sans-serif;background:${t.bg};color:${t.text};min-height:100vh;}
   ${bgImageCSS}
   ${bgOverlayCSS || glowCSS}
   .w{position:relative;z-index:1;max-width:480px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;}
-  .hero-wrap+.links,.hero-wrap~.vids,.hero-wrap~.banner{padding:0 18px;box-sizing:border-box;}
+  .hero-wrap{margin:0 -18px;width:calc(100% + 36px);}
   .avfr{width:100px;height:100px;border-radius:50%;padding:3px;background:${t.avatarBorder};margin-bottom:6px;}
   .nm{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-0.4px;text-align:center;word-break:break-word;}
   .bio-line{font-size:13px;color:${t.muted2};text-align:center;line-height:1.4;max-width:340px;word-break:break-word;}
