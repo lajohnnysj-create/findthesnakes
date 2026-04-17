@@ -13675,7 +13675,7 @@ async function saveSignedContractBack() {
     showTool('deals');
     showDashToast('success', 'Contract signed and saved to deal.');
     // Notify brand (fire-and-forget)
-    sb.functions.invoke('send-deal-notification', { body: { type: 'contract_creator_signed', deal_id: dealId } }).catch(e => console.warn('Notification failed:', e));
+    sb.functions.invoke('send-deal-notification', { body: { type: 'contract_creator_signed', deal_id: dealId } }).then(r => { console.log('Contract notification response:', r); if (r.error) console.warn('Notification error:', r.error); }).catch(e => console.warn('Notification failed:', e));
 
     // Re-open the deal detail
     setTimeout(() => {
