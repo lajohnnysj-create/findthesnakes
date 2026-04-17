@@ -3394,29 +3394,6 @@
               </div>
             </div>
 
-            <!-- Branding toggle -->
-            <div class="bio-section">
-              <button type="button" class="bio-section-header bio-collapsible" onclick="toggleBioSection('branding')" aria-expanded="true">
-                <div class="bio-section-label">Branding</div>
-                <svg class="bio-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              <div class="bio-section-body" id="bio-body-branding">
-              <label id="bio-branding-label" for="bio-show-branding" style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;user-select:none;">
-                <input type="checkbox" id="bio-show-branding" checked onchange="onBrandingToggle()"
-                  style="margin-top:3px;width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;">
-                <div style="flex:1;">
-                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                    <span style="font-size:14px;color:var(--text);font-weight:500;">Show Ryxa branding at bottom</span>
-                    <span id="bio-branding-pro-pill" style="font-size:10px;background:rgba(124,58,237,0.2);color:#c4b5fd;border-radius:100px;padding:2px 8px;font-weight:700;letter-spacing:0.05em;display:none;">PRO</span>
-                  </div>
-                  <div id="bio-branding-hint" style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;">
-                    The footer link helps other creators find Ryxa. Upgrade to Pro to remove it.
-                  </div>
-                </div>
-              </label>
-              </div>
-            </div>
-
             <!-- Socials -->
             <div class="bio-section">
               <button type="button" class="bio-section-header bio-collapsible" onclick="toggleBioSection('socials')" aria-expanded="true">
@@ -3467,6 +3444,29 @@
               <div class="bio-section-body" id="bio-body-videos">
               <div id="bio-videos-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
               <button type="button" id="bio-add-video-btn" onclick="openVideoDraft()" style="width:100%;padding:10px;background:transparent;border:1px dashed rgba(124,58,237,0.4);color:var(--accent2);border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;">+ Add YouTube video</button>
+              </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="bio-section">
+              <button type="button" class="bio-section-header bio-collapsible" onclick="toggleBioSection('branding')" aria-expanded="true">
+                <div class="bio-section-label">Settings</div>
+                <svg class="bio-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="bio-section-body" id="bio-body-branding">
+              <label id="bio-branding-label" for="bio-show-branding" style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;user-select:none;">
+                <input type="checkbox" id="bio-show-branding" checked onchange="onBrandingToggle()"
+                  style="margin-top:3px;width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <span style="font-size:14px;color:var(--text);font-weight:500;">Show Ryxa branding at bottom</span>
+                    <span id="bio-branding-pro-pill" style="font-size:10px;background:rgba(124,58,237,0.2);color:#c4b5fd;border-radius:100px;padding:2px 8px;font-weight:700;letter-spacing:0.05em;display:none;">PRO</span>
+                  </div>
+                  <div id="bio-branding-hint" style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;">
+                    The footer link helps other creators find Ryxa. Upgrade to Pro to remove it.
+                  </div>
+                </div>
+              </label>
               </div>
             </div>
           </div>
