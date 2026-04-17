@@ -13425,7 +13425,10 @@ async function removeContract() {
 // BRAND DEAL CRM — Contract Signing
 // =====================================================
 
-// Sign contract using the Sign PDF tool — loads the contract, lets creator sign, saves back
+// =====================================================
+// BRAND DEAL CRM — Contract Signing (Modal)
+// =====================================================
+
 async function signContractAsCreator() {
   if (!currentDealId) return;
   const deal = dealsList.find(d => d.id === currentDealId);
@@ -13437,35 +13440,23 @@ async function signContractAsCreator() {
   btn.textContent = 'Loading...';
 
   try {
-    // Get signed URL for the contract
     const { data, error } = await sb.storage
       .from('deal-contracts')
       .createSignedUrl(deal.contract_file_path, 3600);
     if (error || !data?.signedUrl) throw new Error(error?.message || 'Could not load contract');
 
-    // Fetch the PDF bytes
     const resp = await fetch(data.signedUrl);
     if (!resp.ok) throw new Error('Failed to download contract');
     const arrayBuffer = await resp.arrayBuffer();
     const pdfBytes = new Uint8Array(arrayBuffer);
 
-    // Close the deal modal
-    closeDealDetailModal();
-
-    // Store the deal context for after signing
     window._contractSignContext = {
       dealId: currentDealId,
       storagePath: deal.contract_file_path,
       fileName: deal.contract_file_name || 'contract.pdf'
     };
 
-    // Switch to Sign PDF tool and load the contract
-    switchTool('pdfsign');
-    // Wait a tick for the tool to render, then load the PDF
-    setTimeout(() => {
-      loadPdfForContractSigning(pdfBytes, deal.contract_file_name || 'contract.pdf');
-    }, 200);
-
+    openContractSignModal(pdfBytes, deal.contract_file_name || 'contract.pdf');
   } catch (err) {
     showDealModalMsg('error', 'Failed to load contract: ' + err.message);
   } finally {
@@ -13474,76 +13465,248 @@ async function signContractAsCreator() {
   }
 }
 
-// Load PDF into the Sign PDF tool for contract signing
-async function loadPdfForContractSigning(pdfBytes, filename) {
-  // Use the existing Sign PDF tool's loading mechanism
-  pdfsignOriginalBytes = pdfBytes;
-  pdfsignFilename = filename;
-  pdfsignFields = [];
-  pdfsignActiveFieldType = null;
+async function openContractSignModal(pdfBytes, filename) {
+  const old = document.getElementById('contract-sign-modal');
+  if (old) old.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'contract-sign-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;';
+  modal.innerHTML = `
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;width:100%;max-width:800px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+        <div>
+          <div style="font-family:Syne,sans-serif;font-size:16px;font-weight:700;color:var(--text);">Sign Contract</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">${escapeHtml(filename)}</div>
+        </div>
+        <button onclick="closeContractSignModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div style="padding:10px 20px;background:rgba(124,58,237,0.06);border-bottom:1px solid var(--border);font-size:11px;color:var(--text);flex-shrink:0;">
+        <strong style="color:#c4b5fd;">Tip:</strong> Select a tool below, then click on the document to place it. When done, click <strong>Save &amp; Upload</strong>.
+      </div>
+      <div style="padding:10px 20px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;border-bottom:1px solid var(--border);" id="csm-toolbar">
+        <button type="button" onclick="csmSetFieldType('signature')" class="csm-tool-btn" data-type="signature" style="padding:6px 12px;border-radius:6px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;">Signature</button>
+        <button type="button" onclick="csmSetFieldType('text')" class="csm-tool-btn" data-type="text" style="padding:6px 12px;border-radius:6px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border-hover);color:var(--muted);">Text</button>
+        <button type="button" onclick="csmSetFieldType('date')" class="csm-tool-btn" data-type="date" style="padding:6px 12px;border-radius:6px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border-hover);color:var(--muted);">Date</button>
+        <button type="button" onclick="csmSetFieldType('checkbox')" class="csm-tool-btn" data-type="checkbox" style="padding:6px 12px;border-radius:6px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border-hover);color:var(--muted);">Checkbox</button>
+      </div>
+      <div id="csm-pages" style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;align-items:center;scrollbar-width:thin;scrollbar-color:rgba(168,85,247,0.4) transparent;"></div>
+      <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;">
+        <button type="button" onclick="closeContractSignModal()" style="padding:9px 18px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
+        <button type="button" id="csm-save-btn" onclick="saveSignedContractBack()" style="padding:9px 18px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;">Save &amp; Upload</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeContractSignModal(); });
+
+  window._csmOriginalBytes = pdfBytes;
+  window._csmFields = [];
+  window._csmActiveType = 'signature';
 
   try {
-    // Load with PDF.js
-    const loadingTask = window.pdfjsLib.getDocument({ data: new Uint8Array(pdfsignOriginalBytes) });
-    pdfsignDoc = await loadingTask.promise;
+    const loadingTask = window.pdfjsLib.getDocument({ data: new Uint8Array(pdfBytes) });
+    const pdfDoc = await loadingTask.promise;
+    window._csmPdfDoc = pdfDoc;
+    const container = document.getElementById('csm-pages');
 
-    // Switch to editor view
-    document.getElementById('pdfsign-upload').style.display = 'none';
-    document.getElementById('pdfsign-editor').style.display = 'block';
-    document.getElementById('pdfsign-filename').textContent = filename;
-    document.getElementById('pdfsign-pages-info').textContent = `${pdfsignDoc.numPages} page${pdfsignDoc.numPages > 1 ? 's' : ''}`;
+    for (let i = 0; i < pdfDoc.numPages; i++) {
+      const page = await pdfDoc.getPage(i + 1);
+      const viewport = page.getViewport({ scale: 1.2 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      canvas.style.cssText = 'max-width:100%;border:1px solid var(--border);border-radius:8px;cursor:crosshair;';
+      canvas.dataset.pageIndex = i;
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
 
-    await renderAllPages();
+      const pageWrap = document.createElement('div');
+      pageWrap.style.cssText = 'position:relative;display:inline-block;';
+      pageWrap.appendChild(canvas);
+      container.appendChild(pageWrap);
 
-    // Show the contract signing banner
-    const wrap = document.querySelector('.pdfsign-wrap');
-    const oldBanner = document.getElementById('pdfsign-contract-banner');
-    if (oldBanner) oldBanner.remove();
-
-    const banner = document.createElement('div');
-    banner.id = 'pdfsign-contract-banner';
-    banner.style.cssText = 'padding:12px 16px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;';
-    banner.innerHTML = `
-      <div style="font-size:12px;color:var(--text);"><strong style="color:#c4b5fd;">Contract Signing Mode</strong> — Add your signature, then click "Save & Upload" to save back to the deal.</div>
-      <button type="button" id="pdfsign-contract-save-btn" onclick="saveSignedContractBack()" style="padding:8px 16px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;white-space:nowrap;">Save & Upload</button>
-    `;
-    if (wrap) wrap.insertBefore(banner, wrap.firstChild);
-  } catch (e) {
-    console.error('Contract PDF load error', e);
-    showDashToast('error', 'Could not load contract PDF: ' + (e.message || 'unknown error'));
-    switchTool('deals');
+      canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        csmAddField(parseInt(canvas.dataset.pageIndex), x, y, pageWrap, canvas);
+      });
+    }
+  } catch (err) {
+    document.getElementById('csm-pages').innerHTML = '<div style="color:#fca5a5;padding:20px;text-align:center;">Failed to render PDF: ' + escapeHtml(err.message) + '</div>';
   }
 }
 
-// Save signed contract back to Supabase Storage (overwrites same file)
-async function saveSignedContractBack() {
-  const ctx = window._contractSignContext;
-  if (!ctx) {
-    alert('No contract signing context. Please try again.');
-    return;
+function closeContractSignModal() {
+  const modal = document.getElementById('contract-sign-modal');
+  if (modal) modal.remove();
+  window._csmOriginalBytes = null;
+  window._csmFields = [];
+  window._csmPdfDoc = null;
+  window._contractSignContext = null;
+}
+
+function csmSetFieldType(type) {
+  window._csmActiveType = type;
+  document.querySelectorAll('#csm-toolbar .csm-tool-btn').forEach(btn => {
+    const isActive = btn.dataset.type === type;
+    btn.style.background = isActive ? 'rgba(124,58,237,0.15)' : 'transparent';
+    btn.style.borderColor = isActive ? 'rgba(124,58,237,0.3)' : 'var(--border-hover)';
+    btn.style.color = isActive ? '#c4b5fd' : 'var(--muted)';
+  });
+}
+
+function csmAddField(pageIndex, normX, normY, pageWrap, canvas) {
+  const type = window._csmActiveType || 'signature';
+  const sizes = { signature: { w: 0.25, h: 0.06 }, text: { w: 0.2, h: 0.03 }, date: { w: 0.15, h: 0.03 }, checkbox: { w: 0.025, h: 0.025 } };
+  const s = sizes[type] || sizes.text;
+
+  const field = {
+    id: Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+    type, pageIndex,
+    x: Math.max(0, Math.min(normX - s.w / 2, 1 - s.w)),
+    y: Math.max(0, Math.min(normY - s.h / 2, 1 - s.h)),
+    w: s.w, h: s.h,
+    value: type === 'date' ? new Date().toLocaleDateString('en-US') : (type === 'checkbox' ? true : '')
+  };
+  window._csmFields.push(field);
+
+  const el = document.createElement('div');
+  el.id = 'csm-field-' + field.id;
+  el.style.cssText = 'position:absolute;left:' + (field.x * 100) + '%;top:' + (field.y * 100) + '%;width:' + (field.w * 100) + '%;height:' + (field.h * 100) + '%;border:2px solid rgba(124,58,237,0.6);background:rgba(124,58,237,0.08);border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c4b5fd;';
+
+  if (type === 'signature') {
+    el.innerHTML = '<span style="font-size:9px;opacity:0.7;">Click to sign</span>';
+    el.addEventListener('click', (e) => { e.stopPropagation(); csmOpenSignaturePad(field); });
+  } else if (type === 'text') {
+    el.innerHTML = '<input type="text" placeholder="Type here" style="width:100%;height:100%;background:transparent;border:none;color:var(--text);font-size:10px;padding:2px 4px;outline:none;font-family:DM Sans,sans-serif;" oninput="csmUpdateFieldValue(\'' + field.id + '\', this.value)">';
+  } else if (type === 'date') {
+    el.innerHTML = '<span style="font-size:9px;">' + escapeHtml(field.value) + '</span>';
+  } else if (type === 'checkbox') {
+    el.innerHTML = '<span style="font-size:12px;">✓</span>';
   }
 
-  const btn = document.getElementById('pdfsign-contract-save-btn');
+  // Delete button
+  const del = document.createElement('div');
+  del.style.cssText = 'position:absolute;top:-8px;right:-8px;width:16px;height:16px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:#fff;line-height:1;';
+  del.textContent = '×';
+  del.addEventListener('click', (e) => {
+    e.stopPropagation();
+    window._csmFields = window._csmFields.filter(f => f.id !== field.id);
+    el.remove();
+  });
+  el.appendChild(del);
+  pageWrap.appendChild(el);
+}
+
+function csmUpdateFieldValue(fieldId, value) {
+  const field = window._csmFields.find(f => f.id === fieldId);
+  if (field) field.value = value;
+}
+
+function csmOpenSignaturePad(field) {
+  const name = prompt('Type your full name for signature:');
+  if (!name) return;
+  field.value = name;
+  field._isTyped = true;
+  const el = document.getElementById('csm-field-' + field.id);
+  if (el) {
+    // Clear inner content but keep delete button
+    const delBtn = el.querySelector('div[style*="ef4444"]');
+    el.innerHTML = '';
+    el.style.fontFamily = "'Syne', sans-serif";
+    el.style.fontWeight = '700';
+    el.style.fontSize = '12px';
+    el.style.color = 'var(--text)';
+    el.style.padding = '2px 4px';
+    el.textContent = name;
+    // Re-add delete
+    const del = document.createElement('div');
+    del.style.cssText = 'position:absolute;top:-8px;right:-8px;width:16px;height:16px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:#fff;line-height:1;';
+    del.textContent = '×';
+    del.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window._csmFields = window._csmFields.filter(f => f.id !== field.id);
+      el.remove();
+    });
+    el.appendChild(del);
+  }
+}
+
+async function saveSignedContractBack() {
+  const ctx = window._contractSignContext;
+  if (!ctx) { alert('No contract signing context. Please try again.'); return; }
+
+  const btn = document.getElementById('csm-save-btn');
   if (!btn) return;
   const origText = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Saving...';
 
   try {
-    // Build the signed PDF
-    const pdfBytes = await buildSignedPdfBytes();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    // Build signed PDF using pdf-lib
+    if (!window.PDFLib) throw new Error('PDF editor not loaded. Refresh and try again.');
+    const { PDFDocument, rgb, StandardFonts } = window.PDFLib;
+    const pdfDoc = await PDFDocument.load(window._csmOriginalBytes);
+    const helv = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const syne = helv; // Fallback — can't embed custom fonts easily
+    const pages = pdfDoc.getPages();
 
-    // Upload back to same storage path (upsert = overwrite)
+    for (const field of window._csmFields) {
+      if (!field.value && field.value !== true) continue;
+      const page = pages[field.pageIndex];
+      if (!page) continue;
+      const { width: pW, height: pH } = page.getSize();
+      const absX = field.x * pW;
+      const absY = pH - (field.y * pH) - (field.h * pH);
+      const absW = field.w * pW;
+      const absH = field.h * pH;
+
+      if (field.type === 'signature' && field._isTyped) {
+        // Typed signature
+        const text = String(field.value);
+        let fontSize = Math.min(14, absH * 0.7);
+        let textWidth = helv.widthOfTextAtSize(text, fontSize);
+        while (textWidth > absW - 4 && fontSize > 5) { fontSize -= 0.5; textWidth = helv.widthOfTextAtSize(text, fontSize); }
+        page.drawText(text, {
+          x: absX + 2,
+          y: absY + (absH - fontSize) / 2 + fontSize * 0.25,
+          size: fontSize, font: helv, color: rgb(0, 0, 0),
+        });
+      } else if (field.type === 'checkbox') {
+        const size = Math.min(absW, absH, 18) * 0.9;
+        page.drawText('X', {
+          x: absX + (absW - size * 0.55) / 2,
+          y: absY + (absH - size) / 2 + size * 0.1,
+          size, font: helv, color: rgb(0, 0, 0),
+        });
+      } else {
+        // text / date
+        const text = String(field.value || '');
+        let fontSize = Math.min(10, absH * 0.65);
+        let textWidth = helv.widthOfTextAtSize(text, fontSize);
+        while (textWidth > absW - 4 && fontSize > 4) { fontSize -= 0.5; textWidth = helv.widthOfTextAtSize(text, fontSize); }
+        page.drawText(text, {
+          x: absX + 2,
+          y: absY + (absH - fontSize) / 2 + fontSize * 0.25,
+          size: fontSize, font: helv, color: rgb(0, 0, 0),
+        });
+      }
+    }
+
+    const signedBytes = await pdfDoc.save();
+    const blob = new Blob([signedBytes], { type: 'application/pdf' });
+
+    // Upload back to same storage path
     const { error: uploadError } = await sb.storage
       .from('deal-contracts')
-      .upload(ctx.storagePath, blob, {
-        contentType: 'application/pdf',
-        upsert: true
-      });
+      .upload(ctx.storagePath, blob, { contentType: 'application/pdf', upsert: true });
     if (uploadError) throw new Error(uploadError.message);
 
-    // Mark creator as signed in DB
+    // Mark creator as signed
     const now = new Date().toISOString();
     const { error: updateError } = await sb
       .from('brand_deals')
@@ -13553,21 +13716,13 @@ async function saveSignedContractBack() {
 
     // Update local cache
     const dealIdx = dealsList.findIndex(d => d.id === ctx.dealId);
-    if (dealIdx >= 0) {
-      dealsList[dealIdx].creator_signed_at = now;
-    }
+    if (dealIdx >= 0) dealsList[dealIdx].creator_signed_at = now;
 
-    // Clean up
-    window._contractSignContext = null;
-    const banner = document.getElementById('pdfsign-contract-banner');
-    if (banner) banner.remove();
-
-    // Show success and switch back to deals
+    // Close modal and refresh UI
+    const dealId = ctx.dealId;
+    closeContractSignModal();
     showDashToast('success', 'Contract signed and saved.');
-    switchTool('deals');
-
-    // Re-open the deal
-    setTimeout(() => { openDealDetail(ctx.dealId); }, 300);
+    renderContractUI(dealsList.find(d => d.id === dealId));
 
   } catch (err) {
     alert('Failed to save signed contract: ' + err.message);
@@ -13577,7 +13732,6 @@ async function saveSignedContractBack() {
   }
 }
 
-// Mark contract as signed without using the Sign PDF tool (e.g. signed externally)
 async function markContractCreatorSigned() {
   if (!currentDealId) return;
   if (!confirm('Mark the contract as signed by you? Use this if you signed the contract outside of Ryxa.')) return;
@@ -13591,21 +13745,15 @@ async function markContractCreatorSigned() {
     if (error) throw new Error(error.message);
 
     const dealIdx = dealsList.findIndex(d => d.id === currentDealId);
-    if (dealIdx >= 0) {
-      dealsList[dealIdx].creator_signed_at = now;
-    }
+    if (dealIdx >= 0) dealsList[dealIdx].creator_signed_at = now;
     renderContractUI(dealsList[dealIdx]);
     showDealModalMsg('success', 'Contract marked as signed.');
-    setTimeout(() => {
-      const msg = document.getElementById('deal-detail-msg');
-      if (msg) msg.style.display = 'none';
-    }, 2500);
+    setTimeout(() => { const msg = document.getElementById('deal-detail-msg'); if (msg) msg.style.display = 'none'; }, 2500);
   } catch (err) {
     showDealModalMsg('error', 'Failed: ' + err.message);
   }
 }
 
-// Send contract to brand via email
 async function sendContractToBrand() {
   if (!currentDealId) return;
   const deal = dealsList.find(d => d.id === currentDealId);
@@ -13625,7 +13773,7 @@ async function sendContractToBrand() {
     return;
   }
 
-  if (!confirm(`Send the contract to ${deal.brand_contact_email} for signing?`)) return;
+  if (!confirm('Send the contract to ' + deal.brand_contact_email + ' for signing?')) return;
 
   const btn = document.getElementById('deal-contract-send-btn');
   const origText = btn.textContent;
@@ -13634,19 +13782,13 @@ async function sendContractToBrand() {
 
   try {
     const { data, error } = await sb.functions.invoke('send-deal-notification', {
-      body: {
-        type: 'contract_for_signing',
-        deal_id: currentDealId
-      }
+      body: { type: 'contract_for_signing', deal_id: currentDealId }
     });
     if (error) throw new Error(error.message || 'Failed to send');
     if (data && data.error) throw new Error(data.error);
 
-    showDealModalMsg('success', `Contract sent to ${deal.brand_contact_email}.`);
-    setTimeout(() => {
-      const msg = document.getElementById('deal-detail-msg');
-      if (msg) msg.style.display = 'none';
-    }, 4000);
+    showDealModalMsg('success', 'Contract sent to ' + deal.brand_contact_email + '.');
+    setTimeout(() => { const msg = document.getElementById('deal-detail-msg'); if (msg) msg.style.display = 'none'; }, 4000);
   } catch (err) {
     showDealModalMsg('error', 'Failed to send: ' + err.message);
   } finally {
@@ -13654,7 +13796,6 @@ async function sendContractToBrand() {
     btn.textContent = origText;
   }
 }
-
 // =====================================================
 // BRAND DEAL CRM — Invoice upload/view/remove + send to brand
 // =====================================================
