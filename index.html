@@ -190,14 +190,15 @@
     .hero-actions { justify-content: center; }
     .hero-phone-device { width: 140px; transform: perspective(600px) rotateY(-20deg) rotateX(6deg) translateY(-15px); border-radius: 12px; }
     .hero-phone-device:hover { transform: perspective(600px) rotateY(-20deg) rotateX(6deg) translateY(-15px); }
-    .hero-phone { padding: 10px 60px 10px 10px; justify-content: flex-start; }
+    .hero-phone { padding: 10px 10px 10px 60px; justify-content: flex-end; }
     .hero-phone::before,
     .hero-phone::after {
       display: block;
       width: 140px;
       max-height: 280px;
       border-radius: 12px;
-      left: 10px;
+      left: auto;
+      right: 10px;
       top: 50%;
     }
     .hero-phone::before {
@@ -211,7 +212,8 @@
       width: 140px;
       max-height: 280px;
       border-radius: 12px;
-      left: 10px;
+      left: auto;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%) perspective(600px) rotateY(-2deg) translateX(66px) translateY(2px);
     }
@@ -616,7 +618,7 @@
     <div class="hero-split">
       <div class="hero-left">
         <h1>Creator tools to <span class="gradient-text">empower your growth</span></h1>
-        <p class="hero-sub">Everything you need to look professional, stay organized, and grow your brand — link in bio, media kit, brand deal tracking, and more. All in one dashboard.</p>
+        <p class="hero-sub">Everything you need to look professional, stay organized, and grow your brand. Link in bio, media kit, brand deal CRM, and more. In one simple dashboard.</p>
         <div class="hero-actions">
           <button class="btn-primary" onclick="openSignupModal()">Get started free &#x2192;</button>
         </div>
