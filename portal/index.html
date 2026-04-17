@@ -937,7 +937,7 @@ let psmSessionSig = null;
 let psmActiveFieldId = null;
 let psmDragType = null;
 let psmTouchPending = null;
-let psmDidDrag = false;
+let psmLastMoveEnd = 0;
 
 const PSM_FIELD_DEFAULTS = {
   signature: { w: 0.22, h: 0.055 },
@@ -1101,7 +1101,7 @@ function psmHandleDrop(e, pageIndex, overlay) {
 }
 
 function psmHandleOverlayClick(e, pageIndex) {
-  if (psmDidDrag) return;
+  if (Date.now() - psmLastMoveEnd < 200) return;
   if (!psmTouchPending) return;
   if (e.target.closest('.pdfsign-field')) return;
   const rect = e.currentTarget.getBoundingClientRect();
@@ -1178,7 +1178,7 @@ function psmRenderField(field) {
   el.addEventListener('dblclick', function(e) { e.stopPropagation(); psmEditField(field); });
   el.addEventListener('click', function(e) {
     e.stopPropagation();
-    if (psmDidDrag) return;
+    if (Date.now() - psmLastMoveEnd < 200) return;
     if (field.type === 'checkbox') { field.value = !field.value; psmRenderFieldContent(field); }
     else if (field.type === 'crossout') { /* toggle not needed */ }
   });
@@ -1246,17 +1246,15 @@ function psmStartMove(e, fieldId, fieldEl) {
   const startX = (e.clientX || e.pageX) - rect.left;
   const startY = (e.clientY || e.pageY) - rect.top;
   const origX = field.x, origY = field.y;
-  psmDidDrag = false;
 
   function onMove(ev) {
-    psmDidDrag = true;
     const cx = (ev.clientX || (ev.touches && ev.touches[0].clientX)) - rect.left;
     const cy = (ev.clientY || (ev.touches && ev.touches[0].clientY)) - rect.top;
     field.x = Math.max(0, Math.min(origX + (cx - startX)/rect.width, 1 - field.w));
     field.y = Math.max(0, Math.min(origY + (cy - startY)/rect.height, 1 - field.h));
     fieldEl.style.left = (field.x*100)+'%'; fieldEl.style.top = (field.y*100)+'%';
   }
-  function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); document.removeEventListener('touchmove', onMove); document.removeEventListener('touchend', onUp); if (psmDidDrag) setTimeout(function(){ psmDidDrag = false; }, 100); }
+  function onUp() { psmLastMoveEnd = Date.now(); document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); document.removeEventListener('touchmove', onMove); document.removeEventListener('touchend', onUp); }
   document.addEventListener('mousemove', onMove);
   document.addEventListener('mouseup', onUp);
   document.addEventListener('touchmove', onMove, { passive: false });
