@@ -13426,7 +13426,8 @@ async function removeContract() {
     return;
   }
 
-  if (!confirm('Remove the uploaded contract? This cannot be undone.')) return;
+  const confirmed1 = await dashConfirm('Remove the uploaded contract? This cannot be undone.');
+  if (!confirmed1) return;
 
   const path = deal.contract_file_path;
 
@@ -13461,8 +13462,19 @@ async function removeContract() {
 // =====================================================
 // BRAND DEAL CRM — Contract Signing
 // =====================================================
-// BRAND DEAL CRM — Contract Signing
-// =====================================================
+
+let _dashConfirmResolve = null;
+function dashConfirm(msg) {
+  return new Promise(function(resolve) {
+    _dashConfirmResolve = resolve;
+    document.getElementById('dash-confirm-msg').textContent = msg;
+    document.getElementById('dash-confirm-modal').style.display = 'flex';
+  });
+}
+function resolveDashConfirm(val) {
+  document.getElementById('dash-confirm-modal').style.display = 'none';
+  if (_dashConfirmResolve) { _dashConfirmResolve(val); _dashConfirmResolve = null; }
+}
 
 async function signContractAsCreator() {
   if (!currentDealId) return;
@@ -13677,7 +13689,8 @@ async function saveSignedContractBack() {
 
 async function markContractCreatorSigned() {
   if (!currentDealId) return;
-  if (!confirm('Mark the contract as signed by you? Use this if you signed the contract outside of Ryxa.')) return;
+  const confirmed2 = await dashConfirm('Mark the contract as signed by you? Use this if you signed the contract outside of Ryxa.');
+  if (!confirmed2) return;
 
   try {
     const now = new Date().toISOString();
@@ -13723,7 +13736,8 @@ async function sendContractToBrand() {
     return;
   }
 
-  if (!confirm('Send the contract to ' + deal.brand_contact_email + ' for signing?')) return;
+  const confirmed3 = await dashConfirm('Send the contract to ' + deal.brand_contact_email + ' for signing?');
+  if (!confirmed3) return;
 
   const btn = document.getElementById('deal-contract-send-btn');
   const origText = btn.textContent;
@@ -16450,6 +16464,17 @@ window.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
+
+<div id="dash-confirm-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:400px;width:100%;margin:20px;text-align:center;">
+    <h3 style="font-family:Syne,sans-serif;font-size:17px;font-weight:800;margin-bottom:8px;letter-spacing:-0.3px;color:var(--text);">Confirm</h3>
+    <p id="dash-confirm-msg" style="font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:20px;"></p>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button onclick="resolveDashConfirm(false)" style="padding:10px 20px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
+      <button onclick="resolveDashConfirm(true)" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Confirm</button>
+    </div>
+  </div>
+</div>
 
 <div id="deal-share-confirm-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;pointer-events:all;">
   <div style="background:#0f0f1a;border:1px solid rgba(124,58,237,0.35);border-radius:16px;padding:28px;position:relative;width:100%;max-width:440px;pointer-events:all;margin:20px;">
