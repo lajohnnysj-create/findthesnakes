@@ -5749,6 +5749,13 @@ function formatNextChangeTime(changes) {
   return `in ${days} day${days > 1 ? 's' : ''}`;
 }
 
+function formatNextChangeDate(changes) {
+  const sorted = changes.map(ts => new Date(ts).getTime()).sort((a, b) => a - b);
+  const earliest = sorted[0];
+  const availableAt = new Date(earliest + USERNAME_CHANGE_WINDOW_MS);
+  return availableAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
 let bioUsernameCheckTimer = null;
 let bioUsernameCheckToken = 0; // handles out-of-order async responses
 
@@ -5805,6 +5812,14 @@ async function checkUsernameAvailability(username, token) {
       return;
     }
     if (!data || data.user_id === currentUser?.id) {
+      // Name is available — but check rate limit before showing green
+      const { allowed, changes } = await checkUsernameChangeLimit();
+      if (token !== bioUsernameCheckToken) return;
+      if (!allowed) {
+        const nextDate = formatNextChangeDate(changes);
+        hint.innerHTML = `<span style="color:#fca5a5;">You've reached the max username changes. Try again on ${nextDate}.</span>`;
+        return;
+      }
       renderUsernameAvailable(username);
     } else {
       hint.innerHTML = `<span style="color:#fca5a5;">✕ <strong>${username}</strong> is already taken, try another.</span>`;
@@ -5818,6 +5833,7 @@ async function checkUsernameAvailability(username, token) {
 function renderUsernameAvailable(cleaned) {
   const hint = document.getElementById('bio-username-hint');
   const fullUrl = `https://www.ryxa.io/${cleaned}`;
+  const isChanged = cleaned !== bioOriginalUsername;
   hint.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
       <span style="color:#4ade80;">✓</span>
@@ -5826,7 +5842,7 @@ function renderUsernameAvailable(cleaned) {
         style="padding:4px 10px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:500;">
         Copy link
       </button>
-    </div>`;
+    </div>${isChanged ? '<div style="margin-top:6px;font-size:12px;color:#fbbf24;">Press save to change username</div>' : ''}`;
   hint.style.color = 'var(--muted)';
 }
 
@@ -6938,7 +6954,8 @@ async function saveBio() {
       // Rate limit: 2 changes per 7 days
       const { allowed, remaining, changes } = await checkUsernameChangeLimit();
       if (!allowed) {
-        throw new Error(`You've used both username changes this week. Try again ${formatNextChangeTime(changes)}.`);
+        const nextDate = formatNextChangeDate(changes);
+        throw new Error(`You've reached the max username changes. Try again on ${nextDate}.`);
       }
       // Check availability
       const { data: existing } = await sb.from('profiles').select('user_id').eq('username', uname).maybeSingle();
@@ -7006,6 +7023,7 @@ async function saveBio() {
 
     updatePublishUI();
     showBioStatus('success', 'Saved ✓');
+    showDashToast('success', 'Link in Bio changes saved.');
   } catch (e) {
     console.error(e);
     showBioStatus('error', e.message || 'Save failed.');
@@ -7532,6 +7550,14 @@ async function checkMKUsernameAvailability(username, token) {
       return;
     }
     if (!data || data.user_id === currentUser?.id) {
+      // Name is available — but check rate limit before showing green
+      const { allowed, changes } = await checkUsernameChangeLimit();
+      if (token !== mkUsernameCheckToken) return;
+      if (!allowed) {
+        const nextDate = formatNextChangeDate(changes);
+        hint.innerHTML = `<span style="color:#fca5a5;">You've reached the max username changes. Try again on ${nextDate}.</span>`;
+        return;
+      }
       renderMKUsernameAvailable(username);
     } else {
       hint.innerHTML = `<span style="color:#fca5a5;">✕ <strong>${escapeHtml(username)}</strong> is taken, try another.</span>`;
@@ -7544,6 +7570,8 @@ async function checkMKUsernameAvailability(username, token) {
 function renderMKUsernameAvailable(cleaned) {
   const hint = document.getElementById('mk-username-hint');
   const fullUrl = `https://www.ryxa.io/mediakit/${cleaned}`;
+  const originalUname = (typeof bioOriginalUsername !== 'undefined') ? bioOriginalUsername : '';
+  const isChanged = cleaned !== originalUname;
   hint.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
       <span style="color:#4ade80;">✓</span>
@@ -7552,7 +7580,7 @@ function renderMKUsernameAvailable(cleaned) {
         style="padding:4px 10px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:500;">
         Copy link
       </button>
-    </div>`;
+    </div>${isChanged ? '<div style="margin-top:6px;font-size:12px;color:#fbbf24;">Press save to change username</div>' : ''}`;
   hint.style.color = 'var(--muted)';
 }
 
@@ -7873,7 +7901,7 @@ async function saveMediaKit() {
         // Rate limit: 2 changes per 7 days
         const { allowed, remaining, changes } = await checkUsernameChangeLimit();
         if (!allowed) {
-          throw new Error(`You've used both username changes this week. Try again ${formatNextChangeTime(changes)}.`);
+          throw new Error(`You've reached the max username changes. Try again on ${formatNextChangeDate(changes)}.`);
         }
         const { data: existing } = await sb.from('profiles').select('user_id').eq('username', uname).maybeSingle();
         if (existing && existing.user_id !== currentUser.id) throw new Error('That username is already taken.');
@@ -7946,6 +7974,7 @@ async function saveMediaKit() {
     await deleteMKStaleBgs();
     updateMKPublishUI();
     showMKStatus('success', 'Saved ✓');
+    showDashToast('success', 'Media Kit changes saved.');
   } catch (e) {
     console.error(e);
     showMKStatus('error', e.message || 'Save failed.');
