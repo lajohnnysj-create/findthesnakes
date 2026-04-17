@@ -3840,7 +3840,7 @@
                     <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:5px;">Display style</div>
                     <div style="display:flex;gap:4px;">
                       <button id="bio-avatar-mode-default" onclick="setAvatarDisplay('default')" style="flex:1;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.15s;background:var(--accent);color:#fff;border:1px solid var(--accent);">Default</button>
-                      <button id="bio-avatar-mode-hero" onclick="setAvatarDisplay('hero')" style="flex:1;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.15s;background:transparent;color:var(--muted);border:1px solid var(--border-hover);">Hero</button>
+                      <button id="bio-avatar-mode-hero" onclick="setAvatarDisplay('hero')" style="flex:1;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.15s;background:transparent;color:#f0abfc;border:1px solid rgba(232,121,249,0.4);">Hero</button>
                     </div>
                   </div>
                 </div>
@@ -7310,9 +7310,11 @@ function updateAvatarDisplayUI() {
     btnDefault.style.background = isHero ? 'transparent' : 'var(--accent)';
     btnDefault.style.color = isHero ? 'var(--muted)' : '#fff';
     btnDefault.style.borderColor = isHero ? 'var(--border-hover)' : 'var(--accent)';
-    btnHero.style.background = isHero ? 'var(--accent)' : 'transparent';
-    btnHero.style.color = isHero ? '#fff' : 'var(--muted)';
-    btnHero.style.borderColor = isHero ? 'var(--accent)' : 'var(--border-hover)';
+    // Hero button: Creator Max gradient when selected, purple border when not
+    btnHero.style.background = isHero ? 'linear-gradient(135deg, #a78bfa, #e879f9)' : 'transparent';
+    btnHero.style.color = isHero ? '#fff' : '#f0abfc';
+    btnHero.style.borderColor = isHero ? 'transparent' : 'rgba(232,121,249,0.4)';
+    btnHero.style.boxShadow = isHero ? '0 0 14px rgba(232,121,249,0.3)' : 'none';
   }
 }
 
