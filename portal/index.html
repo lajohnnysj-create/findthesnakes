@@ -161,6 +161,28 @@
   .pdfsign-sig-tab { flex:1;padding:8px 12px;background:transparent;border:none;color:var(--muted);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:7px; }
   .pdfsign-sig-tab.active { background:var(--accent);color:#fff; }
   .pdfsign-sig-panel { min-height:200px; }
+  /* Toast notifications */
+  .portal-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    z-index: 99999;
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    max-width: 90%;
+    text-align: center;
+    pointer-events: none;
+  }
+  .portal-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .portal-toast.success { background: #065f46; color: #a7f3d0; border: 1px solid rgba(167,243,208,0.25); }
+  .portal-toast.error { background: #7f1d1d; color: #fca5a5; border: 1px solid rgba(252,165,165,0.25); }
+  .portal-toast.info { background: #1e1b4b; color: #c4b5fd; border: 1px solid rgba(196,181,253,0.25); }
 </style>
 </head>
 <body>
@@ -430,6 +452,20 @@ let dealData = null;
 // ============================================================
 // HELPERS
 // ============================================================
+function showPortalToast(type, message) {
+  const old = document.querySelector('.portal-toast');
+  if (old) old.remove();
+  const toast = document.createElement('div');
+  toast.className = 'portal-toast ' + type;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('show'); }); });
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => { toast.remove(); }, 300);
+  }, 4000);
+}
+
 function escapeHtml(str) {
   if (str == null) return '';
   return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -689,7 +725,7 @@ async function downloadDealFile(fileType, btn) {
   } catch (err) {
     console.error('Download failed', err);
     btn.textContent = 'Failed';
-    alert('Could not download file: ' + err.message);
+    showPortalToast('error', 'Could not download file: ' + err.message);
   } finally {
     setTimeout(() => {
       btn.textContent = orig;
@@ -983,7 +1019,7 @@ async function viewPortalContract() {
     if (data && data.error) throw new Error(data.error);
     if (!data || !data.url) throw new Error('No URL returned');
     window.open(data.url, '_blank', 'noopener,noreferrer');
-  } catch (err) { alert('Failed to open contract: ' + err.message); }
+  } catch (err) { showPortalToast('error', 'Failed to open contract: ' + err.message); }
   finally { btn.disabled = false; btn.textContent = 'View'; }
 }
 
@@ -1040,7 +1076,7 @@ async function openPortalSignModal() {
 
     document.getElementById('portal-sign-modal').style.display = 'block';
     document.body.style.overflow = 'hidden';
-  } catch (err) { alert('Failed to load contract: ' + err.message); }
+  } catch (err) { showPortalToast('error', 'Failed to load contract: ' + err.message); }
   finally { btn.disabled = false; btn.textContent = 'Sign Contract'; }
 }
 
@@ -1385,14 +1421,14 @@ async function psmApplySig() {
 
   if (mode === 'draw') {
     dataUrl = await psmTrimSigCanvas();
-    if (!dataUrl) { alert('Please draw your signature first.'); return; }
+    if (!dataUrl) { showPortalToast('info', 'Please draw your signature first.'); return; }
   } else if (mode === 'type') {
     var text = document.getElementById('psm-sig-type-input').value.trim();
-    if (!text) { alert('Please type your name.'); return; }
+    if (!text) { showPortalToast('info', 'Please type your name.'); return; }
     dataUrl = psmRenderTypedSig(text);
   } else if (mode === 'upload') {
     var img = document.getElementById('psm-sig-upload-img');
-    if (!img.src || img.src === '') { alert('Please upload an image.'); return; }
+    if (!img.src || img.src === '') { showPortalToast('info', 'Please upload an image.'); return; }
     dataUrl = img.src;
   }
 
@@ -1466,8 +1502,8 @@ function dataUrlToBytes(dataUrl) {
 
 // ---- Save ----
 async function savePortalSignature() {
-  if (psmFields.length === 0) { alert('Please add at least one field to the document.'); return; }
-  if (!psmPdfBytes) { alert('No PDF loaded.'); return; }
+  if (psmFields.length === 0) { showPortalToast('info', 'Please add at least one field to the document.'); return; }
+  if (!psmPdfBytes) { showPortalToast('error', 'No PDF loaded.'); return; }
 
   var btn = document.getElementById('portal-sign-save-btn');
   btn.disabled = true; btn.textContent = 'Saving...';
@@ -1537,9 +1573,9 @@ async function savePortalSignature() {
 
     closePortalSignModal();
     renderPortalContractStatus(deal);
-    alert('Contract signed successfully!' + (shouldLock ? ' The contract is now fully executed and the deal is active.' : ''));
+    showPortalToast('success', 'Contract signed successfully!' + (shouldLock ? ' The contract is now fully executed and the deal is active.' : ''));
   } catch (err) {
-    alert('Failed to save signature: ' + err.message);
+    showPortalToast('error', 'Failed to save signature: ' + err.message);
   } finally {
     btn.disabled = false; btn.textContent = 'Save & Upload';
   }
@@ -1560,8 +1596,8 @@ async function markPortalBrandSigned() {
     deal.brand_signed_at = now;
     if (shouldLock) { deal.contract_locked = true; deal.status = 'active'; }
     renderPortalContractStatus(deal);
-    alert('Contract marked as signed.' + (shouldLock ? ' The contract is now fully executed and the deal is active.' : ''));
-  } catch (err) { alert('Failed: ' + err.message); }
+    showPortalToast('success', 'Contract marked as signed.' + (shouldLock ? ' The contract is now fully executed and the deal is active.' : ''));
+  } catch (err) { showPortalToast('error', err.message); }
 }
 </script>
 
