@@ -4562,14 +4562,59 @@
         <p style="color:var(--muted);font-size:14px;margin-bottom:8px;">Generate QR codes for your links, profiles, and campaigns.</p>
         <p id="qr-limit-note" style="font-size:13px;color:#a78bfa;margin-bottom:24px;"></p>
 
+        <!-- Tabs -->
+        <div style="display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:20px;">
+          <button id="qr-tab-link" onclick="switchQRTab('link')" style="flex:1;padding:9px 16px;border:none;border-radius:7px;font-size:13px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.15s;background:var(--accent);color:#fff;">Link</button>
+          <button id="qr-tab-vcard" onclick="switchQRTab('vcard')" style="flex:1;padding:9px 16px;border:none;border-radius:7px;font-size:13px;font-weight:600;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.15s;background:transparent;color:var(--muted);">Contact Card</button>
+        </div>
+
         <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
-          <div style="margin-bottom:16px;">
-            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">URL or Text</label>
-            <input type="text" id="qr-text" placeholder="https://yourwebsite.com" onkeydown="if(event.key==='Enter') generateQR()" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:15px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-hover)'" aria-label="URL or text to encode">
-            <button onclick="generateQR()" style="margin-top:12px;width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px var(--accent-glow);">Generate QR Code</button>
+
+          <!-- Link mode -->
+          <div id="qr-mode-link">
+            <div style="margin-bottom:16px;">
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">URL or Text</label>
+              <input type="text" id="qr-text" placeholder="https://yourwebsite.com" onkeydown="if(event.key==='Enter') generateQR()" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:15px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;transition:border-color 0.2s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-hover)'" aria-label="URL or text to encode">
+              <button onclick="generateQR()" style="margin-top:12px;width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px var(--accent-glow);">Generate QR Code</button>
+            </div>
           </div>
 
-          <div id="qr-pro-options" style="display:none;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <!-- Contact Card mode -->
+          <div id="qr-mode-vcard" style="display:none;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+              <div>
+                <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">First Name</label>
+                <input type="text" id="qr-vc-first" placeholder="John" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Last Name</label>
+                <input type="text" id="qr-vc-last" placeholder="Doe" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Phone</label>
+              <input type="tel" id="qr-vc-phone" placeholder="+1 (555) 123-4567" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Email</label>
+              <input type="email" id="qr-vc-email" placeholder="john@example.com" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Website</label>
+              <input type="url" id="qr-vc-website" placeholder="https://yourwebsite.com" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Company</label>
+              <input type="text" id="qr-vc-company" placeholder="Company name" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Title / Role</label>
+              <input type="text" id="qr-vc-title" placeholder="Content Creator" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <button onclick="generateVCardQR()" style="width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px var(--accent-glow);">Generate Contact Card QR</button>
+          </div>
+
+          <div id="qr-pro-options" style="display:none;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
             <div>
               <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Foreground color</label>
               <div style="display:flex;align-items:center;gap:10px;">
@@ -11461,6 +11506,63 @@ const QR_LIMIT_FREE = 3;
 const QR_LIMIT_FREE_DAY = true; // per day for free
 const QR_LIMIT_PRO = 9999; // unlimited
 
+let qrCurrentTab = 'link';
+
+function switchQRTab(tab) {
+  qrCurrentTab = tab;
+  document.getElementById('qr-mode-link').style.display = tab === 'link' ? 'block' : 'none';
+  document.getElementById('qr-mode-vcard').style.display = tab === 'vcard' ? 'block' : 'none';
+  const linkBtn = document.getElementById('qr-tab-link');
+  const vcardBtn = document.getElementById('qr-tab-vcard');
+  if (tab === 'link') {
+    linkBtn.style.background = 'var(--accent)'; linkBtn.style.color = '#fff';
+    vcardBtn.style.background = 'transparent'; vcardBtn.style.color = 'var(--muted)';
+  } else {
+    vcardBtn.style.background = 'var(--accent)'; vcardBtn.style.color = '#fff';
+    linkBtn.style.background = 'transparent'; linkBtn.style.color = 'var(--muted)';
+  }
+  // Reset preview
+  document.getElementById('qr-preview-area').style.display = 'none';
+  document.getElementById('qr-empty').style.display = 'block';
+  document.getElementById('qr-empty').textContent = tab === 'link' ? 'Type a URL above to generate your QR code' : 'Fill in the fields above to generate a contact card QR';
+}
+
+function buildVCardString() {
+  const first = (document.getElementById('qr-vc-first').value || '').trim();
+  const last = (document.getElementById('qr-vc-last').value || '').trim();
+  const phone = (document.getElementById('qr-vc-phone').value || '').trim();
+  const email = (document.getElementById('qr-vc-email').value || '').trim();
+  const website = (document.getElementById('qr-vc-website').value || '').trim();
+  const company = (document.getElementById('qr-vc-company').value || '').trim();
+  const title = (document.getElementById('qr-vc-title').value || '').trim();
+
+  if (!first && !last) return null;
+
+  let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
+  vcard += 'N:' + last + ';' + first + ';;;\n';
+  vcard += 'FN:' + (first + ' ' + last).trim() + '\n';
+  if (company) vcard += 'ORG:' + company + '\n';
+  if (title) vcard += 'TITLE:' + title + '\n';
+  if (phone) vcard += 'TEL;TYPE=CELL:' + phone + '\n';
+  if (email) vcard += 'EMAIL:' + email + '\n';
+  if (website) vcard += 'URL:' + website + '\n';
+  vcard += 'END:VCARD';
+  return vcard;
+}
+
+function generateVCardQR() {
+  const vcard = buildVCardString();
+  if (!vcard) {
+    showDashToast('error', 'Please enter at least a first or last name.');
+    return;
+  }
+  if (typeof QRious === 'undefined') {
+    loadQRLibrary(() => renderQRCanvas(vcard));
+  } else {
+    renderQRCanvas(vcard);
+  }
+}
+
 function initQRGenerator() {
   const pro = isPro();
   // Free: per day, Pro: per month
@@ -11484,11 +11586,21 @@ function initQRGenerator() {
 }
 
 function generateQR() {
-  const text = document.getElementById('qr-text').value.trim();
-  if (!text) {
-    document.getElementById('qr-preview-area').style.display = 'none';
-    document.getElementById('qr-empty').style.display = 'block';
-    return;
+  let text;
+  if (qrCurrentTab === 'vcard') {
+    text = buildVCardString();
+    if (!text) {
+      document.getElementById('qr-preview-area').style.display = 'none';
+      document.getElementById('qr-empty').style.display = 'block';
+      return;
+    }
+  } else {
+    text = document.getElementById('qr-text').value.trim();
+    if (!text) {
+      document.getElementById('qr-preview-area').style.display = 'none';
+      document.getElementById('qr-empty').style.display = 'block';
+      return;
+    }
   }
   // Load library if not loaded yet
   if (typeof QRious === 'undefined') {
