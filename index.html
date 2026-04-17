@@ -835,6 +835,9 @@ function scrollTestimonials(dir) {
   if (!track) return;
   const card = track.querySelector('.testimonial-card');
   const scrollAmount = card ? card.offsetWidth + 20 : 400;
+  const maxScroll = track.scrollWidth - track.clientWidth;
+  if (dir === -1 && track.scrollLeft <= 0) return;
+  if (dir === 1 && track.scrollLeft >= maxScroll - 1) return;
   track.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
 }
 
