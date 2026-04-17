@@ -13481,16 +13481,15 @@ async function postContractEventMessage(dealId, message) {
   try {
     const profile = await sb.from('profiles').select('username').eq('id', currentUser.id).single();
     const authorName = profile.data?.username || currentUser.email.split('@')[0];
-    await sb.from('deal_messages').insert({
+    sb.from('deal_messages').insert({
       deal_id: dealId,
       user_id: currentUser.id,
       author_type: 'creator',
       author_name: authorName,
       content: message
+    }).then(function() {
+      notifyBrandOfCreatorMessage(dealId, message);
     });
-    notifyBrandOfCreatorMessage(dealId, message);
-    // Reload messages if we're viewing this deal
-    if (currentDealId === dealId) await loadDealMessages();
   } catch (err) {
     console.warn('Auto-message failed (non-fatal):', err);
   }
