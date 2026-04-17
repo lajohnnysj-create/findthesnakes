@@ -470,6 +470,9 @@
     min-height: 60px;
     outline: none;
     box-sizing: border-box;
+    max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .scripts-hook-input:focus { border-color: #e879f9; }
   .scripts-hook-meta {
@@ -575,6 +578,9 @@
     font-weight: 600;
     padding: 4px 0;
     outline: none;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   .scripts-block-title::placeholder { color: var(--muted); font-weight: 400; }
   .scripts-block-body {
@@ -592,6 +598,8 @@
     outline: none;
     box-sizing: border-box;
     max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .scripts-block-body:focus { border-color: var(--accent2); }
   .scripts-block-meta {
@@ -686,6 +694,8 @@
     cursor: text;
     border-radius: 6px;
     transition: background 0.15s;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .scripts-hook-display:hover { background: rgba(255,255,255,0.03); }
   .scripts-hook-placeholder {
