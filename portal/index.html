@@ -1101,6 +1101,7 @@ function psmHandleDrop(e, pageIndex, overlay) {
 }
 
 function psmHandleOverlayClick(e, pageIndex) {
+  if (psmDidDrag) { psmDidDrag = false; return; }
   if (!psmTouchPending) return;
   if (e.target.closest('.pdfsign-field')) return;
   const rect = e.currentTarget.getBoundingClientRect();
