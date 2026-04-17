@@ -391,6 +391,18 @@
     </div>
   </div>
 
+  <!-- Confirm modal -->
+  <div id="portal-confirm-modal" class="pdfsign-modal" style="display:none;">
+    <div class="pdfsign-modal-inner" style="max-width:400px;text-align:center;">
+      <h3 id="portal-confirm-title" style="font-family:Syne,sans-serif;font-size:17px;font-weight:800;margin-bottom:8px;letter-spacing:-0.3px;">Confirm</h3>
+      <p id="portal-confirm-msg" style="font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:20px;"></p>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button onclick="resolvePortalConfirm(false)" style="padding:10px 20px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;cursor:pointer;">Cancel</button>
+        <button onclick="resolvePortalConfirm(true)" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Invoice -->
   <div class="portal-card" id="portal-invoice-card" style="display:none;">
     <div class="portal-card-title">Invoice</div>
@@ -464,6 +476,19 @@ function showPortalToast(type, message) {
     toast.classList.remove('show');
     setTimeout(() => { toast.remove(); }, 300);
   }, 4000);
+}
+
+let _portalConfirmResolve = null;
+function portalConfirm(msg) {
+  return new Promise(function(resolve) {
+    _portalConfirmResolve = resolve;
+    document.getElementById('portal-confirm-msg').textContent = msg;
+    document.getElementById('portal-confirm-modal').style.display = 'flex';
+  });
+}
+function resolvePortalConfirm(val) {
+  document.getElementById('portal-confirm-modal').style.display = 'none';
+  if (_portalConfirmResolve) { _portalConfirmResolve(val); _portalConfirmResolve = null; }
 }
 
 function escapeHtml(str) {
@@ -1582,7 +1607,8 @@ async function savePortalSignature() {
 }
 
 async function markPortalBrandSigned() {
-  if (!confirm('Mark the contract as signed by your organization?')) return;
+  const confirmed = await portalConfirm('Mark the contract as signed by your organization? Use this if you signed outside of this portal.');
+  if (!confirmed) return;
   try {
     var deal = dealData.deal;
     var now = new Date().toISOString();
