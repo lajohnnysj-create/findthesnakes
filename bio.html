@@ -282,19 +282,21 @@
 
   /* Hero avatar display mode */
   .wrap.hero-mode {
-    max-width: 100%;
+    max-width: 540px;
     gap: 0;
-    padding-top: 0;
   }
   .hero-header {
     position: relative;
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    overflow: hidden;
   }
   .hero-header-img {
     width: 100%;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
+    object-position: center top;
     display: block;
   }
   .hero-header-fade {
@@ -302,39 +304,40 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60%;
-    background: linear-gradient(to bottom, transparent 0%, var(--bg) 100%);
+    height: 50%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.4) 55%, var(--bg) 100%);
     pointer-events: none;
   }
   .hero-header-info {
     position: absolute;
-    bottom: 20px;
+    bottom: 14px;
     left: 0;
     right: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     z-index: 2;
+    padding: 0 20px;
   }
   .hero-header-info .name {
-    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
     color: #fff;
   }
   .hero-header-info .bio {
-    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
     color: rgba(255,255,255,0.9);
   }
   .hero-header-info .social-btn {
-    background: rgba(0,0,0,0.4);
-    border-color: rgba(255,255,255,0.15);
-    backdrop-filter: blur(4px);
+    background: rgba(0,0,0,0.35);
+    border-color: rgba(255,255,255,0.2);
+    backdrop-filter: blur(6px);
   }
   .hero-content-below {
     max-width: 540px;
     margin: 0 auto;
     width: 100%;
-    padding: 0 18px;
+    padding: 16px 18px 0;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -1185,7 +1188,6 @@ function render(profile, bio, userTier) {
   const isHeroMode = bio.avatar_display === 'hero' && validImageUrl(bio.avatar_url) && isMaxTier;
 
   if (isHeroMode) {
-    document.body.style.paddingTop = '0';
     document.getElementById('wrap').classList.add('hero-mode');
     document.getElementById('wrap').innerHTML = `
       ${buildHeroHeader(profile, bio, socialsHtml)}
