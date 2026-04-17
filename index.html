@@ -841,6 +841,29 @@ function scrollTestimonials(dir) {
   track.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
 }
 
+// Desktop drag-to-scroll
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.getElementById('testimonials-track');
+  if (!track) return;
+  let isDown = false, startX, scrollStart;
+  track.addEventListener('mousedown', (e) => {
+    isDown = true;
+    track.style.cursor = 'grabbing';
+    startX = e.pageX - track.offsetLeft;
+    scrollStart = track.scrollLeft;
+    e.preventDefault();
+  });
+  track.addEventListener('mouseleave', () => { isDown = false; track.style.cursor = 'grab'; });
+  track.addEventListener('mouseup', () => { isDown = false; track.style.cursor = 'grab'; });
+  track.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    const x = e.pageX - track.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    track.scrollLeft = scrollStart - walk;
+  });
+  track.style.cursor = 'grab';
+});
+
 const SUPABASE_URL = 'https://kjytapcgxukalwsyputk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMTcxMzEsImV4cCI6MjA5MDg5MzEzMX0.VC8mcU5lUeA56kG2gHssvl88EVWr018XttA86jpfEn0';
 const { createClient } = supabase;
