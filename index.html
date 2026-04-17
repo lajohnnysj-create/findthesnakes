@@ -139,7 +139,9 @@
 
   /* TESTIMONIALS */
   .testimonials-section { max-width: 900px; margin: 0 auto 56px; padding: 0 20px; }
-  .testimonials-heading { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 24px; color: var(--muted); letter-spacing: -0.3px; }
+  .testimonials-heading { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 6px; color: var(--text); letter-spacing: -0.5px; }
+  .testimonials-heading span { background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .testimonials-sub { font-size: 15px; color: var(--muted); text-align: center; margin-bottom: 28px; }
   .testimonials-track-wrap { position: relative; display: flex; align-items: center; gap: 12px; }
   .testimonials-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; padding: 4px 0; }
   .testimonials-track::-webkit-scrollbar { display: none; }
@@ -149,7 +151,7 @@
   .testimonial-bg { position: absolute; inset: 0; background-size: cover; background-position: center top; filter: brightness(0.35); z-index: 0; }
   .testimonial-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.9) 100%); }
   .testimonial-content { position: relative; z-index: 1; padding: 32px 28px 28px; display: flex; flex-direction: column; min-height: 280px; justify-content: flex-end; }
-  .testimonial-stars { color: #facc15; font-size: 18px; letter-spacing: 2px; margin-top: 16px; }
+  .testimonial-stars { color: #facc15; font-size: 18px; letter-spacing: 2px; margin-bottom: 16px; }
   .testimonial-quote { font-size: 15px; line-height: 1.65; color: #f0eef8; margin-bottom: 20px; font-style: italic; }
   .testimonial-author { display: flex; align-items: center; gap: 12px; }
   .testimonial-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(124,58,237,0.5); flex-shrink: 0; }
@@ -537,7 +539,8 @@
 
     <!-- TESTIMONIALS -->
     <div class="testimonials-section">
-      <h2 class="testimonials-heading">What other creators are saying</h2>
+      <h2 class="testimonials-heading">Trusted by creators <span>who mean business</span></h2>
+      <p class="testimonials-sub">See what they say about Ryxa!</p>
       <div class="testimonials-track-wrap">
         <button class="testimonial-arrow testimonial-arrow-left" onclick="scrollTestimonials(-1)" aria-label="Previous testimonial">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -549,6 +552,7 @@
             <div class="testimonial-bg" style="background-image:url('testimonials/pinsta.jpg');"></div>
             <div class="testimonial-content">
               <p class="testimonial-quote">"I was able to grow my audience as a content creator with Ryxa! The tools that they offer are unbeatable. It has certainly helped make things easier for me!"</p>
+              <div class="testimonial-stars">★★★★★</div>
               <div class="testimonial-author">
                 <img src="testimonials/pinsta.jpg" alt="Pinhwa Su" class="testimonial-avatar">
                 <div>
@@ -556,7 +560,6 @@
                   <div class="testimonial-handle">@xo.pinsta</div>
                 </div>
               </div>
-              <div class="testimonial-stars">★★★★★</div>
             </div>
           </div>
 
