@@ -141,11 +141,12 @@
   .testimonials-section { margin: 0 0 56px; padding: 0; overflow: hidden; align-self: stretch; margin-left: -24px; margin-right: -24px; }
   .testimonials-heading { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; text-align: center; margin: 0 auto 28px; color: #fff; letter-spacing: -0.3px; padding: 0 20px; width: 100%; box-sizing: border-box; }
   .testimonials-heading span { background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .testimonials-track-wrap { position: relative; width: 100%; }
-  .testimonials-track { display: flex; gap: 24px; width: max-content; animation: testimonialScroll 60s linear infinite; padding: 8px 0; will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-  .testimonials-track:hover { animation-play-state: paused; }
-  @keyframes testimonialScroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 12px)); } }
-  .testimonial-card { position: relative; width: 380px; border-radius: 20px; overflow: hidden; flex-shrink: 0; }
+  .testimonials-track-wrap { position: relative; display: flex; align-items: center; gap: 12px; padding: 0 20px; }
+  .testimonials-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; padding: 8px 0; flex: 1; min-width: 0; -webkit-overflow-scrolling: touch; }
+  .testimonials-track::-webkit-scrollbar { display: none; }
+  .testimonial-arrow { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.2s; z-index: 2; }
+  .testimonial-arrow:hover { color: var(--text); border-color: var(--accent); background: rgba(124,58,237,0.1); }
+  .testimonial-card { position: relative; width: 380px; min-width: 380px; border-radius: 20px; overflow: hidden; flex-shrink: 0; scroll-snap-align: center; }
   .testimonial-card-inner { position: relative; border-radius: 20px; overflow: hidden; height: 100%; }
   .testimonial-bg { position: absolute; inset: 0; background-size: cover; background-position: center top; filter: brightness(0.35); z-index: 0; }
   .testimonial-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.9) 100%); }
@@ -158,9 +159,11 @@
   .testimonial-handle { font-size: 12px; color: var(--accent2); }
   @media (max-width: 600px) {
     .testimonials-heading { font-size: 13px; letter-spacing: -0.2px; margin-bottom: 20px; }
-    .testimonial-card { width: 300px; }
+    .testimonial-card { width: 300px; min-width: 300px; }
     .testimonial-content { padding: 24px 20px 22px; min-height: 260px; }
     .testimonials-track { gap: 16px; }
+    .testimonial-arrow { display: none; }
+    .testimonials-track-wrap { padding: 0 16px; }
   }
   .btn-primary { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 15px 36px; font-size: 16px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.25s; box-shadow: 0 0 40px var(--accent-glow); text-decoration: none; display: inline-block; }
   .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
@@ -541,6 +544,9 @@
     <div class="testimonials-section">
       <h2 class="testimonials-heading">Trusted by <span>creators</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><em style="font-style:normal;margin-left:6em;">who mean <span>business</span>...</em></h2>
       <div class="testimonials-track-wrap">
+        <button class="testimonial-arrow" onclick="scrollTestimonials(-1)" aria-label="Previous testimonial">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
         <div class="testimonials-track" id="testimonials-track">
 
           <!-- Testimonial 1 -->
@@ -580,6 +586,9 @@
           </div>
 
         </div>
+        <button class="testimonial-arrow" onclick="scrollTestimonials(1)" aria-label="Next testimonial">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
       </div>
     </div>
 
@@ -820,33 +829,14 @@
 </footer>
 
 <script>
-// Testimonials: clone cards to fill viewport, then duplicate set for seamless loop
-document.addEventListener('DOMContentLoaded', () => {
+// Testimonials: scroll left/right
+function scrollTestimonials(dir) {
   const track = document.getElementById('testimonials-track');
   if (!track) return;
-  const originals = Array.from(track.children);
-  if (!originals.length) return;
-  // Clone originals enough times so one set is wider than the viewport
-  const cardWidth = 380 + 24; // card width + gap
-  const needed = Math.ceil((window.innerWidth * 2) / (originals.length * cardWidth)) + 1;
-  for (let i = 1; i < needed; i++) {
-    originals.forEach(card => {
-      const clone = card.cloneNode(true);
-      clone.setAttribute('aria-hidden', 'true');
-      track.appendChild(clone);
-    });
-  }
-  // Now duplicate the entire set for the seamless loop
-  const allCards = Array.from(track.children);
-  allCards.forEach(card => {
-    const clone = card.cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    track.appendChild(clone);
-  });
-  // Pause on hover/touch
-  track.addEventListener('touchstart', () => { track.style.animationPlayState = 'paused'; }, { passive: true });
-  track.addEventListener('touchend', () => { setTimeout(() => { track.style.animationPlayState = 'running'; }, 2000); });
-});
+  const card = track.querySelector('.testimonial-card');
+  const scrollAmount = card ? card.offsetWidth + 20 : 400;
+  track.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
+}
 
 const SUPABASE_URL = 'https://kjytapcgxukalwsyputk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMTcxMzEsImV4cCI6MjA5MDg5MzEzMX0.VC8mcU5lUeA56kG2gHssvl88EVWr018XttA86jpfEn0';
