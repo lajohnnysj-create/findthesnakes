@@ -135,7 +135,12 @@
   .hero h1 { font-family: "Syne", sans-serif; font-size: clamp(42px, 7vw, 80px); font-weight: 800; letter-spacing: -3px; line-height: 1.05; margin-bottom: 24px; }
   .gradient-text { background: linear-gradient(135deg, #a78bfa, #e879f9, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .hero-sub { font-size: clamp(16px, 2.5vw, 20px); color: var(--muted); line-height: 1.7; max-width: 600px; margin: 0 auto 40px; font-weight: 300; }
-  .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+  .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: nowrap; margin-bottom: 48px; }
+  @media (max-width: 600px) {
+    .hero-actions { gap: 10px; }
+    .hero-actions .btn-primary,
+    .hero-actions .btn-secondary { padding: 13px 20px; font-size: 14px; }
+  }
 
   /* TESTIMONIALS */
   .testimonials-section { margin: 0 0 56px; padding: 0; overflow: hidden; align-self: stretch; margin-left: -24px; margin-right: -24px; }
