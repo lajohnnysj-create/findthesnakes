@@ -3289,7 +3289,7 @@
             </div>
 
             <!-- Avatar + identity -->
-            <div class="bio-section">
+            <div class="bio-section" id="bio-section-profile">
               <button type="button" class="bio-section-header bio-collapsible" onclick="toggleBioSection('profile')" aria-expanded="true">
                 <div class="bio-section-label">Profile</div>
                 <svg class="bio-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
@@ -3472,7 +3472,7 @@
           </div>
 
           <!-- Right: Live Preview (sticky) -->
-          <div style="position:sticky;top:100px;">
+          <div id="bio-preview-col" style="position:sticky;top:100px;">
             <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;margin-bottom:10px;text-align:center;">Live preview</div>
             <div id="bio-preview-frame" style="background:var(--surface2);border:1px solid var(--border);border-radius:24px;padding:14px;height:640px;overflow:hidden;">
               <iframe id="bio-preview-iframe" srcdoc="" style="width:100%;height:100%;border:none;border-radius:16px;background:var(--bg);"></iframe>
@@ -3544,7 +3544,7 @@
             </div>
 
             <!-- Profile (collapsible) -->
-            <div class="mk-section">
+            <div class="mk-section" id="mk-section-profile">
               <button type="button" class="mk-section-header mk-collapsible" onclick="toggleMKSection('profile')" aria-expanded="true">
                 <div class="mk-section-label">Profile</div>
                 <svg class="mk-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
@@ -3738,7 +3738,7 @@
           </div>
 
           <!-- PREVIEW COLUMN -->
-          <div style="position:sticky;top:100px;">
+          <div id="mk-preview-col" style="position:sticky;top:100px;">
             <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;margin-bottom:10px;text-align:center;">Live preview</div>
             <div style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:12px;height:720px;overflow:hidden;">
               <iframe id="mk-preview-iframe" srcdoc="" style="width:100%;height:100%;border:none;border-radius:12px;background:var(--bg);"></iframe>
@@ -5496,6 +5496,61 @@ function restoreBioCollapsed() {
     if (btn) btn.setAttribute('aria-expanded', 'false');
   });
 }
+
+// =====================================================
+// Mobile Preview Relocation
+// Moves preview to sit right after Profile on narrow screens
+// =====================================================
+let bioPreviewRelocated = false;
+let mkPreviewRelocated = false;
+
+function relocatePreviewForMobile() {
+  const isMobile = window.innerWidth <= 1100;
+
+  // Bio preview
+  const bioPreview = document.getElementById('bio-preview-col');
+  const bioProfile = document.getElementById('bio-section-profile');
+  const bioFormCol = bioProfile?.parentElement;
+  if (bioPreview && bioProfile && bioFormCol) {
+    if (isMobile && !bioPreviewRelocated) {
+      // Insert preview right after Profile section
+      bioProfile.insertAdjacentElement('afterend', bioPreview);
+      bioPreview.style.position = 'static';
+      bioPreviewRelocated = true;
+    } else if (!isMobile && bioPreviewRelocated) {
+      // Move back to grid as second column
+      const bioGrid = bioFormCol.parentElement;
+      if (bioGrid) {
+        bioGrid.appendChild(bioPreview);
+        bioPreview.style.position = 'sticky';
+      }
+      bioPreviewRelocated = false;
+    }
+  }
+
+  // MK preview
+  const mkPreview = document.getElementById('mk-preview-col');
+  const mkProfile = document.getElementById('mk-section-profile');
+  const mkFormCol = mkProfile?.parentElement;
+  if (mkPreview && mkProfile && mkFormCol) {
+    if (isMobile && !mkPreviewRelocated) {
+      mkProfile.insertAdjacentElement('afterend', mkPreview);
+      mkPreview.style.position = 'static';
+      mkPreviewRelocated = true;
+    } else if (!isMobile && mkPreviewRelocated) {
+      const mkGrid = mkFormCol.parentElement;
+      if (mkGrid) {
+        mkGrid.appendChild(mkPreview);
+        mkPreview.style.position = 'sticky';
+      }
+      mkPreviewRelocated = false;
+    }
+  }
+}
+
+// Run on load and resize
+window.addEventListener('resize', relocatePreviewForMobile);
+document.addEventListener('DOMContentLoaded', () => setTimeout(relocatePreviewForMobile, 100));
 
 function initBioTool() {
   if (bioInited) {
