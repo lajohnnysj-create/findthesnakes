@@ -22,6 +22,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
 <script>
+  // Apply saved theme immediately to prevent flash
+  if (localStorage.getItem('ryxa-theme') === 'light') document.body.classList.add('light-mode');
   // Load PDF.js worker when needed
   window.__pdfjsReady = new Promise((resolve) => {
     window.__resolvePdfjs = resolve;
@@ -52,6 +54,47 @@
     --topbar-height: 60px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* Light mode overrides */
+  body.light-mode {
+    --bg: #ffffff;
+    --surface: #f5f5f7;
+    --surface2: #ebebef;
+    --surface3: #e0e0e6;
+    --border: rgba(0,0,0,0.1);
+    --border-hover: rgba(0,0,0,0.2);
+    --accent-glow: rgba(124,58,237,0.15);
+    --text: #1a1a2e;
+    --muted: #5c5c72;
+    --muted2: #6e6e82;
+  }
+  /* Keep sidebar and topbar dark in light mode */
+  body.light-mode .sidebar {
+    background: #0f0f1a;
+    border-color: rgba(255,255,255,0.07);
+  }
+  body.light-mode .sidebar-item-label,
+  body.light-mode .sidebar-logo-text,
+  body.light-mode .sidebar-user-email,
+  body.light-mode .sidebar-section-label { color: #f0eef8; }
+  body.light-mode .sidebar-item { color: #bdbcd0; }
+  body.light-mode .sidebar-item:hover,
+  body.light-mode .sidebar-item.active { color: #f0eef8; }
+  body.light-mode .sidebar-item.active { background: rgba(124,58,237,0.12); }
+  body.light-mode .sidebar-user-tier { color: #a855f7; }
+  body.light-mode .sidebar-settings,
+  body.light-mode .sidebar-signout { color: #bdbcd0; border-color: rgba(255,255,255,0.07); }
+  body.light-mode .sidebar-bottom { border-color: rgba(255,255,255,0.07); }
+  body.light-mode .topbar {
+    background: #0f0f1a;
+    border-color: rgba(255,255,255,0.07);
+  }
+  body.light-mode .topbar-title { color: #f0eef8; }
+  /* Settings modal stays dark */
+  body.light-mode .settings-modal-inner { background: #0f0f1a !important; color: #f0eef8; }
+  /* Light mode toggle track active state */
+  body.light-mode #settings-theme-track { background: var(--accent); border-color: var(--accent); }
+  body.light-mode #settings-theme-thumb { transform: translateX(20px); }
   html { scroll-behavior: smooth; }
   body { font-family: "DM Sans", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; }
 
@@ -1643,7 +1686,7 @@
   .welcome-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - var(--topbar-height)); text-align: center; padding: 40px 24px; }
   .welcome-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25); border-radius: 100px; padding: 7px 18px; font-size: 12px; color: #c4b5fd; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 24px; }
   .welcome-screen h1 { font-family: "Syne", sans-serif; font-size: clamp(28px, 5vw, 48px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
-  .welcome-screen h1 span { background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .welcome-screen h1 span, #welcome-name { background: linear-gradient(135deg, #a78bfa, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .welcome-screen p { color: var(--muted); font-size: 16px; line-height: 1.7; max-width: 480px; margin-bottom: 32px; }
 
   /* Dashboard Stats Boxes */
@@ -3305,6 +3348,21 @@
       <div id="settings-stripe-msg" style="display:none;margin-top:8px;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.5;"></div>
     </div>
 
+    <!-- Theme Toggle -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;">Appearance</div>
+          <div style="font-size:11px;color:var(--muted);">Switch between dark and light mode</div>
+        </div>
+        <label style="position:relative;width:44px;height:24px;cursor:pointer;flex-shrink:0;">
+          <input type="checkbox" id="settings-theme-toggle" onchange="toggleThemeMode()" style="display:none;">
+          <div id="settings-theme-track" style="position:absolute;inset:0;background:var(--surface3);border:1px solid var(--border-hover);border-radius:12px;transition:all 0.3s;"></div>
+          <div id="settings-theme-thumb" style="position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:all 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>
+        </label>
+      </div>
+    </div>
+
     <!-- Help -->
     <div style="display:flex;gap:10px;">
       <a href="faq.html" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted);text-decoration:none;text-align:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--border-hover)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">FAQ</a>
@@ -3453,9 +3511,7 @@
     <!-- WELCOME SCREEN -->
     <div id="tool-welcome" style="display:block;">
       <div class="welcome-screen">
-        <div class="welcome-badge" id="welcome-badge">Creator Tools</div>
-        <h1>Welcome back, creator. <span>Let's get to work.</span></h1>
-        <p>Your creator toolkit is ready. Choose a tool from the sidebar or pick one below to get started.</p>
+        <h1>Welcome back, <span id="welcome-name">creator</span>.</h1>
 
         <!-- Time Range Controls -->
         <div class="dash-range-bar" id="dash-range-bar">
@@ -5330,6 +5386,15 @@ async function setUser(user) {
   if (email) email.textContent = user.email;
   if (avatar) avatar.textContent = user.email[0].toUpperCase();
   await fetchTier(user.id);
+
+  // Set welcome name from profile
+  try {
+    const { data: profile } = await sb.from('profiles').select('username').eq('user_id', user.id).maybeSingle();
+    if (welcomeName) {
+      const name = profile?.username || 'creator';
+      welcomeName.textContent = name;
+    }
+  } catch (e) { /* keep default */ }
 
   // Post-signup checkout: if user arrived with a plan intent from pricing page
   try {
@@ -10177,9 +10242,17 @@ if (urlParams.get('payment') === 'success') {
 
 initAuth();
 
+function toggleThemeMode() {
+  const isLight = document.body.classList.toggle('light-mode');
+  localStorage.setItem('ryxa-theme', isLight ? 'light' : 'dark');
+}
+
 function openSettingsModal() {
   const modal = document.getElementById('settings-modal');
   if (!modal) return;
+  // Sync theme toggle state
+  const themeToggle = document.getElementById('settings-theme-toggle');
+  if (themeToggle) themeToggle.checked = document.body.classList.contains('light-mode');
   const pro = isPro();
   if (currentUser) {
     document.getElementById('settings-avatar').textContent = currentUser.email[0].toUpperCase();
