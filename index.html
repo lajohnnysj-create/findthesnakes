@@ -197,25 +197,28 @@
       width: 120px;
       max-height: 240px;
       border-radius: 10px;
-      left: auto;
-      right: 20px;
+      left: 50%;
+      right: auto;
       top: 50%;
     }
     .hero-phone::before {
-      transform: translateY(-50%) perspective(600px) rotateY(-14deg) rotateX(4deg) translateX(8px) translateY(-6px);
+      transform: translate(-50%, -50%) perspective(600px) rotateY(-14deg) rotateX(4deg) translateX(12px) translateY(-6px);
+      z-index: 3;
     }
     .hero-phone::after {
-      transform: translateY(-50%) perspective(600px) rotateY(-8deg) rotateX(2deg) translateX(16px) translateY(-3px);
+      transform: translate(-50%, -50%) perspective(600px) rotateY(-8deg) rotateX(2deg) translateX(28px) translateY(-3px);
+      z-index: 2;
     }
     .hero-phone-ghost-3 {
       display: block;
       width: 120px;
       max-height: 240px;
       border-radius: 10px;
-      left: auto;
-      right: 20px;
+      left: 50%;
+      right: auto;
       top: 50%;
-      transform: translateY(-50%) perspective(600px) rotateY(-2deg) translateX(24px) translateY(0px);
+      transform: translate(-50%, -50%) perspective(600px) rotateY(-2deg) translateX(44px) translateY(0px);
+      z-index: 1;
     }
     .hero-phone-screen { height: 210px; border-radius: 10px; }
     .hero-phone-screen > div { transform: scale(0.55); transform-origin: top left; width: 182%; }
