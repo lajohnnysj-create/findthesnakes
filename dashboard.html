@@ -7996,6 +7996,8 @@ async function saveBio() {
         photoUrl: l.photoUrl || '',
         ...(l.isMediaKit ? { isMediaKit: true } : {}),
         ...(l.isHero ? { isHero: true } : {}),
+        ...(l.isHeader ? { isHeader: true } : {}),
+        ...(l.isCourse ? { isCourse: true, courseId: l.courseId, coursePrice: l.coursePrice || 0, courseCrossoutPrice: l.courseCrossoutPrice || 0 } : {}),
       }));
     const cleanVideos = bioState.videos
       .filter(v => (v.url || '').trim())
