@@ -1751,6 +1751,9 @@
   .dash-range-btn { padding: 6px 14px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; font-size: 12px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.15s; }
   .dash-range-btn:hover { border-color: rgba(124,58,237,0.4); color: var(--text); }
   .dash-range-btn.active { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(232,121,249,0.1)); border-color: rgba(124,58,237,0.5); color: #c4b5fd; }
+  .ana-range-btn { padding: 6px 14px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; font-size: 12px; font-weight: 500; font-family: "DM Sans", sans-serif; cursor: pointer; transition: all 0.15s; }
+  .ana-range-btn:hover { border-color: rgba(124,58,237,0.4); color: var(--text); }
+  .ana-range-btn.active { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(232,121,249,0.1)); border-color: rgba(124,58,237,0.5); color: #c4b5fd; }
   .dash-range-custom { display: flex; align-items: center; gap: 6px; padding: 5px 10px; background: transparent; border: 1px solid var(--border); border-radius: 8px; transition: all 0.15s; cursor: pointer; }
   .dash-range-custom:hover { border-color: rgba(124,58,237,0.4); }
   .dash-range-custom.active { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(232,121,249,0.1)); border-color: rgba(124,58,237,0.5); }
@@ -3392,6 +3395,11 @@
     <button class="sidebar-item" id="nav-deals" onclick="showTool('deals')">
       <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 12h18"/></svg></div>
       <span class="sidebar-item-label">Brand Deals <span style="font-size:9px;font-weight:600;letter-spacing:0.08em;color:var(--muted);vertical-align:middle;margin-left:2px;">CRM</span></span>
+      <span class="sidebar-item-badge max">MAX</span>
+    </button>
+    <button class="sidebar-item" id="nav-analytics" onclick="showTool('analytics')">
+      <div class="sidebar-item-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+      <span class="sidebar-item-label">Analytics</span>
       <span class="sidebar-item-badge max">MAX</span>
     </button>
     <button class="sidebar-item" id="nav-mediakit" onclick="showTool('mediakit')">
@@ -5751,6 +5759,88 @@
       </div>
     </div>
 
+    <!-- ANALYTICS (Creator Max) -->
+    <div id="tool-analytics" style="display:none;">
+      <div style="max-width:900px;">
+
+        <!-- Max upsell -->
+        <div id="analytics-upsell" style="display:none;text-align:center;padding:60px 24px;">
+          <div style="width:56px;height:56px;margin:0 auto 16px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);border-radius:14px;display:flex;align-items:center;justify-content:center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+          <h2 style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px;">Analytics</h2>
+          <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto;">See your page views, revenue trends, and sales breakdown across courses, coaching, and brand deals. Available on Creator Max.</p>
+          <button onclick="openSettingsToSubscription()" style="padding:12px 28px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.3);">Upgrade to Creator Max</button>
+        </div>
+
+        <!-- Analytics content (Max only) -->
+        <div id="analytics-content" style="display:none;">
+          <!-- Date range -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+            <h2 style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;letter-spacing:-0.5px;">Analytics</h2>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="ana-range-btn active" onclick="setAnalyticsRange(7,this)">7d</button>
+              <button class="ana-range-btn" onclick="setAnalyticsRange(14,this)">14d</button>
+              <button class="ana-range-btn" onclick="setAnalyticsRange(30,this)">30d</button>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <input type="date" id="ana-range-start" style="background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text);font-family:DM Sans,sans-serif;">
+                <span style="color:var(--muted);font-size:11px;">to</span>
+                <input type="date" id="ana-range-end" style="background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text);font-family:DM Sans,sans-serif;">
+                <button class="ana-range-btn" onclick="setAnalyticsCustomRange()">Go</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats boxes -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(232,121,249,0.1);border:1px solid rgba(232,121,249,0.25);display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e879f9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;">Page Views</span>
+              </div>
+              <div id="ana-views-total" style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#e879f9,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">—</div>
+              <div id="ana-views-sub" style="font-size:11px;color:var(--muted);margin-top:4px;">Loading...</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;">Revenue</span>
+              </div>
+              <div id="ana-revenue-total" style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#a78bfa,#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">—</div>
+              <div id="ana-revenue-sub" style="font-size:11px;color:var(--muted);margin-top:4px;">Loading...</div>
+            </div>
+          </div>
+
+          <!-- Main chart -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;margin-bottom:16px;">Trends</div>
+            <div style="display:flex;gap:16px;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:3px;background:#e879f9;border-radius:2px;"></div><span style="font-size:10px;color:var(--muted);">Page Views</span></div>
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:3px;background:#7c3aed;border-radius:2px;"></div><span style="font-size:10px;color:var(--muted);">Revenue</span></div>
+            </div>
+            <canvas id="ana-main-chart" style="width:100%;height:200px;"></canvas>
+          </div>
+
+          <!-- Mini charts -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);font-weight:600;margin-bottom:8px;">Courses</div>
+              <div id="ana-courses-total" style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px;">$0</div>
+              <canvas id="ana-courses-chart" style="width:100%;height:60px;"></canvas>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);font-weight:600;margin-bottom:8px;">Coaching</div>
+              <div id="ana-coaching-total" style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px;">$0</div>
+              <canvas id="ana-coaching-chart" style="width:100%;height:60px;"></canvas>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);font-weight:600;margin-bottom:8px;">Brand Deals</div>
+              <div id="ana-deals-total" style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px;">$0</div>
+              <canvas id="ana-deals-chart" style="width:100%;height:60px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -5800,7 +5890,8 @@ const toolTitles = {
   invoice: 'Invoice Generator',
   pdfsign: 'Sign PDF',
   scripts: 'Script Builder',
-  deals: 'Brand Deal CRM'
+  deals: 'Brand Deal CRM',
+  analytics: 'Analytics'
 };
 
 async function initAuth() {
@@ -6049,7 +6140,7 @@ function showTool(tool) {
     if (typeof resetPdfSign === 'function') resetPdfSign();
   }
   // Hide all tools
-  ['welcome','bio','courses','coaching','mediakit','grid','follower','image','qr','invoice','pdfsign','deals','scripts'].forEach(t => {
+  ['welcome','bio','courses','coaching','mediakit','grid','follower','image','qr','invoice','pdfsign','deals','scripts','analytics'].forEach(t => {
     const el = document.getElementById('tool-' + t);
     if (el) el.style.display = 'none';
     const nav = document.getElementById('nav-' + t);
@@ -6079,6 +6170,7 @@ function showTool(tool) {
   if (tool === 'grid') initGridTool();
   if (tool === 'pdfsign') initPdfSignTool();
   if (tool === 'scripts') initScriptsTool();
+  if (tool === 'analytics') initAnalyticsTool();
   if (tool === 'welcome') loadDashStats();
   // Close sidebar on mobile
   closeSidebar();
@@ -19182,6 +19274,223 @@ function faUpdateWhitelistTab() {
 
 function faShowError(msg) { const el = document.getElementById('fa-error-box'); el.textContent = '⚠ ' + msg; el.style.display = 'block'; }
 function faHideError() { const el = document.getElementById('fa-error-box'); if (el) el.style.display = 'none'; }
+
+// =====================================================
+// ANALYTICS
+// =====================================================
+let anaRangeDays = 7;
+let anaCustomStart = null;
+let anaCustomEnd = null;
+
+function getAnaDateRange() {
+  if (anaCustomStart && anaCustomEnd) return { start: anaCustomStart, end: anaCustomEnd };
+  const end = new Date(); const start = new Date();
+  start.setDate(start.getDate() - anaRangeDays + 1);
+  return { start: start.toISOString().slice(0,10), end: end.toISOString().slice(0,10) };
+}
+
+function setAnalyticsRange(days, btn) {
+  anaRangeDays = days;
+  anaCustomStart = null; anaCustomEnd = null;
+  document.querySelectorAll('.ana-range-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  loadAnalyticsData();
+}
+
+function setAnalyticsCustomRange() {
+  const s = document.getElementById('ana-range-start').value;
+  const e = document.getElementById('ana-range-end').value;
+  if (!s || !e || s > e) return;
+  anaCustomStart = s; anaCustomEnd = e;
+  document.querySelectorAll('.ana-range-btn').forEach(b => b.classList.remove('active'));
+  loadAnalyticsData();
+}
+
+function initAnalyticsTool() {
+  const isMax = userTier === 'max';
+  document.getElementById('analytics-upsell').style.display = isMax ? 'none' : 'block';
+  document.getElementById('analytics-content').style.display = isMax ? 'block' : 'none';
+  if (isMax) loadAnalyticsData();
+}
+
+async function loadAnalyticsData() {
+  if (!currentUser) return;
+  const { start, end } = getAnaDateRange();
+  const dayCount = anaCustomStart ? Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1 : anaRangeDays;
+
+  // Load page views
+  const viewsRes = await sb.rpc('get_page_view_stats', { p_start_date: start, p_end_date: end });
+  const vTotal = document.getElementById('ana-views-total');
+  const vSub = document.getElementById('ana-views-sub');
+  let viewsDaily = [];
+  if (!viewsRes.error && viewsRes.data) {
+    const v = viewsRes.data;
+    vTotal.textContent = (v.total || 0).toLocaleString();
+    const avg = v.total > 0 ? Math.round(v.total / dayCount) : 0;
+    vSub.textContent = '~' + avg + '/day avg over ' + dayCount + ' days';
+    viewsDaily = v.daily || [];
+  } else {
+    vTotal.textContent = '—'; vSub.textContent = 'Could not load';
+  }
+
+  // Load revenue
+  const revRes = await sb.rpc('get_revenue_stats', { p_start_date: start, p_end_date: end });
+  const rTotal = document.getElementById('ana-revenue-total');
+  const rSub = document.getElementById('ana-revenue-sub');
+  let revDaily = [];
+  let bySource = {};
+  if (!revRes.error && revRes.data) {
+    const r = revRes.data;
+    rTotal.textContent = formatDashUSD(r.total_cents || 0);
+    rSub.textContent = (r.total_cents > 0 ? Object.keys(r.by_source || {}).length + ' source(s)' : 'No revenue') + ' over ' + dayCount + ' days';
+    revDaily = r.daily || [];
+    bySource = r.by_source || {};
+  } else {
+    rTotal.textContent = '—'; rSub.textContent = 'Could not load';
+  }
+
+  // Mini chart totals
+  document.getElementById('ana-courses-total').textContent = formatDashUSD(bySource.course || 0);
+  document.getElementById('ana-coaching-total').textContent = formatDashUSD(bySource.coaching || 0);
+  document.getElementById('ana-deals-total').textContent = formatDashUSD(bySource.brand_deal || 0);
+
+  // Render main chart (dual line)
+  renderAnaLineChart('ana-main-chart', viewsDaily, revDaily, dayCount);
+
+  // Render mini charts
+  renderAnaMiniChart('ana-courses-chart', revDaily, 'course', '#a78bfa');
+  renderAnaMiniChart('ana-coaching-chart', revDaily, 'coaching', '#e879f9');
+  renderAnaMiniChart('ana-deals-chart', revDaily, 'brand_deal', '#7c3aed');
+}
+
+function renderAnaLineChart(canvasId, viewsDaily, revDaily, dayCount) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.offsetWidth; const h = canvas.offsetHeight;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  // Build arrays padded to dayCount
+  const vVals = new Array(dayCount).fill(0);
+  const rVals = new Array(dayCount).fill(0);
+  const { start } = getAnaDateRange();
+  const startDate = new Date(start + 'T00:00:00');
+
+  (viewsDaily || []).forEach(d => {
+    const idx = Math.round((new Date(d.date + 'T00:00:00') - startDate) / 86400000);
+    if (idx >= 0 && idx < dayCount) vVals[idx] = d.count || 0;
+  });
+  (revDaily || []).forEach(d => {
+    const idx = Math.round((new Date(d.date + 'T00:00:00') - startDate) / 86400000);
+    if (idx >= 0 && idx < dayCount) rVals[idx] = (d.cents || 0) / 100;
+  });
+
+  const pad = { top: 10, right: 10, bottom: 20, left: 10 };
+  const cw = w - pad.left - pad.right;
+  const ch = h - pad.top - pad.bottom;
+
+  function drawLine(vals, color) {
+    const maxV = Math.max(...vals, 1);
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    vals.forEach((v, i) => {
+      const x = pad.left + (i / Math.max(vals.length - 1, 1)) * cw;
+      const y = pad.top + ch - (v / maxV) * ch;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    // Fill area
+    const maxV2 = Math.max(...vals, 1);
+    ctx.lineTo(pad.left + cw, pad.top + ch);
+    ctx.lineTo(pad.left, pad.top + ch);
+    ctx.closePath();
+    ctx.fillStyle = color.replace('1)', '0.06)').replace('rgb', 'rgba');
+    ctx.globalAlpha = 0.3;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 4; i++) {
+    const y = pad.top + (i / 3) * ch;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cw, y); ctx.stroke();
+  }
+
+  // Date labels
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '9px DM Sans, sans-serif';
+  ctx.textAlign = 'center';
+  const labelCount = Math.min(dayCount, 7);
+  for (let i = 0; i < labelCount; i++) {
+    const idx = Math.round(i * (dayCount - 1) / Math.max(labelCount - 1, 1));
+    const d = new Date(startDate); d.setDate(d.getDate() + idx);
+    const label = (d.getMonth() + 1) + '/' + d.getDate();
+    const x = pad.left + (idx / Math.max(dayCount - 1, 1)) * cw;
+    ctx.fillText(label, x, h - 4);
+  }
+
+  drawLine(vVals, 'rgba(232,121,249,1)');
+  drawLine(rVals, 'rgba(124,58,237,1)');
+}
+
+function renderAnaMiniChart(canvasId, revDaily, sourceKey, color) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.offsetWidth; const h = canvas.offsetHeight;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  const { start } = getAnaDateRange();
+  const startDate = new Date(start + 'T00:00:00');
+  const dayCount = anaCustomStart ? Math.ceil((new Date(getAnaDateRange().end) - startDate) / 86400000) + 1 : anaRangeDays;
+  const vals = new Array(dayCount).fill(0);
+
+  // Revenue daily doesn't break down by source in the RPC, so use total for now
+  // If by_source_daily is available, use it; otherwise show total revenue as proxy
+  (revDaily || []).forEach(d => {
+    const idx = Math.round((new Date(d.date + 'T00:00:00') - startDate) / 86400000);
+    if (idx >= 0 && idx < dayCount) vals[idx] = (d.cents || 0) / 100;
+  });
+
+  const maxV = Math.max(...vals, 1);
+  const pad = 4;
+  const cw = w - pad * 2; const ch = h - pad * 2;
+
+  // Area fill
+  ctx.beginPath();
+  vals.forEach((v, i) => {
+    const x = pad + (i / Math.max(vals.length - 1, 1)) * cw;
+    const y = pad + ch - (v / maxV) * ch;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(pad + cw, pad + ch);
+  ctx.lineTo(pad, pad + ch);
+  ctx.closePath();
+  ctx.fillStyle = color + '15';
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.lineJoin = 'round';
+  vals.forEach((v, i) => {
+    const x = pad + (i / Math.max(vals.length - 1, 1)) * cw;
+    const y = pad + ch - (v / maxV) * ch;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
 </script>
 
 <script src="/cookie-banner.js"></script>
