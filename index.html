@@ -1022,9 +1022,9 @@
       <div style="width:12px;height:12px;border-radius:50%;background:#28c840;"></div>
       <div style="flex:1;text-align:center;font-size:12px;color:rgba(255,255,255,0.5);font-family:monospace;">ryxa.io/dashboard</div>
     </div>
-    <div style="position:relative;min-height:380px;">
+    <div style="position:relative;min-height:380px;display:flex;">
       <canvas id="binary-rain" style="position:absolute;inset:0;width:100%;height:100%;opacity:0.15;pointer-events:none;"></canvas>
-      <div style="position:relative;z-index:2;padding:28px 24px;font-family:'DM Mono',monospace,monospace;font-size:13px;line-height:2;overflow:hidden;">
+      <div style="position:relative;z-index:2;padding:28px 24px;font-family:'DM Mono',monospace,monospace;font-size:13px;line-height:2;overflow:hidden;flex:1;">
         <div id="terminal-lines">
           <div style="color:#a78bfa;">$ ryxa init</div>
           <div style="color:#e2e0f0;"><span style="color:#4ade80;">✓</span> Link in Bio created</div>
@@ -1039,6 +1039,15 @@
           <div style="color:#e2e0f0;"><span style="color:#fbbf24;">→</span> $4,200 revenue this month</div>
           <div style="color:#a78bfa;margin-top:4px;">$ <span id="terminal-cursor" style="display:inline-block;width:8px;height:16px;background:#a78bfa;vertical-align:middle;animation:blink 1s step-end infinite;"></span></div>
         </div>
+      </div>
+      <!-- Revenue counter panel -->
+      <div id="rev-panel" style="position:relative;z-index:2;width:200px;flex-shrink:0;border-left:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;gap:12px;">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);font-weight:600;">Revenue</div>
+        <div id="rev-counter" style="font-family:'Syne',sans-serif;font-size:36px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#a78bfa,#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">$0</div>
+        <div style="width:100%;height:40px;position:relative;overflow:hidden;border-radius:8px;">
+          <canvas id="rev-sparkline" style="width:100%;height:100%;"></canvas>
+        </div>
+        <div id="rev-label" style="font-size:10px;color:rgba(255,255,255,0.3);text-align:center;">this month</div>
       </div>
     </div>
   </div>
@@ -1090,7 +1099,107 @@
     }
     setTimeout(draw, 500);
   })();
+
+  // Revenue counter animation
+  (function() {
+    var el = document.getElementById('rev-counter');
+    var sparkCanvas = document.getElementById('rev-sparkline');
+    if (!el || !sparkCanvas) return;
+    var sCtx = sparkCanvas.getContext('2d');
+    var points = [];
+    var maxPoints = 30;
+
+    function randomRange(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function runCycle() {
+      var startVal = randomRange(120, 280);
+      var endVal = randomRange(550, 850);
+      var duration = randomRange(4000, 6000);
+      var startTime = performance.now();
+      points = [];
+
+      function tick(now) {
+        var elapsed = now - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic for natural feel
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = startVal + (endVal - startVal) * eased;
+        // Add small random jitter
+        var jitter = (Math.random() - 0.5) * 8;
+        var display = Math.round(current + jitter);
+        el.textContent = '$' + display.toLocaleString();
+
+        // Sparkline
+        points.push(current);
+        if (points.length > maxPoints) points.shift();
+        drawSparkline();
+
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          // Hold at peak briefly, then restart
+          setTimeout(function() {
+            el.style.transition = 'opacity 0.4s';
+            el.style.opacity = '0.3';
+            setTimeout(function() {
+              el.style.opacity = '1';
+              runCycle();
+            }, 600);
+          }, randomRange(1500, 3000));
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function drawSparkline() {
+      var w = sparkCanvas.offsetWidth;
+      var h = sparkCanvas.offsetHeight;
+      var dpr = window.devicePixelRatio || 1;
+      sparkCanvas.width = w * dpr;
+      sparkCanvas.height = h * dpr;
+      sCtx.scale(dpr, dpr);
+      sCtx.clearRect(0, 0, w, h);
+      if (points.length < 2) return;
+      var min = Math.min.apply(null, points);
+      var max = Math.max.apply(null, points);
+      var range = max - min || 1;
+
+      // Area fill
+      sCtx.beginPath();
+      points.forEach(function(v, i) {
+        var x = (i / (maxPoints - 1)) * w;
+        var y = h - ((v - min) / range) * (h - 4) - 2;
+        if (i === 0) sCtx.moveTo(x, y); else sCtx.lineTo(x, y);
+      });
+      var lastX = ((points.length - 1) / (maxPoints - 1)) * w;
+      sCtx.lineTo(lastX, h);
+      sCtx.lineTo(0, h);
+      sCtx.closePath();
+      sCtx.fillStyle = 'rgba(167,139,250,0.08)';
+      sCtx.fill();
+
+      // Line
+      sCtx.beginPath();
+      points.forEach(function(v, i) {
+        var x = (i / (maxPoints - 1)) * w;
+        var y = h - ((v - min) / range) * (h - 4) - 2;
+        if (i === 0) sCtx.moveTo(x, y); else sCtx.lineTo(x, y);
+      });
+      sCtx.strokeStyle = '#a78bfa';
+      sCtx.lineWidth = 1.5;
+      sCtx.lineJoin = 'round';
+      sCtx.stroke();
+    }
+
+    setTimeout(runCycle, 1500);
+  })();
   </script>
+
+  <style>
+    @media (max-width:600px) {
+      #rev-panel { display:none !important; }
+    }
+  </style>
 </section>
 
 <section class="features-section">
