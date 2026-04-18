@@ -7522,13 +7522,13 @@ function renderLinkExpanded(link, dragSvg) {
       </div>
       ${coverHtml}
       <input type="text" value="${escapeHtml(link.title || '')}" readonly style="opacity:0.6;cursor:default;" aria-label="Course title">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-        <div style="flex:1;padding:9px 12px;background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;font-size:13px;color:var(--text);line-height:1;">Price: ${priceDisplay}</div>
-        <div style="flex:1;display:flex;align-items:center;gap:0;background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;overflow:hidden;height:37px;">
-          <span style="padding:0 0 0 10px;font-size:11px;color:var(--muted);white-space:nowrap;line-height:1;">Crossout $</span>
+      <div style="display:flex;align-items:stretch;gap:8px;margin-bottom:6px;height:36px;">
+        <div style="flex:1;display:flex;align-items:center;background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;padding:0 12px;font-size:13px;color:var(--text);">Price: ${priceDisplay}</div>
+        <div style="flex:1;display:flex;align-items:center;background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;overflow:hidden;">
+          <span style="padding:0 0 0 10px;font-size:11px;color:var(--muted);white-space:nowrap;">Crossout $</span>
           <input type="text" inputmode="decimal" value="${crossoutVal}" placeholder="99.99"
             oninput="updateLinkField(${link._id},'courseCrossoutPrice',Math.round(parseFloat(this.value||0)*100))"
-            aria-label="Crossout price" style="flex:1;background:transparent;border:none;padding:0 8px 0 2px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;height:100%;line-height:1;">
+            aria-label="Crossout price" style="flex:1;background:transparent;border:none;padding:0 8px 0 2px;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;">
         </div>
       </div>
       <button type="button" onclick="saveLinkRow(${link._id})"
