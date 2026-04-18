@@ -199,6 +199,12 @@
     <p>You haven't enrolled in any courses yet.</p>
     <p style="margin-top:8px;"><a href="/" style="color:var(--text);text-decoration:underline;">Browse Ryxa</a> to find courses from creators.</p>
   </div>
+
+  <!-- My Bookings -->
+  <div id="dash-bookings-section" style="display:none;margin-top:40px;">
+    <h2 class="dash-title" style="font-size:22px;margin-bottom:16px;">My Bookings</h2>
+    <div id="dash-bookings" style="display:flex;flex-direction:column;gap:12px;"></div>
+  </div>
 </div>
 
 <!-- Course Viewer -->
@@ -460,6 +466,69 @@ async function loadDashboard() {
   }
 
   renderDashboard();
+  await loadBookings();
+}
+
+async function loadBookings() {
+  var { data: bookings } = await sb
+    .from('coaching_bookings')
+    .select('*, coaching_services(*)')
+    .eq('user_id', currentUser.id)
+    .order('booked_at', { ascending: false });
+
+  bookings = bookings || [];
+
+  // Load creator names
+  for (var i = 0; i < bookings.length; i++) {
+    var b = bookings[i];
+    if (!b.coaching_services) continue;
+    var { data: creatorProfile } = await sb.from('profiles').select('username').eq('user_id', b.coaching_services.user_id).maybeSingle();
+    b._creatorName = creatorProfile?.username || 'Creator';
+  }
+
+  renderBookings(bookings);
+}
+
+function renderBookings(bookings) {
+  var section = document.getElementById('dash-bookings-section');
+  var container = document.getElementById('dash-bookings');
+
+  if (!bookings || bookings.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  container.innerHTML = bookings.map(function(b) {
+    var c = b.coaching_services;
+    if (!c) return '';
+    var date = new Date(b.booked_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    var priceText = b.amount_paid_cents > 0 ? '$' + (b.amount_paid_cents / 100).toFixed(2) : 'Free';
+
+    var actionHtml = '';
+    if (c.booking_type === 'calendly' && c.calendly_url) {
+      actionHtml = '<a href="' + escapeHtml(c.calendly_url) + '" target="_blank" style="padding:6px 14px;background:var(--btn-bg);color:var(--btn-text);border:none;border-radius:6px;font-size:12px;font-weight:500;font-family:DM Sans,sans-serif;text-decoration:none;flex-shrink:0;">Schedule</a>';
+    } else {
+      actionHtml = '<span style="font-size:11px;color:var(--muted);flex-shrink:0;">Creator will contact you</span>';
+    }
+
+    var coverHtml = '';
+    if (c.cover_image_path) {
+      var coverUrl = sb.storage.from('coaching-covers').getPublicUrl(c.cover_image_path).data.publicUrl;
+      coverHtml = '<img src="' + escapeHtml(coverUrl) + '" alt="" style="width:56px;height:38px;object-fit:cover;border-radius:6px;flex-shrink:0;">';
+    } else {
+      coverHtml = '<div style="width:56px;height:38px;border-radius:6px;background:var(--surface);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>';
+    }
+
+    return '<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">'
+      + coverHtml
+      + '<div style="flex:1;min-width:0;">'
+      + '<div style="font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(c.title) + '</div>'
+      + '<div style="font-size:12px;color:var(--muted);margin-top:2px;">by ' + escapeHtml(b._creatorName) + ' · ' + date + ' · ' + priceText + '</div>'
+      + '</div>'
+      + actionHtml
+      + '</div>';
+  }).join('');
 }
 
 function renderDashboard() {
