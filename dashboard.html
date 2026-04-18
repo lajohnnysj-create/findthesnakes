@@ -12399,14 +12399,9 @@ function showCourseMsg(type, msg) {
 }
 
 function generateSlug(text) {
-  var base = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
-  // Append creator username
-  var username = '';
-  var usernameEl = document.getElementById('bio-username');
-  if (usernameEl && usernameEl.value) { username = usernameEl.value.trim().toLowerCase(); }
-  if (!username && currentUser) { username = currentUser.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]+/g, ''); }
-  if (username && base) return (base + '-' + username).slice(0, 80);
-  return base;
+  var base = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 68);
+  var rand = Math.random().toString(36).slice(2, 6);
+  return base ? (base + '-' + rand).slice(0, 80) : '';
 }
 
 // Auto-generate slug from title (only for new courses — slug is locked once saved)
