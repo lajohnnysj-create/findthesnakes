@@ -843,6 +843,7 @@ function validImageUrl(u) {
       '/storage/v1/object/public/bio-photos/',
       '/storage/v1/object/public/media-kit-photos/',
       '/storage/v1/object/public/bio-backgrounds/',
+      '/storage/v1/object/public/course-covers/',
     ];
     if (!allowedBuckets.some(b => url.pathname.includes(b))) return null;
     return url.toString();
@@ -1209,6 +1210,7 @@ function render(profile, bio, userTier) {
   const isPaid = profile.tier === 'monthly' || profile.tier === 'max';
   const showBanner = !isPaid || bio.show_branding !== false;
   const banner = showBanner ? `<a class="brand-banner" href="https://www.ryxa.io"><img src="https://www.ryxa.io/logo.png" alt="" class="brand-banner-logo"><span>Get your free link-in-bio at <strong>Ryxa</strong></span></a>` : '';
+  if (showBanner) document.body.style.paddingBottom = '80px';
 
   const isHeroMode = bio.avatar_display === 'hero' && validImageUrl(bio.avatar_url) && isMaxTier;
 
