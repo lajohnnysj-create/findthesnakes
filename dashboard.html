@@ -4110,6 +4110,13 @@
             <div id="course-revenue" style="font-size:13px;color:var(--muted);margin-top:4px;"></div>
           </div>
 
+          <!-- Completion Message -->
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
+            <h3 style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;margin-bottom:6px;">Completion Message</h3>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Shown to students after they finish the last lesson. Thank them, share next steps, or promote another course.</p>
+            <textarea id="course-completion-msg" placeholder="Congratulations on finishing the course! Here's what to do next..." maxlength="1000" rows="4" aria-label="Completion message" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+          </div>
+
           <!-- Danger zone -->
           <div id="course-danger-zone" style="display:none;border-top:1px solid var(--border);padding-top:20px;margin-top:20px;">
             <button id="course-delete-btn" onclick="deleteCourse()" style="padding:8px 16px;background:transparent;border:1px solid rgba(239,68,68,0.4);color:#ef4444;border-radius:8px;font-size:12px;font-family:DM Sans,sans-serif;cursor:pointer;">Delete Course</button>
@@ -12320,6 +12327,7 @@ async function openCourseEditor(courseId) {
   document.getElementById('course-title-input').value = '';
   document.getElementById('course-slug-input').value = '';
   document.getElementById('course-desc-input').value = '';
+  document.getElementById('course-completion-msg').value = '';
   document.getElementById('course-price-input').value = '';
   document.getElementById('course-cover-preview').style.display = 'none';
   document.getElementById('course-cover-file').value = '';
@@ -12339,6 +12347,7 @@ async function openCourseEditor(courseId) {
     document.getElementById('course-slug-input').value = course.slug || '';
     document.getElementById('course-slug-notice').textContent = 'This URL is permanently locked and cannot be changed.';
     document.getElementById('course-desc-input').value = course.description || '';
+    document.getElementById('course-completion-msg').value = course.completion_message || '';
     document.getElementById('course-price-input').value = course.price_cents ? (course.price_cents / 100).toString() : '';
     document.getElementById('course-danger-zone').style.display = 'block';
 
@@ -12448,6 +12457,7 @@ async function saveCourse() {
   const title = document.getElementById('course-title-input').value.trim();
   const slug = document.getElementById('course-slug-input').value.trim();
   const description = document.getElementById('course-desc-input').value.trim();
+  const completionMessage = document.getElementById('course-completion-msg').value.trim();
   const priceStr = document.getElementById('course-price-input').value;
   const priceCents = Math.round(parseFloat(priceStr || '0') * 100);
 
@@ -12472,6 +12482,7 @@ async function saveCourse() {
     const payload = {
       title,
       description,
+      completion_message: completionMessage,
       price_cents: priceCents,
       updated_at: new Date().toISOString()
     };
