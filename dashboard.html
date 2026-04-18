@@ -4235,7 +4235,20 @@
           <!-- Description -->
           <div style="margin-bottom:16px;">
             <label for="coaching-desc-input" style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Description</label>
-            <textarea id="coaching-desc-input" placeholder="Describe what the buyer will get. What will you cover? How long is the session? What should they prepare?" maxlength="3000" rows="5" aria-label="Service description" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            <textarea id="coaching-desc-input" placeholder="Describe what the buyer will get. What will you cover? What should they prepare?" maxlength="3000" rows="5" aria-label="Service description" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+          </div>
+
+          <!-- Duration -->
+          <div style="margin-bottom:16px;">
+            <label for="coaching-duration-input" style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Session Duration</label>
+            <select id="coaching-duration-input" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg width=&quot;12&quot; height=&quot;12&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23888&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><polyline points=&quot;6 9 12 15 18 9&quot;/></svg>');background-repeat:no-repeat;background-position:right 16px center;">
+              <option value="15">15 minutes</option>
+              <option value="30" selected>30 minutes</option>
+              <option value="45">45 minutes</option>
+              <option value="60">1 hour</option>
+              <option value="90">1.5 hours</option>
+              <option value="120">2 hours</option>
+            </select>
           </div>
 
           <!-- Cover Image -->
@@ -12679,6 +12692,7 @@ function openCoachingEditor(coachingId) {
   document.getElementById('coaching-desc-input').value = '';
   document.getElementById('coaching-price-input').value = '';
   document.getElementById('coaching-calendly-input').value = '';
+  document.getElementById('coaching-duration-input').value = '30';
   document.getElementById('coaching-cover-preview').style.display = 'none';
   document.getElementById('coaching-cover-img').src = '';
   var uploadBtn = document.getElementById('coaching-cover-upload-btn');
@@ -12698,6 +12712,7 @@ function openCoachingEditor(coachingId) {
     document.getElementById('coaching-desc-input').value = coaching.description || '';
     document.getElementById('coaching-price-input').value = coaching.price_cents ? (coaching.price_cents / 100).toString() : '';
     document.getElementById('coaching-calendly-input').value = coaching.calendly_url || '';
+    document.getElementById('coaching-duration-input').value = coaching.duration_minutes ? String(coaching.duration_minutes) : '30';
     setCoachingBookingType(coaching.booking_type || 'manual');
 
     if (coaching.cover_image_path) {
@@ -12839,10 +12854,13 @@ async function saveCoaching() {
       coverPath = path;
     }
 
+    const durationMinutes = parseInt(document.getElementById('coaching-duration-input').value) || 30;
+
     const payload = {
       title,
       description,
       price_cents: priceCents,
+      duration_minutes: durationMinutes,
       booking_type: coachingBookingType,
       calendly_url: coachingBookingType === 'calendly' ? calendlyUrl : '',
       updated_at: new Date().toISOString()
