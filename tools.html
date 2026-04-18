@@ -34,6 +34,11 @@
     --muted: #b4b2c8;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scrollbar-width: thin; scrollbar-color: rgba(168,85,247,0.4) #0a0a14; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #0a0a14; }
+  ::-webkit-scrollbar-thumb { background: rgba(168,85,247,0.4); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(168,85,247,0.6); }
   html { scroll-behavior: smooth; }
   body { font-family: "DM Sans", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
@@ -124,7 +129,6 @@
     <a href="index.html" class="active" style="color:var(--text);">Tools</a>
     <a href="pricing.html">Pricing</a>
     <a href="blog.html">Blog</a>
-    <a href="faq.html">FAQ</a>
     <a href="about.html">About</a>
   </div>
   <div class="nav-right">
@@ -142,7 +146,6 @@
     <a href="index.html">Tools</a>
     <a href="pricing.html">Pricing</a>
     <a href="blog.html">Blog</a>
-    <a href="faq.html">FAQ</a>
     <a href="about.html">About</a>
   </div>
   <div class="mobile-menu-bottom">
@@ -154,7 +157,7 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="hero-badge"><span class="hero-badge-dot"></span>10 tools, one workspace</div>
+    <div class="hero-badge"><span class="hero-badge-dot"></span>12 tools, one workspace</div>
     <h1>Every tool a creator<br>actually <span class="gradient-text">needs</span></h1>
     <p class="hero-tagline">From your link in bio to your brand deal CRM, Ryxa packs the day-to-day creator workflow into a single dashboard. Pick your tier, grab your tools, get back to creating.</p>
   </div>
@@ -253,19 +256,49 @@
   <a href="pricing.html" class="btn-secondary">See pricing</a>
 </section>
 
-<footer>
-  <div class="footer-content">
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="index.html">Tools</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="about.html">About</a>
-      <a href="faq.html">FAQ</a>
-      <a href="blog.html">Blog</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
+<footer style="border-top:1px solid var(--border);padding:60px 48px 32px;max-width:1200px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px;">
+    <div>
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:12px;"><img src="/logo.png" alt="" style="width:32px;height:32px;object-fit:contain;"> Ryxa</a>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;max-width:200px;">Ryxa makes earning money and professional branding easy.</p>
     </div>
-    <div class="footer-copy">© 2026 MRLA Media LLC · Ryxa</div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Tools</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="tools-link-in-bio.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Link in Bio</a>
+        <a href="tools-course-builder.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Course Builder</a>
+        <a href="tools-coaching.html" style="color:var(--muted);font-size:13px;text-decoration:none;">1:1 Coaching</a>
+        <a href="tools-brand-deal-crm.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Brand Deal CRM</a>
+        <a href="tools-media-kit.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Media Kit</a>
+        <a href="tools-script-builder.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Script Builder</a>
+        <a href="tools.html" style="color:var(--muted);font-size:13px;text-decoration:none;">View All Tools</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Product</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="pricing.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Pricing</a>
+        <a href="/learn/" style="color:var(--muted);font-size:13px;text-decoration:none;">Learning Hub</a>
+        <a href="blog.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Blog</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Company</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="about.html" style="color:var(--muted);font-size:13px;text-decoration:none;">About</a>
+        <a href="privacy.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Privacy</a>
+        <a href="terms.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Terms</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Support</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="mailto:hello@ryxa.io" style="color:var(--muted);font-size:13px;text-decoration:none;">hello@ryxa.io</a>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <p style="font-size:12px;color:var(--muted);">&copy; <span class="copy-year"></span> MRLA Media LLC &middot; Ryxa</p>
   </div>
 </footer>
 

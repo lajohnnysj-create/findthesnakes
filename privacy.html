@@ -188,11 +188,11 @@
           <a href="tools-invoice-generator.html" class="nav-tools-item"><div class="nav-tools-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></div><div class="nav-tools-item-content"><div class="nav-tools-item-title">Invoice Generator <span class="nav-tools-tier free">Free</span></div><div class="nav-tools-item-desc">Pro invoices for brand deals and collaborations</div></div></a>
           <a href="tools-sign-pdf.html" class="nav-tools-item"><div class="nav-tools-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M3 17l3-3 2 2 5-5 3 3"/></svg></div><div class="nav-tools-item-content"><div class="nav-tools-item-title">Sign PDF <span class="nav-tools-tier free">Free</span></div><div class="nav-tools-item-desc">Fill and sign PDFs — no printer, no scanner</div></div></a>
         </div>
-        <div class="nav-tools-footer"><div style="font-size:11px;color:#b4b2c8;">10 tools, one workspace</div><a href="tools.html" class="nav-tools-footer-link">View all tools <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></div>
+        <div class="nav-tools-footer"><div style="font-size:11px;color:#b4b2c8;">12 tools, one workspace</div><a href="tools.html" class="nav-tools-footer-link">View all tools <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></div>
       </div>
     </div>
     <a href="pricing.html">Pricing</a>
-    <a href="faq.html" >FAQ</a>
+    
     <a href="about.html">About</a>
     <a href="blog.html">Blog</a>
   </div>
@@ -203,6 +203,22 @@
     <span></span><span></span><span></span>
   </button>
 </nav>
+
+<div class="mobile-menu" id="mobile-menu" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;padding:80px 32px 40px;">
+  <button onclick="toggleMobileMenu()" aria-label="Close menu" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;padding:8px;">&#x2715;</button>
+  <div class="mobile-menu-links">
+    <a href="tools.html">Tools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="about.html">About</a>
+    <a href="/learn/">Learning Hub</a>
+    <a href="blog.html">Blog</a>
+  </div>
+  <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;">
+    <a href="index.html?action=signup" style="width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:500;font-family:'DM Sans',sans-serif;text-decoration:none;display:block;text-align:center;">Get started free</a>
+    <a href="index.html?action=signin" style="width:100%;padding:16px;background:transparent;border:1px solid rgba(255,255,255,0.14);color:var(--text);border-radius:12px;font-size:16px;font-weight:500;font-family:'DM Sans',sans-serif;text-decoration:none;display:block;text-align:center;">Sign in</a>
+  </div>
+</div>
+
 
 <div style="max-width:760px;margin:0 auto;padding:80px 48px 100px;">
   <div style="margin-bottom:48px;">
@@ -215,7 +231,7 @@
 
     <div>
       <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">1. Who we are</h2>
-      <p>Ryxa is a product of <strong style="color:var(--text);">MRLA Media LLC</strong>, operating at ryxa.io. We provide creator tools including Link in Bio, Media Kit, Brand Deal CRM, Grid Planner, Follow-Back Audit, Script Builder, Invoice Generator, Tax Tracker, PDF Signer, QR Generator, and Image Converter.</p>
+      <p>Ryxa is a product of <strong style="color:var(--text);">MRLA Media LLC</strong>, operating at ryxa.io. We provide creator tools including Link in Bio, Media Kit, Brand Deal CRM, Grid Planner, Follow-Back Audit, Script Builder, Invoice Generator, PDF Signer, QR Generator, and Image Converter.</p>
       <p style="margin-top:12px;">This policy explains what data we collect, why, and what rights you have. We try to be honest and straightforward — no dense legalese.</p>
     </div>
 
@@ -237,7 +253,6 @@
         <li><strong>Course Builder (Max only):</strong> Course titles, descriptions, cover images, modules, lessons (text and video embed URLs), pricing, and enrollment data</li>
         <li><strong>1:1 Private Coaching (Max only):</strong> Service titles, descriptions, cover images, pricing, session duration, booking type preference, and scheduling links</li>
         <li><strong>Learning Hub (Buyers):</strong> Course enrollment records, lesson progress, and coaching booking records</li>
-        <li><strong>Tax Tracker (Pro only):</strong> Income entries you log, including amounts, sources, and dates</li>
         <li><strong>Grid Planner (Pro only):</strong> Photos you upload for grid planning</li>
         <li><strong>Follower Audit:</strong> Lists you mark as "whitelist" or "snake list", audit history (Pro)</li>
         <li><strong>Invoice Generator:</strong> Uploaded logo (Pro), invoice details are generated client-side and not stored</li>
@@ -266,7 +281,7 @@
       </ul>
       <p style="margin-bottom:12px;"><strong style="color:var(--text);">Private</strong> — only visible to you:</p>
       <ul style="padding-left:22px;">
-        <li>Scripts, tax entries, grid plans, whitelist/snake list, audit history, unpublished drafts</li>
+        <li>Scripts, grid plans, whitelist/snake list, audit history, unpublished drafts</li>
         <li>Brand Deal CRM data: deals, brand contact info, contracts, invoices, and messages (only visible to you and to brand contacts you explicitly share a deal portal with)</li>
         <li>Course enrollment data, student progress, and revenue records</li>
         <li>Coaching booking records and buyer contact information</li>
@@ -322,7 +337,7 @@
     <div>
       <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">9. Data retention</h2>
       <p style="margin-bottom:12px;"><strong style="color:var(--text);">Active accounts:</strong> We retain your data as long as your account is active.</p>
-      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Cancelled Pro/Max subscriptions:</strong> When you cancel Pro or Max, your account downgrades to Free at the end of your billing period, but your feature data (tax entries, grid plans, scripts, custom themes, media kit, audit history) is preserved. If you resubscribe later, your data will be right where you left it.</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--text);">Cancelled Pro/Max subscriptions:</strong> When you cancel Pro or Max, your account downgrades to Free at the end of your billing period, but your feature data (grid plans, scripts, custom themes, media kit, audit history) is preserved. If you resubscribe later, your data will be right where you left it.</p>
       <p><strong style="color:var(--text);">Account deletion:</strong> You can request permanent deletion of your account and all associated data at any time by emailing hello@ryxa.io. We'll delete everything within 30 days of receiving your request.</p>
     </div>
 
@@ -366,25 +381,58 @@
 </div>
 
 
-<footer>
-  <a class="logo" href="index.html"><img src="logo.png" alt=""> Ryxa</a>
-  <p>© <span class="copy-year"></span> Ryxa.</p>
-  <div class="footer-links">
-    <a href="pricing.html">Pricing</a>
-    <a href="instructions.html">Instructions</a>
-    <a href="faq.html">FAQ</a>
-    <a href="about.html">About</a>
-    <a href="blog.html">Blog</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
+<footer style="border-top:1px solid var(--border);padding:60px 48px 32px;max-width:1200px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px;">
+    <div>
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:12px;"><img src="/logo.png" alt="" style="width:32px;height:32px;object-fit:contain;"> Ryxa</a>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;max-width:200px;">Ryxa makes earning money and professional branding easy.</p>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Tools</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="tools-link-in-bio.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Link in Bio</a>
+        <a href="tools-course-builder.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Course Builder</a>
+        <a href="tools-coaching.html" style="color:var(--muted);font-size:13px;text-decoration:none;">1:1 Coaching</a>
+        <a href="tools-brand-deal-crm.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Brand Deal CRM</a>
+        <a href="tools-media-kit.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Media Kit</a>
+        <a href="tools-script-builder.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Script Builder</a>
+        <a href="tools.html" style="color:var(--muted);font-size:13px;text-decoration:none;">View All Tools</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Product</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="pricing.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Pricing</a>
+        <a href="/learn/" style="color:var(--muted);font-size:13px;text-decoration:none;">Learning Hub</a>
+        <a href="blog.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Blog</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Company</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="about.html" style="color:var(--muted);font-size:13px;text-decoration:none;">About</a>
+        <a href="privacy.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Privacy</a>
+        <a href="terms.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Terms</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Support</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="mailto:hello@ryxa.io" style="color:var(--muted);font-size:13px;text-decoration:none;">hello@ryxa.io</a>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <p style="font-size:12px;color:var(--muted);">&copy; <span class="copy-year"></span> MRLA Media LLC &middot; Ryxa</p>
   </div>
 </footer>
 
 <script>
 document.querySelectorAll('.copy-year').forEach(el => el.textContent = new Date().getFullYear());
 function toggleMobileMenu() {
-  document.getElementById('mobile-menu').classList.toggle('open');
-  document.getElementById('hamburger-btn').classList.toggle('open');
+  var menu = document.getElementById('mobile-menu');
+  if (menu.style.display === 'flex') { menu.style.display = 'none'; }
+  else { menu.style.display = 'flex'; }
 }
 function closeMobileMenu() {
   document.getElementById('mobile-menu').classList.remove('open');

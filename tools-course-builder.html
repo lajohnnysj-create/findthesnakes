@@ -218,12 +218,11 @@
           <a href="/tools-invoice-generator.html" class="nav-tools-item"><div class="nav-tools-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></div><div class="nav-tools-item-content"><div class="nav-tools-item-title">Invoice Generator <span class="nav-tools-tier free">Free</span></div><div class="nav-tools-item-desc">Pro invoices for brand deals and collaborations</div></div></a>
           <a href="/tools-sign-pdf.html" class="nav-tools-item"><div class="nav-tools-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M3 17l3-3 2 2 5-5 3 3"/></svg></div><div class="nav-tools-item-content"><div class="nav-tools-item-title">Sign PDF <span class="nav-tools-tier free">Free</span></div><div class="nav-tools-item-desc">Fill and sign PDFs — no printer, no scanner</div></div></a>
         </div>
-        <div class="nav-tools-footer"><div style="font-size:11px;color:var(--muted);">10 tools, one workspace</div><a href="/tools.html" class="nav-tools-footer-link">View all tools <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></div>
+        <div class="nav-tools-footer"><div style="font-size:11px;color:var(--muted);">12 tools, one workspace</div><a href="/tools.html" class="nav-tools-footer-link">View all tools <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></div>
       </div>
     </div>
     <a href="pricing.html">Pricing</a>
     <a href="blog.html">Blog</a>
-    <a href="faq.html">FAQ</a>
     <a href="about.html">About</a>
   </div>
   <div class="nav-right">
@@ -238,42 +237,17 @@
 <div class="mobile-menu" id="mobile-menu">
   <button onclick="toggleMobileMenu()" aria-label="Close menu" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;padding:8px;">&#x2715;</button>
   <div class="mobile-menu-links">
-    <a href="tools.html">Tools</a>
-    <a href="pricing.html">Pricing</a>
-    <a href="blog.html">Blog</a>
-    <a href="faq.html">FAQ</a>
-    <a href="about.html">About</a>
+    <a href="tools.html" onclick="closeMobileMenu ? closeMobileMenu() : toggleMobileMenu()">Tools</a>
+    <a href="pricing.html" onclick="closeMobileMenu ? closeMobileMenu() : toggleMobileMenu()">Pricing</a>
+    <a href="about.html" onclick="closeMobileMenu ? closeMobileMenu() : toggleMobileMenu()">About</a>
+    <a href="/learn/" onclick="closeMobileMenu ? closeMobileMenu() : toggleMobileMenu()">Learning Hub</a>
+    <a href="blog.html" onclick="closeMobileMenu ? closeMobileMenu() : toggleMobileMenu()">Blog</a>
   </div>
   <div class="mobile-menu-bottom">
-    <button class="mobile-cta" onclick="goSignUp()">Get started free</button>
-    <button class="mobile-signin" onclick="goSignIn()">Sign in</button>
+    <button class="mobile-cta" onclick="goSignUp ? goSignUp() : (window.location.href='index.html?action=signup')">Get started free</button>
+    <button class="mobile-signin" onclick="goSignIn ? goSignIn() : (window.location.href='index.html?action=signin')">Sign in</button>
   </div>
 </div>
-
-<!-- ============ HERO ============ -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
-    <div class="hero-tier-badge">Creator Max</div>
-    <h1>Sell courses to<br><span class="gradient-text">your audience</span></h1>
-    <p class="hero-tagline">Build online courses with modules, lessons, and video embeds. Buyers get their own dashboard to track progress. Payments go directly to your Stripe — Ryxa takes 0%.</p>
-    <div class="hero-cta-row">
-      <a href="dashboard.html" onclick="return tryThisTool(event)" class="btn-primary">Try Course Builder</a>
-      <a href="pricing.html" class="btn-secondary">See pricing</a>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="section-label">How it works</div>
-  <h2 class="section-title">From idea to published course, in four steps.</h2>
-  <p class="section-sub">No complex setup. No monthly course platform fees. Just build, publish, and start earning.</p>
-  <div class="steps-grid">
-    <div class="step-card"><div class="step-num">Step 1</div><div class="step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div><div class="step-title">Create your course</div><div class="step-desc">Add a title, description, cover image, and set your price. Free or paid — your choice.</div></div>
-    <div class="step-card"><div class="step-num">Step 2</div><div class="step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="step-title">Add modules & lessons</div><div class="step-desc">Organize content into modules. Embed videos or write text lessons. Mark lessons as free preview.</div></div>
-    <div class="step-card"><div class="step-num">Step 3</div><div class="step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="step-title">Connect Stripe</div><div class="step-desc">Link your Stripe account in Settings. Payments go directly to you — 0% platform fees.</div></div>
-    <div class="step-card"><div class="step-num">Step 4</div><div class="step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-title">Publish & share</div><div class="step-desc">Your course gets its own landing page. Add it to your Link in Bio and start selling.</div></div>
-  </div>
 </section>
 
 <section>
@@ -308,19 +282,49 @@
 </section>
 
 <!-- ============ FOOTER ============ -->
-<footer>
-  <div class="footer-content">
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="tools.html">Tools</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="about.html">About</a>
-      <a href="faq.html">FAQ</a>
-      <a href="blog.html">Blog</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
+<footer style="border-top:1px solid var(--border);padding:60px 48px 32px;max-width:1200px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px;">
+    <div>
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:12px;"><img src="/logo.png" alt="" style="width:32px;height:32px;object-fit:contain;"> Ryxa</a>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;max-width:200px;">Ryxa makes earning money and professional branding easy.</p>
     </div>
-    <div class="footer-copy">© 2026 MRLA Media LLC · Ryxa</div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Tools</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="tools-link-in-bio.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Link in Bio</a>
+        <a href="tools-course-builder.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Course Builder</a>
+        <a href="tools-coaching.html" style="color:var(--muted);font-size:13px;text-decoration:none;">1:1 Coaching</a>
+        <a href="tools-brand-deal-crm.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Brand Deal CRM</a>
+        <a href="tools-media-kit.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Media Kit</a>
+        <a href="tools-script-builder.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Script Builder</a>
+        <a href="tools.html" style="color:var(--muted);font-size:13px;text-decoration:none;">View All Tools</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Product</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="pricing.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Pricing</a>
+        <a href="/learn/" style="color:var(--muted);font-size:13px;text-decoration:none;">Learning Hub</a>
+        <a href="blog.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Blog</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Company</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="about.html" style="color:var(--muted);font-size:13px;text-decoration:none;">About</a>
+        <a href="privacy.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Privacy</a>
+        <a href="terms.html" style="color:var(--muted);font-size:13px;text-decoration:none;">Terms</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:14px;">Support</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="mailto:hello@ryxa.io" style="color:var(--muted);font-size:13px;text-decoration:none;">hello@ryxa.io</a>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <p style="font-size:12px;color:var(--muted);">&copy; <span class="copy-year"></span> MRLA Media LLC &middot; Ryxa</p>
   </div>
 </footer>
 
