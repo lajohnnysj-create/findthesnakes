@@ -157,8 +157,12 @@
 
 <!-- Auth Screen -->
 <div id="auth-screen" class="auth-wrap" style="display:none;">
+  <div style="text-align:center;margin-bottom:28px;">
+    <h1 style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.8px;margin-bottom:8px;">Your Learning Hub</h1>
+    <p style="font-size:14px;color:var(--muted);line-height:1.6;max-width:320px;margin:0 auto;">Sign in to access courses you've purchased from creators on Ryxa. All your progress in one place.</p>
+  </div>
   <div class="auth-card">
-    <h1 class="auth-title" id="auth-title">Sign In</h1>
+    <h2 class="auth-title" id="auth-title">Sign In</h2>
     <p class="auth-sub" id="auth-sub">Access your courses</p>
     <input type="email" id="auth-email" class="auth-input" placeholder="Email address" aria-label="Email address">
     <input type="password" id="auth-password" class="auth-input" placeholder="Password" aria-label="Password">
@@ -167,6 +171,7 @@
     <div class="auth-toggle" id="auth-toggle">Don't have an account? <a onclick="toggleAuthMode()">Sign up</a></div>
     <div class="auth-error" id="auth-error"></div>
   </div>
+  <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--muted);">Create and sell your own courses with <a href="/" style="color:var(--text);font-weight:600;text-decoration:none;">Ryxa</a></p>
 </div>
 
 <!-- Dashboard (My Courses) -->
@@ -358,8 +363,8 @@ async function onLoggedIn() {
   const redirect = params.get('redirect');
   const courseId = params.get('course');
 
-  // If redirected from a course page, send them back
-  if (redirect) {
+  // If redirected from a course page, send them back (only allow relative paths)
+  if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
     window.location.href = redirect;
     return;
   }
