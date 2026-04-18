@@ -1,1 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<title>Coaching — Ryxa</title>
+<meta name="description" content="Book a private session on Ryxa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a14;
+    --surface: #12121e;
+    --surface2: #16162a;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --text: #eee;
+    --muted: rgba(255,255,255,0.45);
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --accent-glow: rgba(124,58,237,0.35);
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
 
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(168,85,247,0.4); border-radius: 10px; }
+  html { scrollbar-width: thin; scrollbar-color: rgba(168,85,247,0.4) var(--bg); }
+
+  .loading { display: flex; align-items: center; justify-content: center; min-height: 60vh; color: var(--muted); font-size: 14px; }
+  .error-page { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; padding: 40px 24px; }
+
+  .nav { padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.4px; }
+  .nav-logo img { width: 28px; height: 28px; border-radius: 6px; }
+
+  .coaching-hero { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+  .coaching-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px; margin-bottom: 32px; border: 1px solid var(--border); display: block; }
+  .coaching-cover-placeholder { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(232,121,249,0.1)); border-radius: 16px; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
+  .coaching-title { font-family: 'Syne', sans-serif; font-size: clamp(28px, 5vw, 40px); font-weight: 800; letter-spacing: -1.2px; line-height: 1.1; margin-bottom: 12px; }
+  .coaching-creator { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+  .coaching-creator a { color: var(--accent2); text-decoration: none; font-weight: 600; }
+  .coaching-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  .coaching-meta-item { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
+  .coaching-meta-item svg { flex-shrink: 0; }
+  .coaching-price { font-size: 28px; font-weight: 700; color: var(--text); }
+  .coaching-desc { font-size: 15px; line-height: 1.8; color: var(--muted); margin-bottom: 36px; white-space: pre-line; }
+
+  .coaching-buy-btn { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; box-shadow: 0 0 30px var(--accent-glow); transition: all 0.15s; }
+  .coaching-buy-btn:hover { transform: translateY(-1px); box-shadow: 0 0 40px var(--accent-glow); }
+  .coaching-buy-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .coaching-footer { text-align: center; padding: 32px 24px; font-size: 12px; color: var(--muted); }
+  .coaching-footer a { color: var(--accent2); text-decoration: none; }
+
+  /* Confirmation page */
+  .confirm-wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px; text-align: center; }
+  .confirm-icon { width: 64px; height: 64px; margin: 0 auto 20px; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .confirm-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 8px; }
+  .confirm-sub { font-size: 15px; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
+  .calendly-embed { margin-bottom: 32px; border-radius: 12px; overflow: hidden; }
+  .confirm-manual { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 32px; }
+  .confirm-manual p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .confirm-back-btn { display: inline-block; padding: 10px 24px; background: transparent; border: 1px solid var(--border-hover); color: var(--muted); border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; text-decoration: none; transition: all 0.15s; }
+  .confirm-back-btn:hover { border-color: var(--accent); color: var(--text); }
+
+  @media (max-width: 600px) {
+    .nav { padding: 14px 18px; }
+    .coaching-hero { padding: 32px 18px; }
+    .coaching-meta { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/logo.png" alt="Ryxa">
+    Ryxa
+  </a>
+</nav>
+
+<div id="loading" class="loading">Loading...</div>
+<div id="error-page" class="error-page" style="display:none;">
+  <div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:8px;">Not Found</div>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:24px;">This coaching service doesn't exist or isn't published yet.</p>
+  <a href="/" style="color:var(--accent2);font-size:14px;text-decoration:none;">Back to Ryxa</a>
+</div>
+
+<!-- Main landing page -->
+<div id="coaching-page" style="display:none;">
+  <div class="coaching-hero">
+    <div id="cp-cover"></div>
+    <h1 class="coaching-title" id="cp-title"></h1>
+    <div class="coaching-creator" id="cp-creator"></div>
+    <div class="coaching-meta" id="cp-meta"></div>
+    <div class="coaching-desc" id="cp-desc"></div>
+    <div id="cp-buy-area"></div>
+  </div>
+  <div class="coaching-footer">
+    Powered by <a href="/">Ryxa</a> · 1:1 Coaching Platform
+  </div>
+</div>
+
+<!-- Confirmation page (after payment) -->
+<div id="confirm-page" style="display:none;">
+  <div class="confirm-wrap">
+    <div class="confirm-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="confirm-title">Booking Confirmed!</div>
+    <div class="confirm-sub" id="confirm-sub">Your payment was successful.</div>
+    <div id="confirm-body"></div>
+    <a href="/" class="confirm-back-btn">Back to Ryxa</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://kjytapcgxukalwsyputk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeXRhcGNneHVrYWx3c3lwdXRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwMjk1NzUsImV4cCI6MjA2MDYwNTU3NX0.xyRBMOynZZ6533Ahy3QnPHRnN7PmGGgQQoJ3MvyRUYk';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let coachingData = null;
+
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+
+  // Check if returning from successful checkout
+  if (params.get('success') === '1') {
+    await showConfirmation(params.get('coaching_id'));
+    return;
+  }
+
+  // Get slug from URL path
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const slug = pathParts[pathParts.length - 1];
+  if (!slug || slug === 'coaching') { showError(); return; }
+
+  // Load coaching service
+  const { data: coaching, error } = await sb
+    .from('coaching_services')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single();
+
+  if (error || !coaching) { showError(); return; }
+  coachingData = coaching;
+
+  // Load creator name
+  const { data: profile } = await sb.from('profiles').select('username').eq('user_id', coaching.user_id).maybeSingle();
+  const creatorName = profile?.username || 'Creator';
+
+  document.title = coaching.title + ' — Ryxa';
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.content = (coaching.description || '').slice(0, 160);
+
+  renderCoaching(coaching, creatorName);
+
+  // Track page view
+  if (creatorName && creatorName !== 'Creator') {
+    trackPageView(creatorName, 'coaching');
+  }
+}
+
+async function trackPageView(username, pageType) {
+  try {
+    var raw = [navigator.userAgent || '', navigator.language || '', screen.width + 'x' + screen.height, new Date().getTimezoneOffset().toString()].join('|');
+    var msgBuf = new TextEncoder().encode(raw);
+    var hashBuf = await crypto.subtle.digest('SHA-256', msgBuf);
+    var hashArr = Array.from(new Uint8Array(hashBuf));
+    var visitorHash = hashArr.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+    await sb.rpc('record_page_view', { p_username: username, p_page_type: pageType, p_visitor_hash: visitorHash });
+  } catch (e) { console.error('trackPageView failed:', e); }
+}
+
+function showError() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error-page').style.display = 'flex';
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, function(c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function formatDuration(minutes) {
+  if (!minutes) return '';
+  if (minutes < 60) return minutes + ' min';
+  var hrs = Math.floor(minutes / 60);
+  var mins = minutes % 60;
+  if (mins === 0) return hrs + ' hour' + (hrs > 1 ? 's' : '');
+  return hrs + 'h ' + mins + 'min';
+}
+
+function renderCoaching(coaching, creatorName) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('coaching-page').style.display = 'block';
+
+  // Cover
+  var coverEl = document.getElementById('cp-cover');
+  if (coaching.cover_image_path) {
+    var url = sb.storage.from('coaching-covers').getPublicUrl(coaching.cover_image_path).data.publicUrl;
+    coverEl.innerHTML = '<img class="coaching-cover" src="' + url + '" alt="">';
+  } else {
+    coverEl.innerHTML = '<div class="coaching-cover-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>';
+  }
+
+  // Title & creator
+  document.getElementById('cp-title').textContent = coaching.title;
+  document.getElementById('cp-creator').innerHTML = 'by <a href="/' + escapeHtml(creatorName) + '">' + escapeHtml(creatorName) + '</a>';
+
+  // Meta (price + duration)
+  var metaHtml = '';
+  if (coaching.price_cents > 0) {
+    metaHtml += '<div class="coaching-price">$' + (coaching.price_cents / 100).toFixed(2) + '</div>';
+  } else {
+    metaHtml += '<div class="coaching-price" style="color:#4ade80;">Free</div>';
+  }
+  if (coaching.duration_minutes) {
+    metaHtml += '<div class="coaching-meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' + formatDuration(coaching.duration_minutes) + '</div>';
+  }
+  var bookingLabel = coaching.booking_type === 'calendly' ? 'Calendly Scheduling' : 'Manual Booking';
+  metaHtml += '<div class="coaching-meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + bookingLabel + '</div>';
+  document.getElementById('cp-meta').innerHTML = metaHtml;
+
+  // Description
+  document.getElementById('cp-desc').textContent = coaching.description || '';
+
+  // Buy button
+  var buyArea = document.getElementById('cp-buy-area');
+  buyArea.innerHTML = '<button class="coaching-buy-btn" onclick="bookCoaching()">Book Now</button>';
+}
+
+async function bookCoaching() {
+  var { data: { session } } = await sb.auth.getSession();
+  if (!session?.user) {
+    window.location.href = '/learn/?redirect=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+
+  var btn = document.querySelector('.coaching-buy-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading checkout...'; }
+
+  try {
+    var { data, error } = await sb.functions.invoke('create-coaching-checkout', {
+      body: {
+        coaching_id: coachingData.id,
+        success_url: window.location.origin + '/coaching/' + coachingData.slug + '?success=1&coaching_id=' + coachingData.id,
+        cancel_url: window.location.href
+      }
+    });
+
+    if (error || !data || data.error) {
+      throw new Error((data && data.error) || error?.message || 'Failed to create checkout');
+    }
+
+    window.location.href = data.checkout_url;
+  } catch (err) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Book Now'; }
+    alert('Failed: ' + err.message);
+  }
+}
+
+async function showConfirmation(coachingId) {
+  document.getElementById('loading').style.display = 'none';
+
+  // Load coaching data for confirmation
+  if (coachingId) {
+    var { data: coaching } = await sb.from('coaching_services').select('*').eq('id', coachingId).maybeSingle();
+    if (coaching) {
+      document.getElementById('confirm-sub').textContent = 'Your payment for "' + coaching.title + '" was successful.';
+
+      var bodyEl = document.getElementById('confirm-body');
+      if (coaching.booking_type === 'calendly' && coaching.calendly_url) {
+        // Embed Calendly widget
+        bodyEl.innerHTML = '<div class="calendly-embed" style="min-height:600px;"><iframe src="' + escapeHtml(coaching.calendly_url) + '" width="100%" height="700" frameborder="0" style="border-radius:12px;"></iframe></div>'
+          + '<p style="font-size:13px;color:var(--muted);margin-bottom:24px;">Pick a time that works for you above. You\'ll receive a confirmation email with the session details.</p>';
+      } else {
+        // Manual booking message
+        bodyEl.innerHTML = '<div class="confirm-manual">'
+          + '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>'
+          + '<p>The creator will reach out to you via email to schedule your session. Keep an eye on your inbox!</p>'
+          + '</div>';
+      }
+    }
+  }
+
+  document.getElementById('confirm-page').style.display = 'block';
+}
+
+init();
+</script>
+</body>
+</html>
