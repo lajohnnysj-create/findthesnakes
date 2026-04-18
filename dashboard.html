@@ -3559,6 +3559,13 @@
               <div class="welcome-tool-desc">Manage brand partnerships, contracts, deliverables, and revenue</div>
             </div>
           </div>
+          <div class="welcome-tool-card" onclick="showTool('courses')">
+            <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg></div>
+            <div>
+              <div class="welcome-tool-name">Course Builder <span style="font-size:9px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;padding:2px 6px;border-radius:4px;margin-left:4px;vertical-align:middle;font-weight:700;letter-spacing:0.03em;">MAX</span></div>
+              <div class="welcome-tool-desc">Build and sell courses to your audience with Stripe payments</div>
+            </div>
+          </div>
           <div class="welcome-tool-card" onclick="showTool('mediakit')">
             <div class="welcome-tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="16" y1="17" x2="16" y2="15"/></svg></div>
             <div>
@@ -4016,7 +4023,7 @@
           <div style="width:56px;height:56px;margin:0 auto 16px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);border-radius:14px;display:flex;align-items:center;justify-content:center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg></div>
           <h2 style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px;">Courses</h2>
           <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto;">Build and sell your own courses directly to your audience. Create modules, add video lessons, set your price, and share your course landing page. Available on Creator Max.</p>
-          <button onclick="startCheckout('max_monthly', this)" style="padding:12px 26px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.3);">Upgrade to Creator Max</button>
+          <button onclick="handleMaxUpgradeClick(event)" style="padding:12px 26px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.3);">Upgrade to Creator Max</button>
         </div>
 
         <!-- Course list view (Max users) -->
