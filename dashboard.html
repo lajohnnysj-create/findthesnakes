@@ -4049,7 +4049,12 @@
           <div id="course-editor-msg" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;"></div>
 
           <!-- Course details -->
-          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;">
+            <button onclick="toggleCourseSection('details')" style="width:100%;padding:16px 24px;background:transparent;border:none;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+              <h3 style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;color:var(--text);margin:0;">Course Details</h3>
+              <svg id="course-chevron-details" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div id="course-section-details" style="padding:0 24px 24px;">
             <input type="hidden" id="course-id">
             <div style="margin-bottom:16px;">
               <label for="course-title-input" style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Course Title</label>
@@ -4088,19 +4093,25 @@
                 </div>
               </div>
             </div>
+            </div>
           </div>
 
           <!-- Modules & Lessons -->
-          <div style="margin-bottom:20px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-              <h3 style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;">Modules & Lessons</h3>
-              <button onclick="addCourseModule()" style="padding:7px 14px;background:transparent;border:1px dashed rgba(124,58,237,0.4);color:var(--accent2);border-radius:8px;font-size:12px;font-family:DM Sans,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Module
-              </button>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;">
+            <button onclick="toggleCourseSection('modules')" style="width:100%;padding:16px 24px;background:transparent;border:none;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+              <h3 style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;color:var(--text);margin:0;">Modules & Lessons</h3>
+              <svg id="course-chevron-modules" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div id="course-section-modules" style="padding:0 24px 24px;">
+              <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+                <button onclick="addCourseModule()" style="padding:7px 14px;background:transparent;border:1px dashed rgba(124,58,237,0.4);color:var(--accent2);border-radius:8px;font-size:12px;font-family:DM Sans,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Module
+                </button>
+              </div>
+              <div id="course-modules-list" style="display:flex;flex-direction:column;gap:12px;"></div>
+              <div id="course-modules-empty" style="text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;border:1px dashed var(--border-hover);border-radius:12px;">Add a module to start building your course content.</div>
             </div>
-            <div id="course-modules-list" style="display:flex;flex-direction:column;gap:12px;"></div>
-            <div id="course-modules-empty" style="text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;border:1px dashed var(--border-hover);border-radius:12px;">Add a module to start building your course content.</div>
           </div>
 
           <!-- Enrollments (existing courses only) -->
@@ -4111,10 +4122,15 @@
           </div>
 
           <!-- Completion Message -->
-          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
-            <h3 style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;margin-bottom:6px;">Completion Message</h3>
-            <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Shown to students after they finish the last lesson. Thank them, share next steps, or promote another course.</p>
-            <textarea id="course-completion-msg" placeholder="Congratulations on finishing the course! Here's what to do next..." maxlength="1000" rows="4" aria-label="Completion message" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;">
+            <button onclick="toggleCourseSection('completion')" style="width:100%;padding:16px 24px;background:transparent;border:none;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+              <h3 style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;color:var(--text);margin:0;">Completion Message</h3>
+              <svg id="course-chevron-completion" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div id="course-section-completion" style="padding:0 24px 24px;">
+              <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Shown to students after they finish the last lesson. Thank them, share next steps, or promote another course.</p>
+              <textarea id="course-completion-msg" placeholder="Congratulations on finishing the course! Here's what to do next..." maxlength="1000" rows="4" aria-label="Completion message" style="width:100%;background:var(--surface);border:1px solid var(--border-hover);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
           </div>
 
           <!-- Danger zone -->
@@ -12397,6 +12413,16 @@ function closeCourseEditor() {
   loadCoursesList();
 }
 
+function toggleCourseSection(section) {
+  var body = document.getElementById('course-section-' + section);
+  var chevron = document.getElementById('course-chevron-' + section);
+  if (!body) return;
+  var isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  body.style.padding = isOpen ? '0 24px' : '0 24px 24px';
+  if (chevron) chevron.style.transform = isOpen ? 'rotate(-90deg)' : '';
+}
+
 function showCourseMsg(type, msg) {
   const el = document.getElementById('course-editor-msg');
   el.style.display = 'block';
@@ -12649,6 +12675,16 @@ function toggleLessonPreview(modIdx, lessonIdx) {
   renderCourseModules();
 }
 
+function collapseLesson(modIdx, lessonIdx) {
+  courseModules[modIdx].lessons[lessonIdx]._collapsed = true;
+  renderCourseModules();
+}
+
+function expandLesson(modIdx, lessonIdx) {
+  courseModules[modIdx].lessons[lessonIdx]._collapsed = false;
+  renderCourseModules();
+}
+
 function toggleLessonType(modIdx, lessonIdx) {
   const lesson = courseModules[modIdx].lessons[lessonIdx];
   lesson.lesson_type = lesson.lesson_type === 'video' ? 'text' : 'video';
@@ -12671,6 +12707,24 @@ function renderCourseModules() {
       const isVideo = l.lesson_type === 'video';
       const previewBadge = l.is_preview ? '<span style="font-size:9px;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);padding:2px 6px;border-radius:100px;font-weight:600;letter-spacing:0.05em;">PREVIEW</span>' : '';
       const typeLabel = isVideo ? '<span style="font-size:9px;background:rgba(124,58,237,0.12);color:#c4b5fd;border:1px solid rgba(124,58,237,0.25);padding:2px 6px;border-radius:100px;font-weight:600;letter-spacing:0.05em;">VIDEO</span>' : '<span style="font-size:9px;background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);padding:2px 6px;border-radius:100px;font-weight:600;letter-spacing:0.05em;">TEXT</span>';
+      const isCollapsed = l._collapsed;
+      const hasContent = isVideo ? !!(l.video_url) : !!(l.text_content);
+      const preview = isVideo ? (l.video_url || '').slice(0, 40) : (l.text_content || '').slice(0, 50).replace(/\n/g, ' ');
+
+      if (isCollapsed && (l.title || hasContent)) {
+        // Collapsed view
+        return '<div onclick="expandLesson(' + mi + ',' + li + ')" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-top:8px;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor=\'rgba(124,58,237,0.3)\'" onmouseout="this.style.borderColor=\'var(--border)\'">'
+          + '<div style="display:flex;align-items:center;gap:8px;">'
+          + '<span style="font-size:11px;color:var(--muted);font-weight:600;min-width:20px;">' + (li + 1) + '.</span>'
+          + '<span style="flex:1;font-size:13px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.title || 'Untitled') + '</span>'
+          + typeLabel + ' ' + previewBadge
+          + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+          + '</div>'
+          + (preview ? '<div style="font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:28px;">' + escapeHtml(preview) + (preview.length >= 40 ? '...' : '') + '</div>' : '')
+          + '</div>';
+      }
+
+      // Expanded view
       return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:8px;">'
         + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
         + '<span style="font-size:11px;color:var(--muted);font-weight:600;min-width:20px;">' + (li + 1) + '.</span>'
@@ -12683,6 +12737,9 @@ function renderCourseModules() {
         + (isVideo
           ? '<input type="url" value="' + escapeHtml(l.video_url || '') + '" placeholder="Video URL (YouTube, Vimeo, etc.)" oninput="updateLessonField(' + mi + ',' + li + ',\'video_url\',this.value)" aria-label="Video URL" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;">'
           : '<textarea placeholder="Lesson content..." oninput="updateLessonField(' + mi + ',' + li + ',\'text_content\',this.value)" aria-label="Lesson text content" rows="4" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;box-sizing:border-box;resize:vertical;">' + escapeHtml(l.text_content || '') + '</textarea>')
+        + '<div style="display:flex;justify-content:flex-end;margin-top:8px;">'
+        + '<button onclick="collapseLesson(' + mi + ',' + li + ')" style="padding:5px 14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;">Done</button>'
+        + '</div>'
         + '</div>';
     }).join('');
 
