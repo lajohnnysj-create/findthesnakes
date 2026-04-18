@@ -12608,11 +12608,11 @@ function removeCourseModule(idx) {
   renderCourseModules();
 }
 
-function addCourseLesson(modIdx) {
+function addCourseLesson(modIdx, type) {
   courseModules[modIdx].lessons.push({
     id: 'new_' + Date.now(),
     title: '',
-    lesson_type: 'video',
+    lesson_type: type || 'video',
     video_url: '',
     text_content: '',
     is_preview: false
@@ -12659,13 +12659,14 @@ function renderCourseModules() {
     const lessonsHtml = (mod.lessons || []).map((l, li) => {
       const isVideo = l.lesson_type === 'video';
       const previewBadge = l.is_preview ? '<span style="font-size:9px;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);padding:2px 6px;border-radius:100px;font-weight:600;letter-spacing:0.05em;">PREVIEW</span>' : '';
+      const typeLabel = isVideo ? '<span style="font-size:9px;background:rgba(124,58,237,0.12);color:#c4b5fd;border:1px solid rgba(124,58,237,0.25);padding:2px 6px;border-radius:100px;font-weight:600;letter-spacing:0.05em;">VIDEO</span>' : '<span style="font-size:9px;background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);padding:2px 6px;border-radius:100px;font-weight:600;letter-spacing:0.05em;">TEXT</span>';
       return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:8px;">'
         + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
         + '<span style="font-size:11px;color:var(--muted);font-weight:600;min-width:20px;">' + (li + 1) + '.</span>'
         + '<input type="text" value="' + escapeHtml(l.title) + '" placeholder="Lesson title" onchange="updateLessonField(' + mi + ',' + li + ',\'title\',this.value)" aria-label="Lesson title" style="flex:1;background:transparent;border:none;color:var(--text);font-size:13px;font-weight:500;outline:none;font-family:DM Sans,sans-serif;min-width:0;">'
+        + typeLabel
         + previewBadge
         + '<button onclick="toggleLessonPreview(' + mi + ',' + li + ')" title="' + (l.is_preview ? 'Remove preview' : 'Mark as free preview') + '" style="padding:3px 6px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:5px;font-size:10px;font-family:DM Sans,sans-serif;cursor:pointer;">' + (l.is_preview ? 'Paid' : 'Free') + '</button>'
-        + '<button onclick="toggleLessonType(' + mi + ',' + li + ')" title="Switch type" style="padding:3px 6px;background:transparent;border:1px solid var(--border-hover);color:var(--muted);border-radius:5px;font-size:10px;font-family:DM Sans,sans-serif;cursor:pointer;">' + (isVideo ? '🎬' : '📝') + '</button>'
         + '<button onclick="removeCourseLesson(' + mi + ',' + li + ')" style="width:22px;height:22px;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0;display:flex;align-items:center;justify-content:center;" title="Remove lesson">×</button>'
         + '</div>'
         + (isVideo
@@ -12681,9 +12682,14 @@ function renderCourseModules() {
       + '<button onclick="removeCourseModule(' + mi + ')" style="padding:4px 8px;background:transparent;border:1px solid rgba(239,68,68,0.3);color:#ef4444;border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;">Remove</button>'
       + '</div>'
       + lessonsHtml
-      + '<button onclick="addCourseLesson(' + mi + ')" style="margin-top:10px;padding:6px 12px;background:transparent;border:1px dashed var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:4px;width:100%;justify-content:center;">'
-      + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
-      + 'Add Lesson</button>'
+      + '<div style="display:flex;gap:8px;margin-top:10px;">'
+      + '<button onclick="addCourseLesson(' + mi + ',\'video\')" style="flex:1;padding:6px 12px;background:transparent;border:1px dashed var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;">'
+      + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
+      + 'Embed Video</button>'
+      + '<button onclick="addCourseLesson(' + mi + ',\'text\')" style="flex:1;padding:6px 12px;background:transparent;border:1px dashed var(--border-hover);color:var(--muted);border-radius:6px;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;">'
+      + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>'
+      + 'Add Text</button>'
+      + '</div>'
       + '</div>';
   }).join('');
 }
