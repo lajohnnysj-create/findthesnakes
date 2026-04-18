@@ -4007,7 +4007,7 @@
 
         <!-- Max-only upsell (non-Max users) -->
         <div id="courses-upsell" style="display:none;text-align:center;padding:60px 24px;">
-          <div style="font-size:48px;margin-bottom:16px;">📚</div>
+          <div style="width:56px;height:56px;margin:0 auto 16px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);border-radius:14px;display:flex;align-items:center;justify-content:center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg></div>
           <h2 style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px;">Courses</h2>
           <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto;">Build and sell your own courses directly to your audience. Create modules, add video lessons, set your price, and share your course landing page. Available on Creator Max.</p>
           <button onclick="startCheckout('max_monthly', this)" style="padding:12px 26px;background:linear-gradient(135deg,#a78bfa,#e879f9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px rgba(232,121,249,0.3);">Upgrade to Creator Max</button>
@@ -4026,7 +4026,7 @@
             </button>
           </div>
           <div id="courses-empty" style="display:none;text-align:center;padding:48px 24px;">
-            <div style="font-size:40px;margin-bottom:12px;">📚</div>
+            <div style="width:48px;height:48px;margin:0 auto 12px;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg></div>
             <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">You haven't created any courses yet.</p>
             <button onclick="openCourseEditor()" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:500;font-family:DM Sans,sans-serif;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);">Create Your First Course</button>
           </div>
@@ -12295,7 +12295,7 @@ function renderCoursesList() {
       ? 'background-image:url(' + sb.storage.from("course-covers").getPublicUrl(c.cover_image_path).data.publicUrl + ');background-size:cover;background-position:center;'
       : 'background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(232,121,249,0.1));display:flex;align-items:center;justify-content:center;font-size:32px;';
     return '<div onclick="openCourseEditor(\'' + c.id + '\')" style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor=\'rgba(124,58,237,0.4)\'" onmouseout="this.style.borderColor=\'var(--border)\'">'
-      + '<div style="height:140px;' + coverBg + '">' + (c.cover_image_path ? '' : '📚') + '</div>'
+      + '<div style="height:140px;' + coverBg + '">' + (c.cover_image_path ? '' : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg>') + '</div>'
       + '<div style="padding:14px 16px;">'
       + '<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(c.title || 'Untitled Course') + '</div>'
       + '<div style="display:flex;align-items:center;justify-content:space-between;">'
@@ -12408,14 +12408,28 @@ document.addEventListener('input', function(e) {
 
 function onCourseCoverSelect(file) {
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { showCourseMsg('error', 'Cover image must be under 5MB.'); return; }
-  courseCoverFile = file;
-  const reader = new FileReader();
-  reader.onload = function() {
-    document.getElementById('course-cover-img').src = reader.result;
-    document.getElementById('course-cover-preview').style.display = 'block';
+  if (file.size > 10 * 1024 * 1024) { showCourseMsg('error', 'Image must be under 10MB.'); return; }
+  // Compress: resize to max 1200px wide, JPEG at 80% quality
+  const img = new Image();
+  img.onload = function() {
+    const MAX_W = 1200;
+    const MAX_H = 800;
+    let w = img.width, h = img.height;
+    if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+    if (h > MAX_H) { w = Math.round(w * MAX_H / h); h = MAX_H; }
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    canvas.toBlob(function(blob) {
+      if (!blob) { showCourseMsg('error', 'Failed to process image.'); return; }
+      courseCoverFile = new File([blob], 'cover.jpg', { type: 'image/jpeg' });
+      document.getElementById('course-cover-img').src = URL.createObjectURL(blob);
+      document.getElementById('course-cover-preview').style.display = 'block';
+    }, 'image/jpeg', 0.8);
   };
-  reader.readAsDataURL(file);
+  img.onerror = function() { showCourseMsg('error', 'Could not read image file.'); };
+  img.src = URL.createObjectURL(file);
 }
 
 function removeCourseCover() {
@@ -12445,9 +12459,8 @@ async function saveCourse() {
     // Upload cover image if new file selected
     let coverPath = null;
     if (courseCoverFile) {
-      const ext = courseCoverFile.name.split('.').pop();
-      const path = currentUser.id + '/' + (courseId || 'new') + '_' + Date.now() + '.' + ext;
-      const { error: uploadErr } = await sb.storage.from('course-covers').upload(path, courseCoverFile, { upsert: true });
+      const path = currentUser.id + '/' + (courseId || 'new') + '_' + Date.now() + '.jpg';
+      const { error: uploadErr } = await sb.storage.from('course-covers').upload(path, courseCoverFile, { upsert: true, contentType: 'image/jpeg' });
       if (uploadErr) throw new Error('Cover upload failed: ' + uploadErr.message);
       coverPath = path;
     }
