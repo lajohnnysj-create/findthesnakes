@@ -16377,7 +16377,8 @@ async function createNewScript() {
 async function deleteScript(id) {
   const script = scriptsList.find(s => s.id === id);
   if (!script) return;
-  if (!confirm(`Delete "${script.title}"? This cannot be undone.`)) return;
+  const confirmed = await dashConfirm('Delete "' + script.title + '"? This cannot be undone.');
+  if (!confirmed) return;
   try {
     const { error } = await sb.from('scripts').delete().eq('id', id);
     if (error) throw error;
