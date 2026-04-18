@@ -12851,6 +12851,21 @@ async function deleteCourse() {
       await sb.from('course_modules').delete().eq('course_id', currentCourseId);
       var { error } = await sb.from('courses').delete().eq('id', currentCourseId);
 
+      // Remove course link from bio if it exists
+      try {
+        var { data: bioData } = await sb.from('link_in_bio').select('links').eq('user_id', currentUser.id).maybeSingle();
+        if (bioData && Array.isArray(bioData.links)) {
+          var filtered = bioData.links.filter(function(l) { return !(l.isCourse && l.courseId === currentCourseId); });
+          if (filtered.length !== bioData.links.length) {
+            await sb.from('link_in_bio').update({ links: filtered }).eq('user_id', currentUser.id);
+            // Also update local state if bio is loaded
+            if (typeof bioState !== 'undefined' && bioState.links) {
+              bioState.links = bioState.links.filter(function(l) { return !(l.isCourse && l.courseId === currentCourseId); });
+            }
+          }
+        }
+      } catch (bioErr) { console.warn('Failed to clean bio link:', bioErr); }
+
       document.body.removeChild(overlay);
       if (error) { showCourseMsg('error', 'Failed: ' + error.message); return resolve(); }
       coursesList = coursesList.filter(function(c) { return c.id !== currentCourseId; });
