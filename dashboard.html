@@ -12766,6 +12766,16 @@ async function toggleCoursePublish() {
   if (!currentCourseId) return;
   const course = coursesList.find(c => c.id === currentCourseId);
   const newStatus = (course && course.status === 'published') ? 'draft' : 'published';
+
+  // If publishing a paid course, check Stripe is connected
+  if (newStatus === 'published' && course && course.price_cents > 0) {
+    var { data: profile } = await sb.from('profiles').select('stripe_account_id').eq('user_id', currentUser.id).maybeSingle();
+    if (!profile || !profile.stripe_account_id) {
+      showCourseMsg('error', 'Connect your Stripe account before publishing a paid course. Go to Settings to connect.');
+      return;
+    }
+  }
+
   const updates = { status: newStatus };
   if (newStatus === 'published') updates.published_at = new Date().toISOString();
 
