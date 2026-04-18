@@ -182,6 +182,7 @@
     </div>
     <input type="email" id="auth-email" class="auth-input" placeholder="Email address" aria-label="Email address">
     <input type="password" id="auth-password" class="auth-input" placeholder="Password" aria-label="Password">
+    <a onclick="handleLearnForgotPassword()" style="display:block;font-size:12px;color:var(--muted);text-align:right;margin-bottom:8px;cursor:pointer;text-decoration:none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Forgot password?</a>
     <div id="auth-turnstile" style="margin:8px 0 10px;display:flex;justify-content:center;min-height:60px;"></div>
     <button class="auth-btn" id="auth-btn" onclick="handleAuth()">Sign In</button>
     <div class="auth-error" id="auth-error"></div>
@@ -277,6 +278,20 @@ function setLearnAuthMode(mode) {
     btn.textContent = 'Create Account';
   }
   document.getElementById('auth-error').style.display = 'none';
+}
+
+async function handleLearnForgotPassword() {
+  var email = document.getElementById('auth-email').value.trim();
+  var errEl = document.getElementById('auth-error');
+  if (!email) { errEl.textContent = 'Enter your email address first.'; errEl.style.display = 'block'; errEl.style.color = '#f87171'; return; }
+  var captchaToken = getTurnstileToken();
+  if (!captchaToken) { errEl.textContent = 'Please complete the verification check.'; errEl.style.display = 'block'; errEl.style.color = '#f87171'; return; }
+  var { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://ryxa.io/reset-password.html', captchaToken: captchaToken });
+  if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; errEl.style.color = '#f87171'; resetTurnstile(); return; }
+  errEl.textContent = 'Password reset link sent. Check your email.';
+  errEl.style.display = 'block';
+  errEl.style.color = 'var(--text)';
+  resetTurnstile();
 }
 
 async function handleLearnGoogleAuth() {
