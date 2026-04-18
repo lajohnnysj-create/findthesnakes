@@ -59,9 +59,15 @@
   .nav-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; border: none; transition: all 0.15s; }
   .nav-btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.4); color: #fff; }
   .nav-btn-outline:hover { background: #111; }
+  .nav-btn-signout { background: #7c3aed; color: #fff; border: none; box-shadow: 0 0 16px rgba(124,58,237,0.35); }
+  .nav-btn-signout:hover { background: #6d28d9; }
   .nav-user { font-size: 13px; color: #fff; }
-  .theme-toggle { padding: 6px 12px; background: transparent; border: 1px solid rgba(255,255,255,0.4); color: #fff; border-radius: 6px; font-size: 11px; font-family: 'DM Sans', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
-  .theme-toggle:hover { background: #111; }
+  .theme-switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+  .theme-switch-label { font-size: 11px; color: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif; }
+  .theme-switch-track { width: 36px; height: 20px; background: rgba(255,255,255,0.15); border-radius: 100px; position: relative; transition: background 0.2s; flex-shrink: 0; }
+  .theme-switch-track.on { background: #7c3aed; }
+  .theme-switch-thumb { width: 16px; height: 16px; background: #fff; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.2s; }
+  .theme-switch-track.on .theme-switch-thumb { transform: translateX(16px); }
 
   /* Auth form */
   .auth-wrap { max-width: 400px; margin: 80px auto; padding: 0 24px; }
@@ -85,7 +91,7 @@
   .course-card-body { padding: 14px 16px; }
   .course-card-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .course-card-creator { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-  .course-card-progress { height: 4px; background: var(--surface); border-radius: 100px; overflow: hidden; }
+  .course-card-progress { height: 4px; background: var(--border-hover); border-radius: 100px; overflow: hidden; }
   .course-card-progress-bar { height: 100%; background: var(--text); border-radius: 100px; transition: width 0.3s; }
   .empty-state { text-align: center; padding: 60px 24px; color: var(--muted); font-size: 14px; }
 
@@ -136,12 +142,13 @@
 
 <nav class="nav">
   <a href="/" class="nav-logo"><img src="/logo.png" alt=""> Ryxa</a>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <button class="theme-toggle" id="theme-toggle" onclick="toggleLearnTheme()">
-      <svg id="theme-icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      <svg id="theme-icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      <span id="theme-label">Light mode</span>
-    </button>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div class="theme-switch" onclick="toggleLearnTheme()">
+      <span class="theme-switch-label" id="theme-label">Light mode</span>
+      <div class="theme-switch-track" id="theme-track">
+        <div class="theme-switch-thumb"></div>
+      </div>
+    </div>
     <div class="nav-right" id="nav-right">
       <a href="/" class="nav-btn nav-btn-outline">Home</a>
     </div>
@@ -210,9 +217,10 @@ function toggleLearnTheme() {
 }
 
 function updateThemeToggleUI(isLight) {
-  document.getElementById('theme-icon-sun').style.display = isLight ? 'inline' : 'none';
-  document.getElementById('theme-icon-moon').style.display = isLight ? 'none' : 'inline';
-  document.getElementById('theme-label').textContent = isLight ? 'Dark mode' : 'Light mode';
+  var track = document.getElementById('theme-track');
+  var label = document.getElementById('theme-label');
+  if (track) { if (isLight) track.classList.add('on'); else track.classList.remove('on'); }
+  if (label) label.textContent = isLight ? 'Dark mode' : 'Light mode';
 }
 
 // Apply saved theme on load
@@ -340,7 +348,7 @@ async function handleAuth() {
 
 async function onLoggedIn() {
   document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('nav-right').innerHTML = '<span class="nav-user">' + escapeHtml(currentUser.email) + '</span> <button class="nav-btn nav-btn-outline" onclick="signOut()">Sign Out</button>';
+  document.getElementById('nav-right').innerHTML = '<span class="nav-user">' + escapeHtml(currentUser.email) + '</span> <button class="nav-btn nav-btn-signout" onclick="signOut()">Sign Out</button>';
 
   // Create course_users row if needed
   await sb.from('course_users').upsert({ user_id: currentUser.id, display_name: currentUser.email.split('@')[0] }, { onConflict: 'user_id' });
@@ -380,6 +388,19 @@ async function loadDashboard() {
     .order('enrolled_at', { ascending: false });
 
   enrollments = data || [];
+
+  // Load progress for each enrollment
+  for (var i = 0; i < enrollments.length; i++) {
+    var e = enrollments[i];
+    if (!e.courses) continue;
+    // Get total lessons
+    var { count: totalLessons } = await sb.from('course_lessons').select('id', { count: 'exact', head: true }).eq('course_id', e.courses.id);
+    // Get completed lessons
+    var { count: completedLessons } = await sb.from('course_progress').select('id', { count: 'exact', head: true }).eq('enrollment_id', e.id);
+    e._totalLessons = totalLessons || 0;
+    e._completedLessons = completedLessons || 0;
+  }
+
   renderDashboard();
 }
 
@@ -402,11 +423,16 @@ function renderDashboard() {
     var coverStyle = c.cover_image_path
       ? 'background-image:url(' + sb.storage.from("course-covers").getPublicUrl(c.cover_image_path).data.publicUrl + ');background-size:cover;background-position:center;'
       : '';
+    var total = e._totalLessons || 0;
+    var completed = e._completedLessons || 0;
+    var pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    var progressLabel = total > 0 ? completed + '/' + total + ' lessons' : '';
     return '<a class="course-card" href="#" onclick="openCourseViewer(\'' + c.id + '\');return false;">'
-      + '<div class="course-card-cover" style="' + coverStyle + '">' + (c.cover_image_path ? '' : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg>') + '</div>'
+      + '<div class="course-card-cover" style="' + coverStyle + '">' + (c.cover_image_path ? '' : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg>') + '</div>'
       + '<div class="course-card-body">'
       + '<div class="course-card-title">' + escapeHtml(c.title) + '</div>'
-      + '<div class="course-card-progress"><div class="course-card-progress-bar" style="width:0%"></div></div>'
+      + (progressLabel ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">' + progressLabel + (pct === 100 ? ' — Complete' : '') + '</div>' : '')
+      + '<div class="course-card-progress"><div class="course-card-progress-bar" style="width:' + pct + '%"></div></div>'
       + '</div></a>';
   }).join('');
 }
