@@ -414,8 +414,7 @@ async function onLoggedIn() {
 
 async function signOut() {
   await sb.auth.signOut();
-  currentUser = null;
-  showAuth();
+  window.location.href = '/';
 }
 
 async function loadDashboard() {
