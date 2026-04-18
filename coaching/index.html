@@ -238,7 +238,11 @@ function renderCoaching(coaching, creatorName) {
 
   // Buy button
   var buyArea = document.getElementById('cp-buy-area');
-  buyArea.innerHTML = '<button class="coaching-buy-btn" onclick="bookCoaching()">Book Now</button>';
+  if (coaching.price_cents === 0) {
+    buyArea.innerHTML = '<button class="coaching-buy-btn" onclick="bookCoaching()">Book for Free</button>';
+  } else {
+    buyArea.innerHTML = '<button class="coaching-buy-btn" onclick="bookCoaching()">Book Now</button>';
+  }
 }
 
 async function bookCoaching() {
@@ -249,9 +253,23 @@ async function bookCoaching() {
   }
 
   var btn = document.querySelector('.coaching-buy-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Loading checkout...'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Booking...'; }
 
   try {
+    // Free booking — skip Stripe
+    if (coachingData.price_cents === 0) {
+      var { error: bookErr } = await sb.from('coaching_bookings').insert({
+        coaching_id: coachingData.id,
+        user_id: session.user.id,
+        buyer_email: session.user.email || '',
+        amount_paid_cents: 0
+      });
+      if (bookErr) throw new Error(bookErr.message);
+      window.location.href = '/coaching/' + coachingData.slug + '?success=1&coaching_id=' + coachingData.id;
+      return;
+    }
+
+    // Paid booking — Stripe checkout
     var { data, error } = await sb.functions.invoke('create-coaching-checkout', {
       body: {
         coaching_id: coachingData.id,
