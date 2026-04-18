@@ -19371,13 +19371,17 @@ function renderAnaLineChart(canvasId, viewsDaily, revDaily, dayCount) {
   const w = canvas.offsetWidth; const h = canvas.offsetHeight;
   canvas.width = w * dpr; canvas.height = h * dpr;
   ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, w, h);
 
-  // Build arrays padded to dayCount
   const vVals = new Array(dayCount).fill(0);
   const rVals = new Array(dayCount).fill(0);
+  const dates = [];
   const { start } = getAnaDateRange();
   const startDate = new Date(start + 'T00:00:00');
+
+  for (let i = 0; i < dayCount; i++) {
+    const d = new Date(startDate); d.setDate(d.getDate() + i);
+    dates.push((d.getMonth() + 1) + '/' + d.getDate());
+  }
 
   (viewsDaily || []).forEach(d => {
     const idx = Math.round((new Date(d.date + 'T00:00:00') - startDate) / 86400000);
@@ -19391,53 +19395,125 @@ function renderAnaLineChart(canvasId, viewsDaily, revDaily, dayCount) {
   const pad = { top: 10, right: 10, bottom: 20, left: 10 };
   const cw = w - pad.left - pad.right;
   const ch = h - pad.top - pad.bottom;
+  const vMax = Math.max(...vVals, 1);
+  const rMax = Math.max(...rVals, 1);
 
-  function drawLine(vals, color) {
-    const maxV = Math.max(...vals, 1);
+  function getX(i) { return pad.left + (i / Math.max(dayCount - 1, 1)) * cw; }
+  function getVY(v) { return pad.top + ch - (v / vMax) * ch; }
+  function getRY(v) { return pad.top + ch - (v / rMax) * ch; }
+
+  function draw(hoverIdx) {
+    ctx.clearRect(0, 0, w, h);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 4; i++) {
+      const y = pad.top + (i / 3) * ch;
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cw, y); ctx.stroke();
+    }
+
+    // Date labels
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '9px DM Sans, sans-serif';
+    ctx.textAlign = 'center';
+    const labelCount = Math.min(dayCount, 7);
+    for (let i = 0; i < labelCount; i++) {
+      const idx = Math.round(i * (dayCount - 1) / Math.max(labelCount - 1, 1));
+      ctx.fillText(dates[idx], getX(idx), h - 4);
+    }
+
+    // Draw views line + fill
     ctx.beginPath();
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.lineJoin = 'round';
-    vals.forEach((v, i) => {
-      const x = pad.left + (i / Math.max(vals.length - 1, 1)) * cw;
-      const y = pad.top + ch - (v / maxV) * ch;
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    });
+    ctx.strokeStyle = 'rgba(232,121,249,1)'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    vVals.forEach((v, i) => { const x = getX(i), y = getVY(v); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
     ctx.stroke();
-    // Fill area
-    const maxV2 = Math.max(...vals, 1);
-    ctx.lineTo(pad.left + cw, pad.top + ch);
-    ctx.lineTo(pad.left, pad.top + ch);
-    ctx.closePath();
-    ctx.fillStyle = color.replace('1)', '0.06)').replace('rgb', 'rgba');
-    ctx.globalAlpha = 0.3;
-    ctx.fill();
-    ctx.globalAlpha = 1;
+    ctx.lineTo(getX(dayCount - 1), pad.top + ch); ctx.lineTo(getX(0), pad.top + ch); ctx.closePath();
+    ctx.fillStyle = 'rgba(232,121,249,0.06)'; ctx.globalAlpha = 0.3; ctx.fill(); ctx.globalAlpha = 1;
+
+    // Draw revenue line + fill
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(124,58,237,1)'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    rVals.forEach((v, i) => { const x = getX(i), y = getRY(v); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+    ctx.stroke();
+    ctx.lineTo(getX(dayCount - 1), pad.top + ch); ctx.lineTo(getX(0), pad.top + ch); ctx.closePath();
+    ctx.fillStyle = 'rgba(124,58,237,0.06)'; ctx.globalAlpha = 0.3; ctx.fill(); ctx.globalAlpha = 1;
+
+    // Hover state
+    if (hoverIdx !== null && hoverIdx >= 0 && hoverIdx < dayCount) {
+      const hx = getX(hoverIdx);
+
+      // Vertical line
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.moveTo(hx, pad.top); ctx.lineTo(hx, pad.top + ch);
+      ctx.stroke(); ctx.setLineDash([]);
+
+      // Dots
+      const vy = getVY(vVals[hoverIdx]);
+      const ry = getRY(rVals[hoverIdx]);
+      ctx.beginPath(); ctx.arc(hx, vy, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#e879f9'; ctx.fill();
+      ctx.strokeStyle = '#0a0a14'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(hx, ry, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#7c3aed'; ctx.fill();
+      ctx.strokeStyle = '#0a0a14'; ctx.lineWidth = 2; ctx.stroke();
+
+      // Tooltip
+      const viewsText = vVals[hoverIdx].toLocaleString() + ' views';
+      const revText = '$' + rVals[hoverIdx].toLocaleString();
+      const dateText = dates[hoverIdx];
+      const line1 = dateText;
+      const line2 = viewsText;
+      const line3 = revText;
+
+      ctx.font = 'bold 10px DM Sans, sans-serif';
+      const tw = Math.max(ctx.measureText(line1).width, ctx.measureText(line2).width, ctx.measureText(line3).width) + 20;
+      const th = 52;
+      let tx = hx - tw / 2;
+      if (tx < 2) tx = 2;
+      if (tx + tw > w - 2) tx = w - tw - 2;
+      const ty = Math.min(vy, ry) - th - 10;
+      const tty = ty < 2 ? Math.max(vy, ry) + 10 : ty;
+
+      // Tooltip bg
+      ctx.fillStyle = 'rgba(15,15,26,0.92)';
+      ctx.strokeStyle = 'rgba(232,121,249,0.25)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(tx, tty, tw, th, 8);
+      ctx.fill(); ctx.stroke();
+
+      // Tooltip text
+      ctx.textAlign = 'left';
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = '9px DM Sans, sans-serif';
+      ctx.fillText(line1, tx + 10, tty + 14);
+      ctx.fillStyle = '#e879f9';
+      ctx.font = '10px DM Sans, sans-serif';
+      ctx.fillText(line2, tx + 10, tty + 28);
+      ctx.fillStyle = '#a78bfa';
+      ctx.fillText(line3, tx + 10, tty + 42);
+      ctx.textAlign = 'center';
+    }
   }
 
-  // Grid lines
-  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i < 4; i++) {
-    const y = pad.top + (i / 3) * ch;
-    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cw, y); ctx.stroke();
+  draw(null);
+
+  // Mouse interaction
+  function getHoverIdx(e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const relX = (mx - pad.left) / cw;
+    return Math.round(relX * (dayCount - 1));
   }
 
-  // Date labels
-  ctx.fillStyle = 'rgba(255,255,255,0.3)';
-  ctx.font = '9px DM Sans, sans-serif';
-  ctx.textAlign = 'center';
-  const labelCount = Math.min(dayCount, 7);
-  for (let i = 0; i < labelCount; i++) {
-    const idx = Math.round(i * (dayCount - 1) / Math.max(labelCount - 1, 1));
-    const d = new Date(startDate); d.setDate(d.getDate() + idx);
-    const label = (d.getMonth() + 1) + '/' + d.getDate();
-    const x = pad.left + (idx / Math.max(dayCount - 1, 1)) * cw;
-    ctx.fillText(label, x, h - 4);
-  }
-
-  drawLine(vVals, 'rgba(232,121,249,1)');
-  drawLine(rVals, 'rgba(124,58,237,1)');
+  canvas.onmousemove = function(e) { draw(getHoverIdx(e)); };
+  canvas.onmouseleave = function() { draw(null); };
+  canvas.ontouchmove = function(e) { e.preventDefault(); draw(getHoverIdx(e.touches[0])); };
+  canvas.ontouchend = function() { draw(null); };
+  canvas.style.cursor = 'crosshair';
 }
 
 function renderAnaMiniChart(canvasId, revDaily, sourceKey, color) {
