@@ -12823,7 +12823,24 @@ async function deleteCourse() {
     confirmBtn.onclick = async function() {
       confirmBtn.disabled = true;
       confirmBtn.textContent = 'Deleting...';
+
+      // Find the course to get cover path before deleting
+      var course = coursesList.find(function(c) { return c.id === currentCourseId; });
+
+      // Delete cover image from storage
+      if (course && course.cover_image_path) {
+        await sb.storage.from('course-covers').remove([course.cover_image_path]);
+      }
+
+      // Delete lessons, modules, then course
+      await sb.from('course_progress').delete().in('enrollment_id',
+        (await sb.from('course_enrollments').select('id').eq('course_id', currentCourseId)).data?.map(function(e) { return e.id; }) || []
+      );
+      await sb.from('course_enrollments').delete().eq('course_id', currentCourseId);
+      await sb.from('course_lessons').delete().eq('course_id', currentCourseId);
+      await sb.from('course_modules').delete().eq('course_id', currentCourseId);
       var { error } = await sb.from('courses').delete().eq('id', currentCourseId);
+
       document.body.removeChild(overlay);
       if (error) { showCourseMsg('error', 'Failed: ' + error.message); return resolve(); }
       coursesList = coursesList.filter(function(c) { return c.id !== currentCourseId; });
