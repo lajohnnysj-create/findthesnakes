@@ -7528,7 +7528,7 @@ function renderLinkExpanded(link, dragSvg) {
           <span style="padding:10px 12px 10px 4px;font-size:13px;color:var(--text);">${priceDisplay}</span>
         </div>
         <div style="flex:1;display:flex;align-items:center;gap:0;background:var(--surface);border:1px solid var(--border-hover);border-radius:6px;overflow:hidden;">
-          <span style="padding:10px 0 10px 12px;font-size:13px;color:var(--muted);white-space:nowrap;">Was: $</span>
+          <span style="padding:10px 0 10px 12px;font-size:13px;color:var(--muted);white-space:nowrap;">Crossout $</span>
           <input type="text" inputmode="decimal" value="${crossoutVal}" placeholder="99.99"
             oninput="updateLinkField(${link._id},'courseCrossoutPrice',Math.round(parseFloat(this.value||0)*100))"
             aria-label="Crossout price" style="flex:1;background:transparent;border:none;padding:10px 12px 10px 0;font-size:13px;color:var(--text);font-family:DM Sans,sans-serif;outline:none;min-width:0;margin:0;">
@@ -8294,7 +8294,7 @@ function buildPreviewLink(l, t) {
   if (l.isCourse) {
     const priceDisplay = l.coursePrice > 0 ? '$' + (l.coursePrice / 100).toFixed(2) : 'Free';
     const crossoutHtml = l.courseCrossoutPrice > 0 ? `<span style="text-decoration:line-through;color:${t.muted};font-size:11px;margin-right:4px;">$${(l.courseCrossoutPrice / 100).toFixed(2)}</span>` : '';
-    const coverHtml = l.photoUrl ? `<img src="${escapeHtml(l.photoUrl)}" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:8px 8px 0 0;">` : '';
+    const coverHtml = l.photoUrl ? `<img src="${escapeHtml(l.photoUrl)}" alt="" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px 8px 0 0;">` : '';
     return `<div style="background:${t.surface};border:1px solid ${t.border};border-radius:10px;overflow:hidden;margin-bottom:8px;">
       ${coverHtml}
       <div style="padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
